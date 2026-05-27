@@ -1,10 +1,10 @@
 <?php
 
 it('exposes the env command with json output', function () {
-    $path = sys_get_temp_dir().'/devdoctor-env-'.bin2hex(random_bytes(4));
+    $path = sys_get_temp_dir() . '/devdoctor-env-' . bin2hex(random_bytes(4));
     mkdir($path);
-    file_put_contents($path.'/.env', "APP_ENV=local\n");
-    file_put_contents($path.'/.env.example', "APP_ENV=local\n");
+    file_put_contents($path . '/.env', "APP_ENV=local\n");
+    file_put_contents($path . '/.env.example', "APP_ENV=local\n");
 
     $this->artisan('env', ['--path' => $path, '--format' => 'json'])
         ->assertExitCode(0)

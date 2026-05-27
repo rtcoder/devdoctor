@@ -12,11 +12,11 @@ use App\DevDoctor\Core\Output\TableRenderer;
 trait RendersDiagnostics
 {
     /**
-     * @param  list<ModuleResult>  $results
+     * @param list<ModuleResult> $results
      */
     protected function renderDiagnostics(array $results): int
     {
-        $format = (string) $this->option('format');
+        $format = (string)$this->option('format');
         $output = $format === 'json'
             ? app(JsonRenderer::class)->render($results)
             : app(TableRenderer::class)->render($results);
@@ -26,9 +26,13 @@ trait RendersDiagnostics
         $exitCode = ExitCode::OK;
 
         foreach ($results as $result) {
-            $exitCode = max($exitCode, ExitCode::fromIssues($result->issues));
+            $resultExitCode = ExitCode::fromIssues($result->issues);
+
+            if ($resultExitCode->value > $exitCode->value) {
+                $exitCode = $resultExitCode;
+            }
         }
 
-        return $exitCode;
+        return $exitCode->value;
     }
 }

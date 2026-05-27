@@ -7,21 +7,15 @@ namespace App\DevDoctor\Core;
 final readonly class ModuleResult
 {
     public function __construct(
-        public string $name,
+        public string          $name,
         public IssueCollection $issues,
-    ) {}
-
-    public function status(): string
+    )
     {
-        if ($this->issues->hasErrors()) {
-            return 'failed';
-        }
+    }
 
-        if ($this->issues->hasWarnings()) {
-            return 'warning';
-        }
-
-        return 'passed';
+    public function status(): ModuleStatus
+    {
+        return ModuleStatus::fromSummary($this->issues->summary());
     }
 
     /**
@@ -31,10 +25,10 @@ final readonly class ModuleResult
     {
         return [
             'name' => $this->name,
-            'status' => $this->status(),
+            'status' => $this->status()->value,
             'summary' => $this->issues->summary(),
             'issues' => array_map(
-                static fn (Issue $issue): array => $issue->toArray(),
+                static fn(Issue $issue): array => $issue->toArray(),
                 $this->issues->all(),
             ),
         ];

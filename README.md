@@ -74,3 +74,7 @@ JSON output follows the shared module shape:
 ## Safety
 
 DevDoctor is read-only by default. It must not rewrite `.env`, execute destructive commands, send telemetry, or require internet access for basic diagnostics.
+
+## Roadmap
+
+See [ROADMAP.md](ROADMAP.md) for the implementation roadmap from the current scaffold to the first complete release and later distribution work.

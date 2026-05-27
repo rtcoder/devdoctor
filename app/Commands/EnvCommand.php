@@ -29,27 +29,27 @@ final class EnvCommand extends Command
 
     public function handle(): int
     {
-        $path = rtrim((string) $this->option('path'), DIRECTORY_SEPARATOR);
+        $path = rtrim((string)$this->option('path'), DIRECTORY_SEPARATOR);
         $issues = new IssueCollection;
 
-        $env = (string) $this->option('env-file');
-        $example = (string) $this->option('example');
+        $env = (string)$this->option('env-file');
+        $example = (string)$this->option('example');
 
-        if (! is_file($path.DIRECTORY_SEPARATOR.$env)) {
+        if (!is_file($path . DIRECTORY_SEPARATOR . $env)) {
             $issues->add(new Issue(
                 code: 'DD_ENV_FILE_MISSING',
                 severity: Severity::ERROR,
-                message: $env.' does not exist',
+                message: $env . ' does not exist',
                 module: 'env',
                 file: $env,
             ));
         }
 
-        if (! is_file($path.DIRECTORY_SEPARATOR.$example)) {
+        if (!is_file($path . DIRECTORY_SEPARATOR . $example)) {
             $issues->add(new Issue(
                 code: 'DD_ENV_EXAMPLE_MISSING',
                 severity: $this->option('strict') ? Severity::ERROR : Severity::WARNING,
-                message: $example.' does not exist',
+                message: $example . ' does not exist',
                 module: 'env',
                 file: $example,
             ));

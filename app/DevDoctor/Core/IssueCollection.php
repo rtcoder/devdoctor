@@ -10,7 +10,7 @@ final class IssueCollection
     private array $issues = [];
 
     /**
-     * @param  iterable<Issue>  $issues
+     * @param iterable<Issue> $issues
      */
     public function __construct(iterable $issues = [])
     {
@@ -33,20 +33,20 @@ final class IssueCollection
 
         usort($issues, static function (Issue $left, Issue $right): int {
             return [
-                Severity::rank($left->severity),
-                $left->module ?? '',
-                $left->file ?? '',
-                $left->line ?? 0,
-                $left->code,
-                $left->key ?? '',
-            ] <=> [
-                Severity::rank($right->severity),
-                $right->module ?? '',
-                $right->file ?? '',
-                $right->line ?? 0,
-                $right->code,
-                $right->key ?? '',
-            ];
+                    $left->severity->rank(),
+                    $left->module ?? '',
+                    $left->file ?? '',
+                    $left->line ?? 0,
+                    $left->code,
+                    $left->key ?? '',
+                ] <=> [
+                    $right->severity->rank(),
+                    $right->module ?? '',
+                    $right->file ?? '',
+                    $right->line ?? 0,
+                    $right->code,
+                    $right->key ?? '',
+                ];
         });
 
         return $issues;
@@ -62,11 +62,11 @@ final class IssueCollection
         return $this->count(Severity::WARNING) > 0;
     }
 
-    public function count(string $severity): int
+    public function count(Severity $severity): int
     {
         return count(array_filter(
             $this->issues,
-            static fn (Issue $issue): bool => $issue->severity === $severity,
+            static fn(Issue $issue): bool => $issue->severity === $severity,
         ));
     }
 

@@ -11,7 +11,7 @@ use App\DevDoctor\Core\Severity;
 final class TableRenderer
 {
     /**
-     * @param  list<ModuleResult>  $results
+     * @param list<ModuleResult> $results
      */
     public function render(array $results): string
     {
@@ -23,14 +23,14 @@ final class TableRenderer
             $lines[] = sprintf(
                 '%-10s %-8s %6d %8d %5d',
                 $result->name,
-                $result->status(),
+                $result->status()->value,
                 $summary['errors'],
                 $summary['warnings'],
                 $summary['info'],
             );
         }
 
-        foreach ([Severity::ERROR => 'Errors', Severity::WARNING => 'Warnings', Severity::INFO => 'Info'] as $severity => $heading) {
+        foreach ([[Severity::ERROR, 'Errors'], [Severity::WARNING, 'Warnings'], [Severity::INFO, 'Info']] as [$severity, $heading]) {
             $issues = $this->issuesWithSeverity($results, $severity);
 
             if ($issues === []) {
@@ -41,18 +41,18 @@ final class TableRenderer
             $lines[] = $heading;
 
             foreach ($issues as $issue) {
-                $lines[] = '  '.$this->formatIssue($issue);
+                $lines[] = '  ' . $this->formatIssue($issue);
             }
         }
 
-        return implode(PHP_EOL, $lines).PHP_EOL;
+        return implode(PHP_EOL, $lines) . PHP_EOL;
     }
 
     /**
-     * @param  list<ModuleResult>  $results
+     * @param list<ModuleResult> $results
      * @return list<Issue>
      */
-    private function issuesWithSeverity(array $results, string $severity): array
+    private function issuesWithSeverity(array $results, Severity $severity): array
     {
         $issues = [];
 
@@ -72,14 +72,14 @@ final class TableRenderer
         $location = $issue->file ?? '';
 
         if ($issue->line !== null) {
-            $location .= ':'.$issue->line;
+            $location .= ':' . $issue->line;
         }
 
         if ($issue->key !== null) {
-            $location .= ($location === '' ? '' : ' ').$issue->key;
+            $location .= ($location === '' ? '' : ' ') . $issue->key;
         }
 
-        $prefix = $location === '' ? '' : $location.' ';
+        $prefix = $location === '' ? '' : $location . ' ';
 
         return sprintf('[%s] %s%s', $issue->code, $prefix, $issue->message);
     }
