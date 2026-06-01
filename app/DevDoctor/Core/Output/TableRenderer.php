@@ -11,7 +11,7 @@ use App\DevDoctor\Core\Severity;
 final class TableRenderer
 {
     /**
-     * @param list<ModuleResult> $results
+     * @param  list<ModuleResult>  $results
      */
     public function render(array $results): string
     {
@@ -41,15 +41,15 @@ final class TableRenderer
             $lines[] = $heading;
 
             foreach ($issues as $issue) {
-                $lines[] = '  ' . $this->formatIssue($issue);
+                $lines[] = '  '.$this->formatIssue($issue);
             }
         }
 
-        return implode(PHP_EOL, $lines) . PHP_EOL;
+        return implode(PHP_EOL, $lines).PHP_EOL;
     }
 
     /**
-     * @param list<ModuleResult> $results
+     * @param  list<ModuleResult>  $results
      * @return list<Issue>
      */
     private function issuesWithSeverity(array $results, Severity $severity): array
@@ -72,14 +72,14 @@ final class TableRenderer
         $location = $issue->file ?? '';
 
         if ($issue->line !== null) {
-            $location .= ':' . $issue->line;
+            $location .= ':'.$issue->line;
         }
 
         if ($issue->key !== null) {
-            $location .= ($location === '' ? '' : ' ') . $issue->key;
+            $location .= ($location === '' ? '' : ' ').$issue->key;
         }
 
-        $prefix = $location === '' ? '' : $location . ' ';
+        $prefix = $location === '' ? '' : $location.' ';
 
         return sprintf('[%s] %s%s', $issue->code, $prefix, $issue->message);
     }

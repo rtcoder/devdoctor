@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Commands;
 
 use App\Commands\Concerns\RendersDiagnostics;
-use App\DevDoctor\Core\Issue;
-use App\DevDoctor\Core\IssueCollection;
 use App\DevDoctor\Core\ModuleResult;
-use App\DevDoctor\Core\Severity;
+use App\DevDoctor\Modules\Docker\DockerAnalyzer;
+use App\DevDoctor\Modules\Docker\DockerOptions;
 use LaravelZero\Framework\Commands\Command;
 
 final class DockerCommand extends Command
@@ -19,16 +18,23 @@ final class DockerCommand extends Command
         {--path=. : Project path to inspect}
         {--format=table : Output format: table or json}
         {--ci : Use CI-safe behavior}
-        {--strict : Treat warnings as errors where supported}';
+        {--strict : Treat warnings as errors where supported}
+        {--compose-file= : Compose file to inspect}
+        {--no-daemon : Skip Docker daemon checks}
+        {--no-containers : Skip Compose container status checks}';
 
     protected $description = 'Check Docker and Docker Compose project health.';
 
     public function handle(): int
     {
         return $this->renderDiagnostics([
-            new ModuleResult('docker', new IssueCollection([
-                new Issue('DD_DOCKER_NOT_IMPLEMENTED', Severity::WARNING, 'Docker diagnostics are not implemented yet.', 'docker'),
-            ])),
+            new ModuleResult('docker', app(DockerAnalyzer::class)->analyze(new DockerOptions(
+                path: (string) $this->option('path'),
+                strict: (bool) $this->option('strict'),
+                composeFile: $this->option('compose-file') !== null ? (string) $this->option('compose-file') : null,
+                daemon: ! (bool) $this->option('no-daemon'),
+                containers: ! (bool) $this->option('no-containers'),
+            ))),
         ]);
     }
 }

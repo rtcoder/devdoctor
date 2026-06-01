@@ -1,0 +1,66 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\DevDoctor\Modules\Env;
+
+final readonly class EnvFile
+{
+    /**
+     * @param  list<EnvEntry>  $entries
+     */
+    public function __construct(
+        public string $path,
+        public array $entries,
+        public bool $exists = true,
+    ) {}
+
+    public static function missing(string $path): self
+    {
+        return new self($path, [], false);
+    }
+
+    public function has(string $key): bool
+    {
+        return $this->get($key) !== null;
+    }
+
+    public function get(string $key): ?EnvEntry
+    {
+        foreach ($this->entries as $entry) {
+            if ($entry->key === $key) {
+                return $entry;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function keys(): array
+    {
+        return array_values(array_unique(array_map(
+            static fn (EnvEntry $entry): string => $entry->key,
+            $this->entries,
+        )));
+    }
+
+    /**
+     * @return array<string, list<EnvEntry>>
+     */
+    public function duplicates(): array
+    {
+        $byKey = [];
+
+        foreach ($this->entries as $entry) {
+            $byKey[$entry->key][] = $entry;
+        }
+
+        return array_filter(
+            $byKey,
+            static fn (array $entries): bool => count($entries) > 1,
+        );
+    }
+}

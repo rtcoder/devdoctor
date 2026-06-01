@@ -5,10 +5,16 @@ declare(strict_types=1);
 namespace App\Commands;
 
 use App\Commands\Concerns\RendersDiagnostics;
+use App\DevDoctor\Core\Config\ConfigLoader;
+use App\DevDoctor\Core\Config\InvalidDevDoctorConfig;
+use App\DevDoctor\Core\ExitCode;
 use App\DevDoctor\Core\Issue;
 use App\DevDoctor\Core\IssueCollection;
 use App\DevDoctor\Core\ModuleResult;
+use App\DevDoctor\Core\PathResolver;
 use App\DevDoctor\Core\Severity;
+use App\DevDoctor\Modules\Env\EnvAnalysisOptions;
+use App\DevDoctor\Modules\Env\EnvAnalyzer;
 use LaravelZero\Framework\Commands\Command;
 
 final class EnvCommand extends Command
@@ -29,40 +35,34 @@ final class EnvCommand extends Command
 
     public function handle(): int
     {
-        $path = rtrim((string)$this->option('path'), DIRECTORY_SEPARATOR);
-        $issues = new IssueCollection;
+        $paths = PathResolver::fromBasePath((string) $this->option('path'));
 
-        $env = (string)$this->option('env-file');
-        $example = (string)$this->option('example');
-
-        if (!is_file($path . DIRECTORY_SEPARATOR . $env)) {
-            $issues->add(new Issue(
-                code: 'DD_ENV_FILE_MISSING',
-                severity: Severity::ERROR,
-                message: $env . ' does not exist',
-                module: 'env',
-                file: $env,
-            ));
+        try {
+            $config = app(ConfigLoader::class)->load($paths->absolute((string) $this->option('config')));
+        } catch (InvalidDevDoctorConfig $exception) {
+            return $this->renderDiagnostics([
+                new ModuleResult('env', new IssueCollection([
+                    new Issue(
+                        code: 'DD_ENV_INVALID_CONFIG',
+                        severity: Severity::ERROR,
+                        message: $exception->getMessage(),
+                        module: 'env',
+                        file: $paths->display((string) $this->option('config')),
+                    ),
+                ])),
+            ], ExitCode::INVALID_CONFIG);
         }
 
-        if (!is_file($path . DIRECTORY_SEPARATOR . $example)) {
-            $issues->add(new Issue(
-                code: 'DD_ENV_EXAMPLE_MISSING',
-                severity: $this->option('strict') ? Severity::ERROR : Severity::WARNING,
-                message: $example . ' does not exist',
-                module: 'env',
-                file: $example,
-            ));
-        }
-
-        if ($issues->summary() === ['errors' => 0, 'warnings' => 0, 'info' => 0]) {
-            $issues->add(new Issue(
-                code: 'DD_ENV_READY',
-                severity: Severity::INFO,
-                message: 'Env files are present. Detailed analysis is next.',
-                module: 'env',
-            ));
-        }
+        $issues = app(EnvAnalyzer::class)->analyze(new EnvAnalysisOptions(
+            path: (string) $this->option('path'),
+            envFile: $this->option('env-file') !== '.env' ? (string) $this->option('env-file') : $config->envFile,
+            exampleFile: $this->option('example') !== '.env.example' ? (string) $this->option('example') : $config->exampleFile,
+            strict: (bool) $this->option('strict'),
+            scanSecrets: ! (bool) $this->option('no-secrets'),
+            rules: $config->envRules,
+            ignoreMissingInEnv: $config->ignoreMissingInEnv,
+            ignoreMissingInExample: $config->ignoreMissingInExample,
+        ));
 
         return $this->renderDiagnostics([
             new ModuleResult('env', $issues),

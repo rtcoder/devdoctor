@@ -7,11 +7,9 @@ namespace App\DevDoctor\Core;
 final readonly class ModuleResult
 {
     public function __construct(
-        public string          $name,
+        public string $name,
         public IssueCollection $issues,
-    )
-    {
-    }
+    ) {}
 
     public function status(): ModuleStatus
     {
@@ -28,7 +26,7 @@ final readonly class ModuleResult
             'status' => $this->status()->value,
             'summary' => $this->issues->summary(),
             'issues' => array_map(
-                static fn(Issue $issue): array => $issue->toArray(),
+                static fn (Issue $issue): array => $issue->toArray(),
                 $this->issues->all(),
             ),
         ];

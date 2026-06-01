@@ -7,20 +7,18 @@ namespace App\DevDoctor\Core;
 final readonly class Issue
 {
     /**
-     * @param array<string, mixed> $context
+     * @param  array<string, mixed>  $context
      */
     public function __construct(
-        public string   $code,
+        public string $code,
         public Severity $severity,
-        public string   $message,
-        public ?string  $module = null,
-        public ?string  $file = null,
-        public ?int     $line = null,
-        public ?string  $key = null,
-        public array    $context = [],
-    )
-    {
-    }
+        public string $message,
+        public ?string $module = null,
+        public ?string $file = null,
+        public ?int $line = null,
+        public ?string $key = null,
+        public array $context = [],
+    ) {}
 
     /**
      * @return array<string, mixed>
@@ -36,6 +34,6 @@ final readonly class Issue
             'line' => $this->line,
             'key' => $this->key,
             'context' => $this->context,
-        ], static fn(mixed $value): bool => $value !== null && $value !== []);
+        ], static fn (mixed $value): bool => $value !== null && $value !== []);
     }
 }

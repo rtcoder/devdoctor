@@ -7,17 +7,25 @@ namespace App\Commands\Concerns;
 use App\DevDoctor\Core\ExitCode;
 use App\DevDoctor\Core\ModuleResult;
 use App\DevDoctor\Core\Output\JsonRenderer;
+use App\DevDoctor\Core\Output\OutputFormat;
 use App\DevDoctor\Core\Output\TableRenderer;
 
 trait RendersDiagnostics
 {
     /**
-     * @param list<ModuleResult> $results
+     * @param  list<ModuleResult>  $results
      */
-    protected function renderDiagnostics(array $results): int
+    protected function renderDiagnostics(array $results, ?ExitCode $overrideExitCode = null): int
     {
-        $format = (string)$this->option('format');
-        $output = $format === 'json'
+        $format = OutputFormat::tryFrom((string) $this->option('format'));
+
+        if ($format === null) {
+            $this->output->writeln('Invalid --format value. Expected "table" or "json".');
+
+            return ExitCode::INVALID_CONFIG->value;
+        }
+
+        $output = $format === OutputFormat::JSON
             ? app(JsonRenderer::class)->render($results)
             : app(TableRenderer::class)->render($results);
 
@@ -33,6 +41,6 @@ trait RendersDiagnostics
             }
         }
 
-        return $exitCode->value;
+        return ($overrideExitCode ?? $exitCode)->value;
     }
 }

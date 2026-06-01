@@ -1,14 +1,14 @@
 # DevDoctor Roadmap
 
-This roadmap describes the implementation path from the current Laravel Zero scaffold to the first complete DevDoctor release and later public distribution work.
+This roadmap describes the implementation path from the Laravel Zero scaffold to the first complete DevDoctor release and later public distribution work.
 
 Current state:
 
 - Laravel Zero 12.x is initialized.
 - The `devdoctor` binary exists.
-- Public commands are visible: `env`, `ports`, `docker`, `composer`, `git`, and `ci`.
-- `env` performs the first file-presence checks for `.env` and `.env.example`.
-- The remaining modules are explicit early stubs with stable `*_NOT_IMPLEMENTED` issue codes.
+- Public commands are implemented: `env`, `ports`, `docker`, `composer`, `git`, and `ci`.
+- Core diagnostics, rendering, redaction, path normalization, config loading, and process execution are in place.
+- `env`, `ports`, `composer`, `git`, `docker`, and `ci` have focused tests and read-only behavior.
 
 ## Milestone 0.1.1 - Foundation Cleanup
 
@@ -193,4 +193,3 @@ After the first complete version:
 - `v0.11`: SARIF output, GitHub Action wrapper, and baseline file support.
 - `v0.12`: PHAR release automation, signed builds, and Homebrew tap.
 - `v1.0`: stable JSON schema, stable issue code catalog, documentation site, public Composer package, and CI examples for GitHub Actions, GitLab CI, and Bitbucket Pipelines.
-

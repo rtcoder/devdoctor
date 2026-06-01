@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Commands;
 
 use App\Commands\Concerns\RendersDiagnostics;
-use App\DevDoctor\Core\Issue;
-use App\DevDoctor\Core\IssueCollection;
 use App\DevDoctor\Core\ModuleResult;
-use App\DevDoctor\Core\Severity;
+use App\DevDoctor\Modules\Composer\ComposerAnalyzer;
+use App\DevDoctor\Modules\Composer\ComposerOptions;
 use LaravelZero\Framework\Commands\Command;
 
 final class ComposerCommand extends Command
@@ -19,16 +18,23 @@ final class ComposerCommand extends Command
         {--path=. : Project path to inspect}
         {--format=table : Output format: table or json}
         {--ci : Use CI-safe behavior}
-        {--strict : Treat warnings as errors where supported}';
+        {--strict : Treat warnings as errors where supported}
+        {--no-scripts : Skip Composer script inspection}
+        {--no-platform-check : Skip local platform checks}
+        {--no-validate : Skip composer validate}';
 
     protected $description = 'Check Composer project health.';
 
     public function handle(): int
     {
         return $this->renderDiagnostics([
-            new ModuleResult('composer', new IssueCollection([
-                new Issue('DD_COMPOSER_NOT_IMPLEMENTED', Severity::WARNING, 'Composer diagnostics are not implemented yet.', 'composer'),
-            ])),
+            new ModuleResult('composer', app(ComposerAnalyzer::class)->analyze(new ComposerOptions(
+                path: (string) $this->option('path'),
+                strict: (bool) $this->option('strict'),
+                validate: ! (bool) $this->option('no-validate'),
+                platformCheck: ! (bool) $this->option('no-platform-check'),
+                scripts: ! (bool) $this->option('no-scripts'),
+            ))),
         ]);
     }
 }

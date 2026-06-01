@@ -1,0 +1,191 @@
+<?php
+
+use App\DevDoctor\Core\IssueCollection;
+use App\DevDoctor\Core\ProcessResult;
+use App\DevDoctor\Modules\Docker\DockerAnalyzer;
+use App\DevDoctor\Modules\Docker\DockerOptions;
+use App\DevDoctor\Modules\Docker\DockerRunnerInterface;
+use App\DevDoctor\Modules\Ports\PortProviderInterface;
+use App\DevDoctor\Modules\Ports\PortUsage;
+use App\DevDoctor\Modules\Ports\ProcessInfo;
+
+it('does not require docker when no compose file exists', function () {
+    $issues = analyzeDocker(new FakeDockerRunner([]));
+
+    expect(dockerCodes($issues))->toBe(['DD_DOCKER_NO_COMPOSE_PROJECT']);
+});
+
+it('reports missing docker binary for compose projects', function () {
+    $path = dockerTempPath();
+    dockerCompose($path, "services:\n  app:\n    image: nginx\n");
+
+    $issues = analyzeDocker(new FakeDockerRunner([
+        'which docker' => new ProcessResult(1, '', ''),
+    ], $path), new DockerOptions($path));
+
+    expect(dockerCodes($issues))->toBe(['DD_DOCKER_BINARY_MISSING']);
+});
+
+it('reports daemon and compose config failures', function () {
+    $path = dockerTempPath();
+    $composeFile = dockerCompose($path, "services:\n  app:\n    image: nginx\n");
+
+    $issues = analyzeDocker(new FakeDockerRunner([
+        'which docker' => dockerOk("/usr/bin/docker\n"),
+        'docker info --format json' => new ProcessResult(1, '', 'daemon unavailable'),
+    ], $path), new DockerOptions($path));
+
+    expect(dockerCodes($issues))->toBe(['DD_DOCKER_DAEMON_UNAVAILABLE']);
+
+    $issues = analyzeDocker(new FakeDockerRunner([
+        'which docker' => dockerOk("/usr/bin/docker\n"),
+        'docker compose -f '.$composeFile.' config' => new ProcessResult(1, '', 'bad config'),
+    ], $path), new DockerOptions($path, daemon: false, containers: false));
+
+    expect(dockerCodes($issues))->toBe(['DD_DOCKER_COMPOSE_CONFIG_INVALID']);
+});
+
+it('reports invalid compose yaml and missing env references', function () {
+    $path = dockerTempPath();
+    dockerCompose($path, "services:\n  app: [");
+
+    $issues = analyzeDocker(new FakeDockerRunner([
+        'which docker' => dockerOk("/usr/bin/docker\n"),
+        'docker compose -f '.$path.'/docker-compose.yml config' => dockerOk(''),
+    ], $path), new DockerOptions($path, daemon: false, containers: false));
+
+    expect(dockerCodes($issues))->toContain('DD_DOCKER_COMPOSE_INVALID');
+
+    dockerCompose($path, "services:\n  app:\n    image: \${DD_TEST_IMAGE_MISSING}\n");
+
+    $issues = analyzeDocker(new FakeDockerRunner([
+        'which docker' => dockerOk("/usr/bin/docker\n"),
+        'docker compose -f '.$path.'/docker-compose.yml config' => dockerOk(''),
+    ], $path), new DockerOptions($path, daemon: false, containers: false));
+
+    expect(dockerCodes($issues))->toBe(['DD_DOCKER_ENV_REFERENCE_MISSING']);
+});
+
+it('reports compose host port conflicts', function () {
+    $path = dockerTempPath();
+    dockerCompose($path, "services:\n  web:\n    image: nginx\n    ports:\n      - '8080:80'\n");
+
+    $issues = analyzeDocker(new FakeDockerRunner([
+        'which docker' => dockerOk("/usr/bin/docker\n"),
+        'docker compose -f '.$path.'/docker-compose.yml config' => dockerOk(''),
+    ], $path), new DockerOptions($path, daemon: false, containers: false), new FakeDockerPorts([8080]));
+
+    expect(dockerCodes($issues))->toBe(['DD_DOCKER_HOST_PORT_CONFLICT']);
+});
+
+it('reports unhealthy and restarting compose containers', function () {
+    $path = dockerTempPath();
+    $composeFile = dockerCompose($path, "services:\n  web:\n    image: nginx\n");
+    $json = json_encode(['Service' => 'web', 'State' => 'restarting'], JSON_THROW_ON_ERROR)."\n";
+    $json .= json_encode(['Service' => 'db', 'Health' => 'unhealthy'], JSON_THROW_ON_ERROR)."\n";
+
+    $issues = analyzeDocker(new FakeDockerRunner([
+        'which docker' => dockerOk("/usr/bin/docker\n"),
+        'docker compose -f '.$composeFile.' config' => dockerOk(''),
+        'docker compose -f '.$composeFile.' ps --format json' => dockerOk($json),
+    ], $path), new DockerOptions($path, daemon: false));
+
+    expect(dockerCodes($issues))->toBe([
+        'DD_DOCKER_CONTAINER_UNHEALTHY',
+        'DD_DOCKER_CONTAINER_UNHEALTHY',
+    ]);
+});
+
+it('reports ready compose projects', function () {
+    $path = dockerTempPath();
+    $composeFile = dockerCompose($path, "services:\n  web:\n    image: nginx\n");
+
+    $issues = analyzeDocker(new FakeDockerRunner([
+        'which docker' => dockerOk("/usr/bin/docker\n"),
+        'docker compose -f '.$composeFile.' config' => dockerOk(''),
+        'docker compose -f '.$composeFile.' ps --format json' => dockerOk(''),
+    ], $path), new DockerOptions($path, daemon: false));
+
+    expect(dockerCodes($issues))->toBe(['DD_DOCKER_READY']);
+});
+
+function analyzeDocker(FakeDockerRunner $runner, ?DockerOptions $options = null, ?PortProviderInterface $ports = null): IssueCollection
+{
+    $path = $options?->path ?? dockerTempPath();
+
+    return (new DockerAnalyzer($runner, $ports ?? new FakeDockerPorts))->analyze($options ?? new DockerOptions($path));
+}
+
+function dockerOk(string $stdout): ProcessResult
+{
+    return new ProcessResult(0, $stdout, '');
+}
+
+/**
+ * @return list<string>
+ */
+function dockerCodes(IssueCollection $issues): array
+{
+    return array_map(static fn ($issue): string => $issue->code, $issues->all());
+}
+
+function dockerTempPath(): string
+{
+    $path = sys_get_temp_dir().'/devdoctor-docker-'.bin2hex(random_bytes(4));
+    mkdir($path);
+
+    return $path;
+}
+
+function dockerCompose(string $path, string $content): string
+{
+    file_put_contents($path.'/docker-compose.yml', $content);
+
+    return $path.'/docker-compose.yml';
+}
+
+final class FakeDockerRunner implements DockerRunnerInterface
+{
+    /**
+     * @param  array<string, ProcessResult>  $responses
+     */
+    public function __construct(
+        private array $responses,
+        private readonly string $path = '',
+    ) {}
+
+    public function run(array $command, string $workingDirectory): ProcessResult
+    {
+        expect($workingDirectory)->toBe($this->path !== '' ? $this->path : $workingDirectory);
+
+        $key = implode(' ', $command);
+
+        return $this->responses[$key] ?? new ProcessResult(1, '', 'missing fake response: '.$key);
+    }
+}
+
+final readonly class FakeDockerPorts implements PortProviderInterface
+{
+    /**
+     * @param  list<int>  $usedPorts
+     */
+    public function __construct(
+        private array $usedPorts = [],
+    ) {}
+
+    public function available(): bool
+    {
+        return true;
+    }
+
+    public function usages(int $port): array
+    {
+        if (! in_array($port, $this->usedPorts, true)) {
+            return [];
+        }
+
+        return [
+            new PortUsage($port, new ProcessInfo(1234, 'php'), 'tcp'),
+        ];
+    }
+}

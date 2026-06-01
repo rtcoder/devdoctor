@@ -10,7 +10,7 @@ use App\DevDoctor\Core\ModuleStatus;
 final class JsonRenderer
 {
     /**
-     * @param list<ModuleResult> $results
+     * @param  list<ModuleResult>  $results
      */
     public function render(array $results): string
     {
@@ -24,21 +24,21 @@ final class JsonRenderer
         }
 
         return json_encode([
-                'tool' => 'devdoctor',
-                'status' => ModuleStatus::fromSummary([
-                    'errors' => $errors,
-                    'warnings' => $warnings,
-                    'info' => $info,
-                ])->value,
-                'summary' => [
-                    'errors' => $errors,
-                    'warnings' => $warnings,
-                    'info' => $info,
-                ],
-                'modules' => array_map(
-                    static fn(ModuleResult $result): array => $result->toArray(),
-                    $results,
-                ),
-            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL;
+            'tool' => 'devdoctor',
+            'status' => ModuleStatus::fromSummary([
+                'errors' => $errors,
+                'warnings' => $warnings,
+                'info' => $info,
+            ])->value,
+            'summary' => [
+                'errors' => $errors,
+                'warnings' => $warnings,
+                'info' => $info,
+            ],
+            'modules' => array_map(
+                static fn (ModuleResult $result): array => $result->toArray(),
+                $results,
+            ),
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES).PHP_EOL;
     }
 }
