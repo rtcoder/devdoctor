@@ -33,7 +33,7 @@ Do not reduce the product to only `.env` checks. The `.env` module is important,
 
 Use:
 
-- PHP 8.3+
+- PHP 8.5+
 - Laravel Zero 12.x
 - Pest for tests
 - Symfony Console / Laravel Prompts where appropriate
@@ -2141,7 +2141,7 @@ Example Composer risky script:
 ```json
 {
   "require": {
-    "php": "^8.3",
+    "php": "^8.5",
     "ext-intl": "*"
   },
   "scripts": {

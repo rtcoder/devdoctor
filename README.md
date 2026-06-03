@@ -53,6 +53,8 @@ php devdoctor docker --compose-file=docker-compose.yml
 php devdoctor ci --modules=env,composer,git,docker --no-fail-on-warnings
 ```
 
+`ports` uses platform-specific read-only providers: `lsof` on macOS/Linux, `ss` as a Linux fallback, and `netstat -ano` on Windows. If no supported provider is available, DevDoctor reports `DD_PORT_PROVIDER_UNAVAILABLE` instead of failing unexpectedly.
+
 ## Table Output
 
 ```text

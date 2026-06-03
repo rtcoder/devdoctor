@@ -5,6 +5,7 @@ use App\DevDoctor\Modules\Ports\PortsAnalyzer;
 use App\DevDoctor\Modules\Ports\PortsOptions;
 use App\DevDoctor\Modules\Ports\PortUsage;
 use App\DevDoctor\Modules\Ports\ProcessInfo;
+use App\DevDoctor\Modules\Ports\SystemPortProvider;
 
 final class FakePortProvider implements PortProviderInterface
 {
@@ -76,4 +77,26 @@ it('reports multiple listeners', function () {
 
     expect($codes)->toContain('DD_PORT_MULTIPLE_LISTENERS')
         ->and($codes)->toContain('DD_PORT_IN_USE');
+});
+
+it('uses the first available system port provider', function () {
+    $provider = new SystemPortProvider([
+        new FakePortProvider(available: false),
+        new FakePortProvider(usages: [
+            3000 => [new PortUsage(3000, new ProcessInfo(4321, 'node'))],
+        ]),
+    ]);
+
+    expect($provider->available())->toBeTrue()
+        ->and($provider->usages(3000)[0]->process->command)->toBe('node');
+});
+
+it('reports unavailable when no system port provider is available', function () {
+    $provider = new SystemPortProvider([
+        new FakePortProvider(available: false),
+        new FakePortProvider(available: false),
+    ]);
+
+    expect($provider->available())->toBeFalse()
+        ->and($provider->usages(3000))->toBe([]);
 });

@@ -8,8 +8,8 @@ use App\DevDoctor\Core\Issue;
 use App\DevDoctor\Core\IssueCollection;
 use App\DevDoctor\Core\PathResolver;
 use App\DevDoctor\Core\Severity;
-use App\DevDoctor\Modules\Ports\LsofPortProvider;
 use App\DevDoctor\Modules\Ports\PortProviderInterface;
+use App\DevDoctor\Modules\Ports\SystemPortProvider;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -25,7 +25,7 @@ final readonly class DockerAnalyzer
 
     public function __construct(
         private DockerRunnerInterface $runner = new ProcessDockerRunner,
-        private PortProviderInterface $ports = new LsofPortProvider,
+        private PortProviderInterface $ports = new SystemPortProvider,
     ) {}
 
     public function analyze(DockerOptions $options): IssueCollection

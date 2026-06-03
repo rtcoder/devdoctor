@@ -11,7 +11,7 @@ use App\DevDoctor\Core\Severity;
 final readonly class PortsAnalyzer
 {
     public function __construct(
-        private PortProviderInterface $provider = new LsofPortProvider,
+        private PortProviderInterface $provider = new SystemPortProvider,
         private CommonPorts $commonPorts = new CommonPorts,
     ) {}
 
