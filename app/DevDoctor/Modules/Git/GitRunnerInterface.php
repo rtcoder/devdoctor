@@ -9,7 +9,7 @@ use App\DevDoctor\Core\ProcessResult;
 interface GitRunnerInterface
 {
     /**
-     * @param  list<string>  $arguments
+     * @param list<string> $arguments
      */
     public function run(array $arguments, string $workingDirectory): ProcessResult;
 }

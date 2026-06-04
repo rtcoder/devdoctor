@@ -13,14 +13,16 @@ final readonly class GitAnalyzer
 {
     public function __construct(
         private GitRunnerInterface $git = new ProcessGitRunner,
-    ) {}
+    )
+    {
+    }
 
     public function analyze(GitOptions $options): IssueCollection
     {
         $paths = PathResolver::fromBasePath($options->path);
         $issues = new IssueCollection;
 
-        if (! $this->isRepository($options->path)) {
+        if (!$this->isRepository($options->path)) {
             $issues->add(new Issue(
                 code: 'DD_GIT_NOT_REPOSITORY',
                 severity: Severity::INFO,
@@ -108,7 +110,7 @@ final readonly class GitAnalyzer
     {
         $upstream = $this->git->run(['rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{u}'], $options->path);
 
-        if (! $upstream->successful() || trim($upstream->stdout) === '') {
+        if (!$upstream->successful() || trim($upstream->stdout) === '') {
             $issues->add(new Issue(
                 code: 'DD_GIT_NO_UPSTREAM',
                 severity: $options->requireUpstream || $options->strict ? Severity::ERROR : Severity::WARNING,
@@ -121,13 +123,13 @@ final readonly class GitAnalyzer
 
         $aheadBehind = $this->git->run(['rev-list', '--left-right', '--count', 'HEAD...@{u}'], $options->path);
 
-        if (! $aheadBehind->successful()) {
+        if (!$aheadBehind->successful()) {
             return;
         }
 
         $parts = preg_split('/\s+/', trim($aheadBehind->stdout));
-        $ahead = (int) ($parts[0] ?? 0);
-        $behind = (int) ($parts[1] ?? 0);
+        $ahead = (int)($parts[0] ?? 0);
+        $behind = (int)($parts[1] ?? 0);
 
         if ($ahead === 0 && $behind === 0) {
             return;
@@ -160,7 +162,7 @@ final readonly class GitAnalyzer
     private function checkSensitiveFiles(IssueCollection $issues, GitOptions $options): void
     {
         foreach ($this->splitPaths($this->git->run(['ls-files', '-z'], $options->path)->stdout) as $file) {
-            if (! $this->isSensitivePath($file)) {
+            if (!$this->isSensitivePath($file)) {
                 continue;
             }
 
@@ -174,7 +176,7 @@ final readonly class GitAnalyzer
         }
 
         foreach ($this->untrackedFiles($options->path) as $file) {
-            if (! $this->isSensitivePath($file)) {
+            if (!$this->isSensitivePath($file)) {
                 continue;
             }
 
@@ -195,7 +197,7 @@ final readonly class GitAnalyzer
         foreach ($this->untrackedFiles($options->path) as $file) {
             $absolute = $paths->absolute($file);
 
-            if (! is_file($absolute) || filesize($absolute) <= $threshold) {
+            if (!is_file($absolute) || filesize($absolute) <= $threshold) {
                 continue;
             }
 
@@ -241,7 +243,7 @@ final readonly class GitAnalyzer
     {
         return array_values(array_filter(
             preg_split('/\R/', trim($status)) ?: [],
-            static fn (string $line): bool => $line !== '',
+            static fn(string $line): bool => $line !== '',
         ));
     }
 
@@ -250,10 +252,9 @@ final readonly class GitAnalyzer
      */
     private function splitPaths(string $paths): array
     {
-        return array_values(array_filter(
-            explode("\0", $paths),
-            static fn (string $path): bool => $path !== '',
-        ));
+        return explode("\0", $paths)
+                |> (fn($x) => array_filter($x, static fn(string $path): bool => $path !== ''))
+                |> array_values(...);
     }
 
     private function isSensitivePath(string $path): bool
@@ -272,7 +273,7 @@ final readonly class GitAnalyzer
             return 10 * 1024 * 1024;
         }
 
-        $bytes = (int) $matches[1];
+        $bytes = (int)$matches[1];
 
         return match (strtoupper($matches[2] ?? '')) {
             'K' => $bytes * 1024,

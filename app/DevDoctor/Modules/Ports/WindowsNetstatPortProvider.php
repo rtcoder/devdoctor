@@ -10,7 +10,9 @@ final readonly class WindowsNetstatPortProvider implements PortProviderInterface
 {
     public function __construct(
         private ProcessRunner $processRunner = new ProcessRunner,
-    ) {}
+    )
+    {
+    }
 
     public function available(): bool
     {
@@ -22,14 +24,17 @@ final readonly class WindowsNetstatPortProvider implements PortProviderInterface
     {
         $result = $this->processRunner->run(['netstat', '-ano', '-p', 'tcp'], getcwd());
 
-        if (! $result->successful()) {
+        if (!$result->successful()) {
             return [];
         }
 
-        return array_values(array_filter(array_map(
-            fn (string $line): ?PortUsage => $this->parseLine($line, $port),
-            array_filter(explode(PHP_EOL, trim($result->stdout))),
-        )));
+        return $result->stdout
+                |> trim(...)
+                |> (fn($x) => explode(PHP_EOL, $x))
+                |> array_filter(...)
+                |> (fn($x) => array_map(fn(string $line): ?PortUsage => $this->parseLine($line, $port), $x))
+                |> array_filter(...)
+                |> array_values(...);
     }
 
     private function parseLine(string $line, int $port): ?PortUsage
@@ -40,23 +45,23 @@ final readonly class WindowsNetstatPortProvider implements PortProviderInterface
             return null;
         }
 
-        if (strtoupper($parts[3]) !== 'LISTENING' || ! ctype_digit($parts[4])) {
+        if (strtoupper($parts[3]) !== 'LISTENING' || !ctype_digit($parts[4])) {
             return null;
         }
 
-        if (! $this->addressUsesPort($parts[1], $port)) {
+        if (!$this->addressUsesPort($parts[1], $port)) {
             return null;
         }
 
         return new PortUsage(
             port: $port,
-            process: new ProcessInfo((int) $parts[4], 'pid '.$parts[4]),
+            process: new ProcessInfo((int)$parts[4], 'pid ' . $parts[4]),
             address: $parts[1],
         );
     }
 
     private function addressUsesPort(string $address, int $port): bool
     {
-        return str_ends_with($address, ':'.$port);
+        return str_ends_with($address, ':' . $port);
     }
 }

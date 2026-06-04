@@ -40,7 +40,7 @@ final class SecretScanner
 
     public function isSuspicious(EnvEntry $entry): bool
     {
-        if (! $this->hasSensitiveKey($entry->key)) {
+        if (!$this->hasSensitiveKey($entry->key)) {
             return false;
         }
 
@@ -58,13 +58,7 @@ final class SecretScanner
 
     private function hasSensitiveKey(string $key): bool
     {
-        foreach ($this->sensitiveKeyParts as $part) {
-            if (str_contains(strtoupper($key), $part)) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($this->sensitiveKeyParts, fn($part) => str_contains(strtoupper($key), $part));
     }
 
     private function isPlaceholder(string $value): bool

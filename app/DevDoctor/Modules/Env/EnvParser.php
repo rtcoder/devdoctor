@@ -8,11 +8,11 @@ final class EnvParser
 {
     public function parseFile(string $path, string $displayPath): EnvFile
     {
-        if (! is_file($path)) {
+        if (!is_file($path)) {
             return EnvFile::missing($displayPath);
         }
 
-        return $this->parse((string) file_get_contents($path), $displayPath);
+        return $this->parse((string)file_get_contents($path), $displayPath);
     }
 
     public function parse(string $contents, string $displayPath): EnvFile
@@ -43,10 +43,13 @@ final class EnvParser
 
         if (str_starts_with($trimmed, 'export ')) {
             $exported = true;
-            $trimmed = trim(substr($trimmed, strlen('export ')));
+            $trimmed = 'export '
+                    |> strlen(...)
+                    |> (fn($x) => substr($trimmed, $x))
+                    |> trim(...);
         }
 
-        if (! str_contains($trimmed, '=')) {
+        if (!str_contains($trimmed, '=')) {
             return null;
         }
 

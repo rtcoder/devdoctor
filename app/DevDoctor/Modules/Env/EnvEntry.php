@@ -10,9 +10,11 @@ final readonly class EnvEntry
         public string $key,
         public string $value,
         public string $rawLine,
-        public int $line,
+        public int    $line,
         public string $file,
-        public bool $quoted = false,
-        public bool $exported = false,
-    ) {}
+        public bool   $quoted = false,
+        public bool   $exported = false,
+    )
+    {
+    }
 }

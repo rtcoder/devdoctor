@@ -11,7 +11,9 @@ final readonly class ProcessDockerRunner implements DockerRunnerInterface
 {
     public function __construct(
         private ProcessRunner $processRunner = new ProcessRunner,
-    ) {}
+    )
+    {
+    }
 
     public function run(array $command, string $workingDirectory): ProcessResult
     {

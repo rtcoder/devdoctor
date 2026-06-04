@@ -7,11 +7,13 @@ namespace App\DevDoctor\Modules\Ports;
 final readonly class SystemPortProvider implements PortProviderInterface
 {
     /**
-     * @param  list<PortProviderInterface>|null  $providers
+     * @param list<PortProviderInterface>|null $providers
      */
     public function __construct(
         private ?array $providers = null,
-    ) {}
+    )
+    {
+    }
 
     public function available(): bool
     {
