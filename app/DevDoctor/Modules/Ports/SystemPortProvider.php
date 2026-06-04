@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Modules\Ports;
+namespace DevDoctor\Modules\Ports;
 
-use App\DevDoctor\Core\Platform;
+use DevDoctor\Core\Platform;
 
 final readonly class SystemPortProvider implements PortProviderInterface
 {

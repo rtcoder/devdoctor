@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Support;
 
-use App\DevDoctor\Core\CommandAvailabilityInterface;
+use DevDoctor\Core\CommandAvailabilityInterface;
 
 final readonly class FakeCommandAvailability implements CommandAvailabilityInterface
 {

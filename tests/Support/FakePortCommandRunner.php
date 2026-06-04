@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Support;
 
-use App\DevDoctor\Core\ProcessResult;
-use App\DevDoctor\Modules\Ports\PortCommandRunnerInterface;
+use DevDoctor\Core\ProcessResult;
+use DevDoctor\Modules\Ports\PortCommandRunnerInterface;
 
 final readonly class FakePortCommandRunner implements PortCommandRunnerInterface
 {

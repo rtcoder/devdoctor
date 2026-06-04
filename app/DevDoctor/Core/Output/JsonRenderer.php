@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Core\Output;
+namespace DevDoctor\Core\Output;
 
-use App\DevDoctor\Core\ModuleResult;
-use App\DevDoctor\Core\ModuleStatus;
+use DevDoctor\Core\ModuleResult;
+use DevDoctor\Core\ModuleStatus;
 
 final class JsonRenderer
 {

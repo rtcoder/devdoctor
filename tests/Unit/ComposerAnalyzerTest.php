@@ -1,7 +1,7 @@
 <?php
 
-use App\DevDoctor\Modules\Composer\ComposerAnalyzer;
-use App\DevDoctor\Modules\Composer\ComposerOptions;
+use DevDoctor\Modules\Composer\ComposerAnalyzer;
+use DevDoctor\Modules\Composer\ComposerOptions;
 use Tests\Support\FakeCommandAvailability;
 
 function composerFixture(array $files): string

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Core\Output;
+namespace DevDoctor\Core\Output;
 
-use App\DevDoctor\Core\Issue;
-use App\DevDoctor\Core\IssueFingerprint;
-use App\DevDoctor\Core\ModuleResult;
-use App\DevDoctor\Core\Redactor;
-use App\DevDoctor\Core\Severity;
+use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueFingerprint;
+use DevDoctor\Core\ModuleResult;
+use DevDoctor\Core\Redactor;
+use DevDoctor\Core\Severity;
 
 final class SarifRenderer
 {

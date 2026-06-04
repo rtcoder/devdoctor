@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Modules\Env;
+namespace DevDoctor\Modules\Env;
 
 final class SecretScanner
 {

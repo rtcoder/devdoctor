@@ -1,6 +1,20 @@
 <?php
 
+use DevDoctor\Core\ProcessRunner;
 use Symfony\Component\Yaml\Yaml;
+
+it('uses the public Composer package identity and namespace', function () {
+    $root = dirname(__DIR__, 2);
+    $composer = json_decode((string) file_get_contents($root.'/composer.json'), true, flags: JSON_THROW_ON_ERROR);
+
+    expect($composer['name'])->toBe('rtcoder/devdoctor')
+        ->and($composer['homepage'])->toBe('https://github.com/rtcoder/devdoctor')
+        ->and($composer['autoload']['psr-4'])->toHaveKey('DevDoctor\\')
+        ->and($composer['autoload']['psr-4']['DevDoctor\\'])->toBe('app/')
+        ->and($composer['autoload']['psr-4'])->toHaveKey('DevDoctor\\Core\\')
+        ->and($composer['autoload']['psr-4'])->toHaveKey('DevDoctor\\Modules\\')
+        ->and($composer['autoload']['psr-4'])->not->toHaveKey('App\\');
+});
 
 it('ships valid JSON schema and Box configuration', function () {
     $root = dirname(__DIR__, 2);
@@ -12,6 +26,43 @@ it('ships valid JSON schema and Box configuration', function () {
         ->and($schema)->toBe($versionedSchema)
         ->and($schema['properties']['schema_version']['const'])->toBe('1.0')
         ->and($box['directories'])->toContain('app');
+});
+
+it('can be installed from a local path repository', function () {
+    $root = dirname(__DIR__, 2);
+    $workdir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'devdoctor-install-'.bin2hex(random_bytes(4));
+    mkdir($workdir);
+
+    file_put_contents($workdir.DIRECTORY_SEPARATOR.'composer.json', json_encode([
+        'repositories' => [
+            'packagist.org' => false,
+            [
+                'type' => 'path',
+                'url' => $root,
+                'options' => ['symlink' => false],
+            ],
+        ],
+        'require' => [
+            'rtcoder/devdoctor' => '*',
+        ],
+        'replace' => [
+            'laravel-zero/framework' => '*',
+            'symfony/yaml' => '*',
+        ],
+        'minimum-stability' => 'dev',
+        'prefer-stable' => true,
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+    $result = (new ProcessRunner)->run([
+        'composer',
+        'install',
+        '--no-interaction',
+        '--no-scripts',
+        '--ignore-platform-req=php',
+    ], $workdir, 120);
+
+    expect($result->successful())->toBeTrue($result->stderr)
+        ->and(is_file($workdir.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'bin'.DIRECTORY_SEPARATOR.'devdoctor'))->toBeTrue();
 });
 
 it('ships release workflow and composite action metadata', function () {
@@ -49,9 +100,9 @@ it('ships static documentation and pinned CI examples', function () {
         expect(is_file($root.'/'.$path))->toBeTrue($path);
     }
 
-    expect(file_get_contents($root.'/docs/examples/github-actions.yml'))->toContain('v0.14.0')
-        ->and(file_get_contents($root.'/docs/examples/gitlab-ci.yml'))->toContain('v0.14.0')
-        ->and(file_get_contents($root.'/docs/examples/bitbucket-pipelines.yml'))->toContain('v0.14.0');
+    expect(file_get_contents($root.'/docs/examples/github-actions.yml'))->toContain('v0.15.0')
+        ->and(file_get_contents($root.'/docs/examples/gitlab-ci.yml'))->toContain('v0.15.0')
+        ->and(file_get_contents($root.'/docs/examples/bitbucket-pipelines.yml'))->toContain('v0.15.0');
 });
 
 it('catalogs every issue code used by the application', function () {

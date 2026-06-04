@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Commands;
+namespace DevDoctor\Commands;
 
-use App\Commands\Concerns\RendersDiagnostics;
-use App\DevDoctor\Core\ModuleResult;
-use App\DevDoctor\Modules\Composer\ComposerAnalyzer;
-use App\DevDoctor\Modules\Composer\ComposerOptions;
+use DevDoctor\Commands\Concerns\RendersDiagnostics;
+use DevDoctor\Core\ModuleResult;
+use DevDoctor\Modules\Composer\ComposerAnalyzer;
+use DevDoctor\Modules\Composer\ComposerOptions;
 use LaravelZero\Framework\Commands\Command;
 
 final class ComposerCommand extends Command

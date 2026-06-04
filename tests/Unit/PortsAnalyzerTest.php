@@ -1,16 +1,16 @@
 <?php
 
-use App\DevDoctor\Core\Platform;
-use App\DevDoctor\Core\ProcessResult;
-use App\DevDoctor\Modules\Ports\LsofPortProvider;
-use App\DevDoctor\Modules\Ports\PortProviderInterface;
-use App\DevDoctor\Modules\Ports\PortsAnalyzer;
-use App\DevDoctor\Modules\Ports\PortsOptions;
-use App\DevDoctor\Modules\Ports\PortUsage;
-use App\DevDoctor\Modules\Ports\ProcessInfo;
-use App\DevDoctor\Modules\Ports\SsPortProvider;
-use App\DevDoctor\Modules\Ports\SystemPortProvider;
-use App\DevDoctor\Modules\Ports\WindowsNetstatPortProvider;
+use DevDoctor\Core\Platform;
+use DevDoctor\Core\ProcessResult;
+use DevDoctor\Modules\Ports\LsofPortProvider;
+use DevDoctor\Modules\Ports\PortProviderInterface;
+use DevDoctor\Modules\Ports\PortsAnalyzer;
+use DevDoctor\Modules\Ports\PortsOptions;
+use DevDoctor\Modules\Ports\PortUsage;
+use DevDoctor\Modules\Ports\ProcessInfo;
+use DevDoctor\Modules\Ports\SsPortProvider;
+use DevDoctor\Modules\Ports\SystemPortProvider;
+use DevDoctor\Modules\Ports\WindowsNetstatPortProvider;
 use Tests\Support\FakeCommandAvailability;
 use Tests\Support\FakePortCommandRunner;
 

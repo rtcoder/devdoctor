@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Commands;
+namespace DevDoctor\Commands;
 
-use App\DevDoctor\Core\Config\ConfigWizard;
-use App\DevDoctor\Core\ExitCode;
-use App\DevDoctor\Core\PathResolver;
+use DevDoctor\Core\Config\ConfigWizard;
+use DevDoctor\Core\ExitCode;
+use DevDoctor\Core\PathResolver;
 use LaravelZero\Framework\Commands\Command;
 
 final class InitCommand extends Command

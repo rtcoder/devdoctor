@@ -1,11 +1,11 @@
 <?php
 
-use App\DevDoctor\Core\Baseline\BaselineManager;
-use App\DevDoctor\Core\Baseline\InvalidBaseline;
-use App\DevDoctor\Core\Issue;
-use App\DevDoctor\Core\IssueCollection;
-use App\DevDoctor\Core\ModuleResult;
-use App\DevDoctor\Core\Severity;
+use DevDoctor\Core\Baseline\BaselineManager;
+use DevDoctor\Core\Baseline\InvalidBaseline;
+use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleResult;
+use DevDoctor\Core\Severity;
 
 it('writes and applies warning and error fingerprints', function () {
     $path = sys_get_temp_dir().'/devdoctor-baseline-'.bin2hex(random_bytes(4)).'.json';

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Modules\Presets;
+namespace DevDoctor\Modules\Presets;
 
-use App\DevDoctor\Core\Issue;
-use App\DevDoctor\Core\IssueCollection;
-use App\DevDoctor\Core\Severity;
+use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\Severity;
 
 final readonly class PresetsAnalyzer
 {

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Core\Baseline;
+namespace DevDoctor\Core\Baseline;
 
-use App\DevDoctor\Core\Issue;
-use App\DevDoctor\Core\IssueCollection;
-use App\DevDoctor\Core\IssueFingerprint;
-use App\DevDoctor\Core\ModuleResult;
-use App\DevDoctor\Core\Severity;
+use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\IssueFingerprint;
+use DevDoctor\Core\ModuleResult;
+use DevDoctor\Core\Severity;
 use JsonException;
 
 final class BaselineManager

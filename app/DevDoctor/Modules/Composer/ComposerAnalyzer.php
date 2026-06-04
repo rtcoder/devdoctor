@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Modules\Composer;
+namespace DevDoctor\Modules\Composer;
 
-use App\DevDoctor\Core\CommandAvailability;
-use App\DevDoctor\Core\CommandAvailabilityInterface;
-use App\DevDoctor\Core\Issue;
-use App\DevDoctor\Core\IssueCollection;
-use App\DevDoctor\Core\PathResolver;
-use App\DevDoctor\Core\ProcessRunner;
-use App\DevDoctor\Core\Severity;
+use DevDoctor\Core\CommandAvailability;
+use DevDoctor\Core\CommandAvailabilityInterface;
+use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\PathResolver;
+use DevDoctor\Core\ProcessRunner;
+use DevDoctor\Core\Severity;
 use JsonException;
 
 final readonly class ComposerAnalyzer

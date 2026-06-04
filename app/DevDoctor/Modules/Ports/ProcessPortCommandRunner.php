@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Modules\Ports;
+namespace DevDoctor\Modules\Ports;
 
-use App\DevDoctor\Core\ProcessResult;
-use App\DevDoctor\Core\ProcessRunner;
+use DevDoctor\Core\ProcessResult;
+use DevDoctor\Core\ProcessRunner;
 
 final readonly class ProcessPortCommandRunner implements PortCommandRunnerInterface
 {

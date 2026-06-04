@@ -1,14 +1,14 @@
 <?php
 
-use App\DevDoctor\Core\CommandAvailabilityInterface;
-use App\DevDoctor\Core\IssueCollection;
-use App\DevDoctor\Core\ProcessResult;
-use App\DevDoctor\Modules\Docker\DockerAnalyzer;
-use App\DevDoctor\Modules\Docker\DockerOptions;
-use App\DevDoctor\Modules\Docker\DockerRunnerInterface;
-use App\DevDoctor\Modules\Ports\PortProviderInterface;
-use App\DevDoctor\Modules\Ports\PortUsage;
-use App\DevDoctor\Modules\Ports\ProcessInfo;
+use DevDoctor\Core\CommandAvailabilityInterface;
+use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ProcessResult;
+use DevDoctor\Modules\Docker\DockerAnalyzer;
+use DevDoctor\Modules\Docker\DockerOptions;
+use DevDoctor\Modules\Docker\DockerRunnerInterface;
+use DevDoctor\Modules\Ports\PortProviderInterface;
+use DevDoctor\Modules\Ports\PortUsage;
+use DevDoctor\Modules\Ports\ProcessInfo;
 use Tests\Support\FakeCommandAvailability;
 
 it('does not require docker when no compose file exists', function () {

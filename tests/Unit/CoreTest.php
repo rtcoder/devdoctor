@@ -1,18 +1,18 @@
 <?php
 
-use App\DevDoctor\Core\ExitCode;
-use App\DevDoctor\Core\FixSuggestion;
-use App\DevDoctor\Core\Issue;
-use App\DevDoctor\Core\IssueCollection;
-use App\DevDoctor\Core\ModuleResult;
-use App\DevDoctor\Core\Output\JsonRenderer;
-use App\DevDoctor\Core\Output\SarifRenderer;
-use App\DevDoctor\Core\Output\TableRenderer;
-use App\DevDoctor\Core\PathResolver;
-use App\DevDoctor\Core\Platform;
-use App\DevDoctor\Core\ProcessRunner;
-use App\DevDoctor\Core\Redactor;
-use App\DevDoctor\Core\Severity;
+use DevDoctor\Core\ExitCode;
+use DevDoctor\Core\FixSuggestion;
+use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleResult;
+use DevDoctor\Core\Output\JsonRenderer;
+use DevDoctor\Core\Output\SarifRenderer;
+use DevDoctor\Core\Output\TableRenderer;
+use DevDoctor\Core\PathResolver;
+use DevDoctor\Core\Platform;
+use DevDoctor\Core\ProcessRunner;
+use DevDoctor\Core\Redactor;
+use DevDoctor\Core\Severity;
 
 it('summarizes issues and maps exit codes', function () {
     $issues = new IssueCollection([

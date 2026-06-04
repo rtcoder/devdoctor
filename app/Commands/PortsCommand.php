@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Commands;
+namespace DevDoctor\Commands;
 
-use App\Commands\Concerns\RendersDiagnostics;
-use App\DevDoctor\Core\ModuleResult;
-use App\DevDoctor\Modules\Ports\PortsAnalyzer;
-use App\DevDoctor\Modules\Ports\PortsOptions;
+use DevDoctor\Commands\Concerns\RendersDiagnostics;
+use DevDoctor\Core\ModuleResult;
+use DevDoctor\Modules\Ports\PortsAnalyzer;
+use DevDoctor\Modules\Ports\PortsOptions;
 use LaravelZero\Framework\Commands\Command;
 
 final class PortsCommand extends Command

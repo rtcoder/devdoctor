@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Modules\Ports;
+namespace DevDoctor\Modules\Ports;
 
-use App\DevDoctor\Core\CommandAvailability;
-use App\DevDoctor\Core\CommandAvailabilityInterface;
-use App\DevDoctor\Core\Platform;
+use DevDoctor\Core\CommandAvailability;
+use DevDoctor\Core\CommandAvailabilityInterface;
+use DevDoctor\Core\Platform;
 
 final readonly class LsofPortProvider implements PortProviderInterface
 {

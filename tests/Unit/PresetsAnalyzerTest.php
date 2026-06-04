@@ -1,6 +1,6 @@
 <?php
 
-use App\DevDoctor\Modules\Presets\PresetsAnalyzer;
+use DevDoctor\Modules\Presets\PresetsAnalyzer;
 
 function presetsFixture(array $files): string
 {

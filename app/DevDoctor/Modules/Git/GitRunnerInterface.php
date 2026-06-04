@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Modules\Git;
+namespace DevDoctor\Modules\Git;
 
-use App\DevDoctor\Core\ProcessResult;
+use DevDoctor\Core\ProcessResult;
 
 interface GitRunnerInterface
 {

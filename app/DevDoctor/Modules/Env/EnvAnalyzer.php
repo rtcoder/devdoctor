@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Modules\Env;
+namespace DevDoctor\Modules\Env;
 
-use App\DevDoctor\Core\Issue;
-use App\DevDoctor\Core\IssueCollection;
-use App\DevDoctor\Core\PathResolver;
-use App\DevDoctor\Core\Redactor;
-use App\DevDoctor\Core\Severity;
+use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\PathResolver;
+use DevDoctor\Core\Redactor;
+use DevDoctor\Core\Severity;
 
 final readonly class EnvAnalyzer
 {

@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Commands;
+namespace DevDoctor\Commands;
 
-use App\Commands\Concerns\RendersDiagnostics;
-use App\DevDoctor\Core\Config\ConfigLoader;
-use App\DevDoctor\Core\Config\InvalidDevDoctorConfig;
-use App\DevDoctor\Core\ExitCode;
-use App\DevDoctor\Core\Issue;
-use App\DevDoctor\Core\IssueCollection;
-use App\DevDoctor\Core\ModuleResult;
-use App\DevDoctor\Core\PathResolver;
-use App\DevDoctor\Core\Severity;
-use App\DevDoctor\Modules\Env\EnvAnalysisOptions;
-use App\DevDoctor\Modules\Env\EnvAnalyzer;
+use DevDoctor\Commands\Concerns\RendersDiagnostics;
+use DevDoctor\Core\Config\ConfigLoader;
+use DevDoctor\Core\Config\InvalidDevDoctorConfig;
+use DevDoctor\Core\ExitCode;
+use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleResult;
+use DevDoctor\Core\PathResolver;
+use DevDoctor\Core\Severity;
+use DevDoctor\Modules\Env\EnvAnalysisOptions;
+use DevDoctor\Modules\Env\EnvAnalyzer;
 use LaravelZero\Framework\Commands\Command;
 
 final class EnvCommand extends Command

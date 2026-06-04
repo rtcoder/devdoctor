@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Commands;
+namespace DevDoctor\Commands;
 
-use App\Commands\Concerns\RendersDiagnostics;
-use App\DevDoctor\Core\ModuleResult;
-use App\DevDoctor\Modules\Docker\DockerAnalyzer;
-use App\DevDoctor\Modules\Docker\DockerOptions;
+use DevDoctor\Commands\Concerns\RendersDiagnostics;
+use DevDoctor\Core\ModuleResult;
+use DevDoctor\Modules\Docker\DockerAnalyzer;
+use DevDoctor\Modules\Docker\DockerOptions;
 use LaravelZero\Framework\Commands\Command;
 
 final class DockerCommand extends Command

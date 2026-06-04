@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Core;
+namespace DevDoctor\Core;
 
 use Symfony\Component\Process\ExecutableFinder;
 

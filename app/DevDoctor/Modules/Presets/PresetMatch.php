@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Modules\Presets;
+namespace DevDoctor\Modules\Presets;
 
 final readonly class PresetMatch
 {

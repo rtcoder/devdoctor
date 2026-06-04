@@ -2,30 +2,30 @@
 
 declare(strict_types=1);
 
-namespace App\Commands;
+namespace DevDoctor\Commands;
 
-use App\Commands\Concerns\RendersDiagnostics;
-use App\DevDoctor\Core\Baseline\BaselineManager;
-use App\DevDoctor\Core\Baseline\InvalidBaseline;
-use App\DevDoctor\Core\Config\ConfigLoader;
-use App\DevDoctor\Core\Config\InvalidDevDoctorConfig;
-use App\DevDoctor\Core\ExitCode;
-use App\DevDoctor\Core\Issue;
-use App\DevDoctor\Core\IssueCollection;
-use App\DevDoctor\Core\ModuleResult;
-use App\DevDoctor\Core\PathResolver;
-use App\DevDoctor\Core\Severity;
-use App\DevDoctor\Modules\Composer\ComposerAnalyzer;
-use App\DevDoctor\Modules\Composer\ComposerOptions;
-use App\DevDoctor\Modules\Docker\DockerAnalyzer;
-use App\DevDoctor\Modules\Docker\DockerOptions;
-use App\DevDoctor\Modules\Env\EnvAnalysisOptions;
-use App\DevDoctor\Modules\Env\EnvAnalyzer;
-use App\DevDoctor\Modules\Git\GitAnalyzer;
-use App\DevDoctor\Modules\Git\GitOptions;
-use App\DevDoctor\Modules\Ports\PortsAnalyzer;
-use App\DevDoctor\Modules\Ports\PortsOptions;
-use App\DevDoctor\Modules\Presets\PresetsAnalyzer;
+use DevDoctor\Commands\Concerns\RendersDiagnostics;
+use DevDoctor\Core\Baseline\BaselineManager;
+use DevDoctor\Core\Baseline\InvalidBaseline;
+use DevDoctor\Core\Config\ConfigLoader;
+use DevDoctor\Core\Config\InvalidDevDoctorConfig;
+use DevDoctor\Core\ExitCode;
+use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleResult;
+use DevDoctor\Core\PathResolver;
+use DevDoctor\Core\Severity;
+use DevDoctor\Modules\Composer\ComposerAnalyzer;
+use DevDoctor\Modules\Composer\ComposerOptions;
+use DevDoctor\Modules\Docker\DockerAnalyzer;
+use DevDoctor\Modules\Docker\DockerOptions;
+use DevDoctor\Modules\Env\EnvAnalysisOptions;
+use DevDoctor\Modules\Env\EnvAnalyzer;
+use DevDoctor\Modules\Git\GitAnalyzer;
+use DevDoctor\Modules\Git\GitOptions;
+use DevDoctor\Modules\Ports\PortsAnalyzer;
+use DevDoctor\Modules\Ports\PortsOptions;
+use DevDoctor\Modules\Presets\PresetsAnalyzer;
 use LaravelZero\Framework\Commands\Command;
 
 final class CiCommand extends Command

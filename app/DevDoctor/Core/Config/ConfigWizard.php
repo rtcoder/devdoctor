@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Core\Config;
+namespace DevDoctor\Core\Config;
 
-use App\DevDoctor\Core\PathResolver;
-use App\DevDoctor\Modules\Env\EnvEntry;
-use App\DevDoctor\Modules\Env\EnvParser;
-use App\DevDoctor\Modules\Presets\PresetDetector;
+use DevDoctor\Core\PathResolver;
+use DevDoctor\Modules\Env\EnvEntry;
+use DevDoctor\Modules\Env\EnvParser;
+use DevDoctor\Modules\Presets\PresetDetector;
 use Symfony\Component\Yaml\Yaml;
 
 final readonly class ConfigWizard

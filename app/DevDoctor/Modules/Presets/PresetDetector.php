@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Modules\Presets;
+namespace DevDoctor\Modules\Presets;
 
-use App\DevDoctor\Core\PathResolver;
+use DevDoctor\Core\PathResolver;
 use JsonException;
 
 final readonly class PresetDetector

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Modules\Git;
+namespace DevDoctor\Modules\Git;
 
-use App\DevDoctor\Core\CommandAvailability;
-use App\DevDoctor\Core\CommandAvailabilityInterface;
-use App\DevDoctor\Core\Issue;
-use App\DevDoctor\Core\IssueCollection;
-use App\DevDoctor\Core\PathResolver;
-use App\DevDoctor\Core\Severity;
+use DevDoctor\Core\CommandAvailability;
+use DevDoctor\Core\CommandAvailabilityInterface;
+use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\PathResolver;
+use DevDoctor\Core\Severity;
 
 final readonly class GitAnalyzer
 {

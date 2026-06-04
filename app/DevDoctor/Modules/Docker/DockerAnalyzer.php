@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Modules\Docker;
+namespace DevDoctor\Modules\Docker;
 
-use App\DevDoctor\Core\CommandAvailability;
-use App\DevDoctor\Core\CommandAvailabilityInterface;
-use App\DevDoctor\Core\Issue;
-use App\DevDoctor\Core\IssueCollection;
-use App\DevDoctor\Core\PathResolver;
-use App\DevDoctor\Core\Severity;
-use App\DevDoctor\Modules\Ports\PortProviderInterface;
-use App\DevDoctor\Modules\Ports\SystemPortProvider;
+use DevDoctor\Core\CommandAvailability;
+use DevDoctor\Core\CommandAvailabilityInterface;
+use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\PathResolver;
+use DevDoctor\Core\Severity;
+use DevDoctor\Modules\Ports\PortProviderInterface;
+use DevDoctor\Modules\Ports\SystemPortProvider;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 

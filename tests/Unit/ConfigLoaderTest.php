@@ -1,7 +1,7 @@
 <?php
 
-use App\DevDoctor\Core\Config\ConfigLoader;
-use App\DevDoctor\Core\Config\InvalidDevDoctorConfig;
+use DevDoctor\Core\Config\ConfigLoader;
+use DevDoctor\Core\Config\InvalidDevDoctorConfig;
 
 it('loads env config from devdoctor yaml', function () {
     $path = sys_get_temp_dir().'/devdoctor-config-'.bin2hex(random_bytes(4));

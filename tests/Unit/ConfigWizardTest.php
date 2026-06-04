@@ -1,6 +1,6 @@
 <?php
 
-use App\DevDoctor\Core\Config\ConfigWizard;
+use DevDoctor\Core\Config\ConfigWizard;
 
 function wizardFixture(array $files): string
 {

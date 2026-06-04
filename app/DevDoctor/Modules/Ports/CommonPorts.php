@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Modules\Ports;
+namespace DevDoctor\Modules\Ports;
 
 final class CommonPorts
 {

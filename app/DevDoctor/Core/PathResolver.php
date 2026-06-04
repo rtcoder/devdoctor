@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Core;
+namespace DevDoctor\Core;
 
 final readonly class PathResolver
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Core\Config;
+namespace DevDoctor\Core\Config;
 
 final readonly class DevDoctorConfig
 {

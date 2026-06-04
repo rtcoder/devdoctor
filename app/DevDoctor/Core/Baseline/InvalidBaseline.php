@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Core\Baseline;
+namespace DevDoctor\Core\Baseline;
 
 use RuntimeException;
 

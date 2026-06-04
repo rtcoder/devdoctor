@@ -1,13 +1,13 @@
 {
-    "name": "devdoctor/devdoctor",
+    "name": "rtcoder/devdoctor",
     "description": "Developer diagnostics for humans.",
     "keywords": ["diagnostics", "cli", "developer-tools", "env", "docker", "composer", "git"],
-    "homepage": "https://github.com/devdoctor/devdoctor",
+    "homepage": "https://github.com/rtcoder/devdoctor",
     "type": "project",
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/devdoctor/devdoctor/issues",
-        "source": "https://github.com/devdoctor/devdoctor"
+        "issues": "https://github.com/rtcoder/devdoctor/issues",
+        "source": "https://github.com/rtcoder/devdoctor"
     },
     "authors": [],
     "require": {
@@ -22,7 +22,11 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/",
+            "DevDoctor\\": "app/",
+            "DevDoctor\\Core\\": "app/DevDoctor/Core/",
+            "DevDoctor\\Modules\\": "app/DevDoctor/Modules/",
+            "DevDoctor\\Commands\\": "app/Commands/",
+            "DevDoctor\\Providers\\": "app/Providers/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }
@@ -42,7 +46,7 @@
     },
     "extra": {
         "devdoctor": {
-            "version": "0.14.0"
+            "version": "0.15.0"
         }
     },
     "minimum-stability": "stable",

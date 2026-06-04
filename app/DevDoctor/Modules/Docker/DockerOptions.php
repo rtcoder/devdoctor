@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Modules\Docker;
+namespace DevDoctor\Modules\Docker;
 
 final readonly class DockerOptions
 {

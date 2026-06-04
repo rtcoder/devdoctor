@@ -1,6 +1,6 @@
 <?php
 
-use App\DevDoctor\Modules\Env\EnvParser;
+use DevDoctor\Modules\Env\EnvParser;
 
 it('parses simple key value pairs', function () {
     $file = (new EnvParser)->parse("APP_ENV=local\nAPP_DEBUG=true\n", '.env');

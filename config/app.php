@@ -1,6 +1,6 @@
 <?php
 
-use App\Providers\AppServiceProvider;
+use DevDoctor\Providers\AppServiceProvider;
 
 return [
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Core\Output;
+namespace DevDoctor\Core\Output;
 
 enum OutputFormat: string
 {

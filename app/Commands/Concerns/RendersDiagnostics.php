@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Commands\Concerns;
+namespace DevDoctor\Commands\Concerns;
 
-use App\DevDoctor\Core\ExitCode;
-use App\DevDoctor\Core\ModuleResult;
-use App\DevDoctor\Core\Output\JsonRenderer;
-use App\DevDoctor\Core\Output\OutputFormat;
-use App\DevDoctor\Core\Output\SarifRenderer;
-use App\DevDoctor\Core\Output\TableRenderer;
+use DevDoctor\Core\ExitCode;
+use DevDoctor\Core\ModuleResult;
+use DevDoctor\Core\Output\JsonRenderer;
+use DevDoctor\Core\Output\OutputFormat;
+use DevDoctor\Core\Output\SarifRenderer;
+use DevDoctor\Core\Output\TableRenderer;
 
 trait RendersDiagnostics
 {

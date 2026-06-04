@@ -1,11 +1,11 @@
 <?php
 
-use App\DevDoctor\Core\CommandAvailabilityInterface;
-use App\DevDoctor\Core\IssueCollection;
-use App\DevDoctor\Core\ProcessResult;
-use App\DevDoctor\Modules\Git\GitAnalyzer;
-use App\DevDoctor\Modules\Git\GitOptions;
-use App\DevDoctor\Modules\Git\GitRunnerInterface;
+use DevDoctor\Core\CommandAvailabilityInterface;
+use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ProcessResult;
+use DevDoctor\Modules\Git\GitAnalyzer;
+use DevDoctor\Modules\Git\GitOptions;
+use DevDoctor\Modules\Git\GitRunnerInterface;
 use Tests\Support\FakeCommandAvailability;
 
 it('reports a missing git binary', function () {

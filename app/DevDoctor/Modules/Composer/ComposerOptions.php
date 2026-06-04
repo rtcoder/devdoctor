@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Modules\Composer;
+namespace DevDoctor\Modules\Composer;
 
 final readonly class ComposerOptions
 {

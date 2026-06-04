@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\DevDoctor\Modules\Ports;
+namespace DevDoctor\Modules\Ports;
 
-use App\DevDoctor\Core\Issue;
-use App\DevDoctor\Core\IssueCollection;
-use App\DevDoctor\Core\Platform;
-use App\DevDoctor\Core\Severity;
+use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\Platform;
+use DevDoctor\Core\Severity;
 
 final readonly class PortsAnalyzer
 {

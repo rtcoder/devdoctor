@@ -1,8 +1,8 @@
 <?php
 
-use App\DevDoctor\Core\Severity;
-use App\DevDoctor\Modules\Env\EnvAnalysisOptions;
-use App\DevDoctor\Modules\Env\EnvAnalyzer;
+use DevDoctor\Core\Severity;
+use DevDoctor\Modules\Env\EnvAnalysisOptions;
+use DevDoctor\Modules\Env\EnvAnalyzer;
 
 function envFixture(array $files): string
 {
