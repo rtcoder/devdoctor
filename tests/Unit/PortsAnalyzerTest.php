@@ -1,11 +1,18 @@
 <?php
 
+use App\DevDoctor\Core\Platform;
+use App\DevDoctor\Core\ProcessResult;
+use App\DevDoctor\Modules\Ports\LsofPortProvider;
 use App\DevDoctor\Modules\Ports\PortProviderInterface;
 use App\DevDoctor\Modules\Ports\PortsAnalyzer;
 use App\DevDoctor\Modules\Ports\PortsOptions;
 use App\DevDoctor\Modules\Ports\PortUsage;
 use App\DevDoctor\Modules\Ports\ProcessInfo;
+use App\DevDoctor\Modules\Ports\SsPortProvider;
 use App\DevDoctor\Modules\Ports\SystemPortProvider;
+use App\DevDoctor\Modules\Ports\WindowsNetstatPortProvider;
+use Tests\Support\FakeCommandAvailability;
+use Tests\Support\FakePortCommandRunner;
 
 final class FakePortProvider implements PortProviderInterface
 {
@@ -38,12 +45,20 @@ it('reports no issue for a free port', function () {
 it('reports occupied ports with safe kill suggestion', function () {
     $issues = (new PortsAnalyzer(new FakePortProvider(usages: [
         8000 => [new PortUsage(8000, new ProcessInfo(1234, 'php'))],
-    ])))->analyze(new PortsOptions(path: '.', ports: [8000]));
+    ]), platform: Platform::LINUX))->analyze(new PortsOptions(path: '.', ports: [8000]));
 
     $issue = $issues->all()[0];
 
     expect($issue->code)->toBe('DD_PORT_IN_USE')
         ->and($issue->context['suggested_command'])->toBe('kill -TERM 1234');
+});
+
+it('uses a windows taskkill suggestion on windows', function () {
+    $issues = (new PortsAnalyzer(new FakePortProvider(usages: [
+        8000 => [new PortUsage(8000, new ProcessInfo(1234, 'php'))],
+    ]), platform: Platform::WINDOWS))->analyze(new PortsOptions(path: '.', ports: [8000]));
+
+    expect($issues->all()[0]->context['suggested_command'])->toBe('taskkill /PID 1234');
 });
 
 it('reports invalid ports without querying providers', function () {
@@ -99,4 +114,48 @@ it('reports unavailable when no system port provider is available', function () 
 
     expect($provider->available())->toBeFalse()
         ->and($provider->usages(3000))->toBe([]);
+});
+
+it('parses lsof listeners', function () {
+    $runner = new FakePortCommandRunner([
+        'lsof -nP -iTCP:8000 -sTCP:LISTEN' => new ProcessResult(
+            0,
+            "COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME\nphp 1234 user 10u IPv4 0t0 TCP *:8000 (LISTEN)\n",
+            '',
+        ),
+    ]);
+    $provider = new LsofPortProvider($runner, new FakeCommandAvailability(['lsof']), Platform::MACOS);
+
+    expect($provider->available())->toBeTrue()
+        ->and($provider->usages(8000)[0]->process->pid)->toBe(1234)
+        ->and($provider->usages(8000)[0]->process->command)->toBe('php');
+});
+
+it('parses ss listeners', function () {
+    $runner = new FakePortCommandRunner([
+        'ss -ltnp sport = :3000' => new ProcessResult(
+            0,
+            "State Recv-Q Send-Q Local Address:Port Peer Address:Port Process\nLISTEN 0 511 *:3000 *:* users:((\"node\",pid=2345,fd=20))\n",
+            '',
+        ),
+    ]);
+    $provider = new SsPortProvider($runner, new FakeCommandAvailability(['ss']), Platform::LINUX);
+
+    expect($provider->available())->toBeTrue()
+        ->and($provider->usages(3000)[0]->process->pid)->toBe(2345)
+        ->and($provider->usages(3000)[0]->process->command)->toBe('node');
+});
+
+it('parses windows netstat listeners', function () {
+    $runner = new FakePortCommandRunner([
+        'netstat -ano -p tcp' => new ProcessResult(
+            0,
+            "  Proto  Local Address          Foreign Address        State           PID\r\n  TCP    0.0.0.0:5173           0.0.0.0:0              LISTENING       3456\r\n",
+            '',
+        ),
+    ]);
+    $provider = new WindowsNetstatPortProvider($runner, new FakeCommandAvailability(['netstat']), Platform::WINDOWS);
+
+    expect($provider->available())->toBeTrue()
+        ->and($provider->usages(5173)[0]->process->pid)->toBe(3456);
 });

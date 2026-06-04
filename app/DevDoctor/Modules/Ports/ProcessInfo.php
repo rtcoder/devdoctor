@@ -7,9 +7,7 @@ namespace App\DevDoctor\Modules\Ports;
 final readonly class ProcessInfo
 {
     public function __construct(
-        public int    $pid,
+        public int $pid,
         public string $command,
-    )
-    {
-    }
+    ) {}
 }

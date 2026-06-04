@@ -7,6 +7,7 @@ use App\DevDoctor\Core\ModuleResult;
 use App\DevDoctor\Core\Output\JsonRenderer;
 use App\DevDoctor\Core\Output\TableRenderer;
 use App\DevDoctor\Core\PathResolver;
+use App\DevDoctor\Core\Platform;
 use App\DevDoctor\Core\ProcessRunner;
 use App\DevDoctor\Core\Redactor;
 use App\DevDoctor\Core\Severity;
@@ -93,4 +94,11 @@ it('reports process timeouts', function () {
 
     expect($result->successful())->toBeFalse()
         ->and($result->timedOut)->toBeTrue();
+});
+
+it('maps operating system families to platforms', function () {
+    expect(Platform::fromOsFamily('Linux'))->toBe(Platform::LINUX)
+        ->and(Platform::fromOsFamily('Darwin'))->toBe(Platform::MACOS)
+        ->and(Platform::fromOsFamily('Windows'))->toBe(Platform::WINDOWS)
+        ->and(Platform::fromOsFamily('SomethingElse'))->toBe(Platform::OTHER);
 });

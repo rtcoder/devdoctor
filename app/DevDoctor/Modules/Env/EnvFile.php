@@ -7,15 +7,13 @@ namespace App\DevDoctor\Modules\Env;
 final readonly class EnvFile
 {
     /**
-     * @param list<EnvEntry> $entries
+     * @param  list<EnvEntry>  $entries
      */
     public function __construct(
         public string $path,
-        public array  $entries,
-        public bool   $exists = true,
-    )
-    {
-    }
+        public array $entries,
+        public bool $exists = true,
+    ) {}
 
     public static function missing(string $path): self
     {
@@ -29,7 +27,7 @@ final readonly class EnvFile
 
     public function get(string $key): ?EnvEntry
     {
-        return array_find($this->entries, fn($entry) => $entry->key === $key);
+        return array_find($this->entries, fn ($entry) => $entry->key === $key);
     }
 
     /**
@@ -37,12 +35,10 @@ final readonly class EnvFile
      */
     public function keys(): array
     {
-        return array_map(
-                static fn(EnvEntry $entry): string => $entry->key,
-                $this->entries,
-            )
-                |> array_unique(...)
-                |> array_values(...);
+        return array_values(array_unique(array_map(
+            static fn (EnvEntry $entry): string => $entry->key,
+            $this->entries,
+        )));
     }
 
     /**
@@ -58,7 +54,7 @@ final readonly class EnvFile
 
         return array_filter(
             $byKey,
-            static fn(array $entries): bool => count($entries) > 1,
+            static fn (array $entries): bool => count($entries) > 1,
         );
     }
 }

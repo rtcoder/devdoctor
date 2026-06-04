@@ -6,16 +6,16 @@ namespace App\DevDoctor\Modules\Ports;
 
 use App\DevDoctor\Core\Issue;
 use App\DevDoctor\Core\IssueCollection;
+use App\DevDoctor\Core\Platform;
 use App\DevDoctor\Core\Severity;
 
 final readonly class PortsAnalyzer
 {
     public function __construct(
         private PortProviderInterface $provider = new SystemPortProvider,
-        private CommonPorts           $commonPorts = new CommonPorts,
-    )
-    {
-    }
+        private CommonPorts $commonPorts = new CommonPorts,
+        private Platform $platform = Platform::OTHER,
+    ) {}
 
     public function analyze(PortsOptions $options): IssueCollection
     {
@@ -26,7 +26,7 @@ final readonly class PortsAnalyzer
             return $issues;
         }
 
-        if (!$this->provider->available()) {
+        if (! $this->provider->available()) {
             $issues->add(new Issue(
                 code: 'DD_PORT_PROVIDER_UNAVAILABLE',
                 severity: Severity::WARNING,
@@ -42,7 +42,7 @@ final readonly class PortsAnalyzer
                 $issues->add(new Issue(
                     code: 'DD_PORT_PRIVILEGED',
                     severity: Severity::INFO,
-                    message: 'Port ' . $port . ' may require elevated permissions to bind',
+                    message: 'Port '.$port.' may require elevated permissions to bind',
                     module: 'ports',
                     context: ['port' => $port],
                 ));
@@ -54,24 +54,30 @@ final readonly class PortsAnalyzer
                 $issues->add(new Issue(
                     code: 'DD_PORT_MULTIPLE_LISTENERS',
                     severity: $options->strict ? Severity::ERROR : Severity::WARNING,
-                    message: 'Port ' . $port . ' has multiple listeners',
+                    message: 'Port '.$port.' has multiple listeners',
                     module: 'ports',
                     context: ['port' => $port],
                 ));
             }
 
             foreach ($usages as $usage) {
+                $context = [
+                    'port' => $port,
+                    'pid' => $usage->process->pid,
+                    'command' => $usage->process->command,
+                ];
+                $suggestion = $this->terminationSuggestion($usage->process->pid);
+
+                if ($suggestion !== null) {
+                    $context['suggested_command'] = $suggestion;
+                }
+
                 $issues->add(new Issue(
                     code: 'DD_PORT_IN_USE',
                     severity: $options->strict ? Severity::ERROR : Severity::WARNING,
-                    message: 'Port ' . $port . ' is used by ' . $usage->process->command . ' (PID ' . $usage->process->pid . ')',
+                    message: 'Port '.$port.' is used by '.$usage->process->command.' (PID '.$usage->process->pid.')',
                     module: 'ports',
-                    context: [
-                        'port' => $port,
-                        'pid' => $usage->process->pid,
-                        'command' => $usage->process->command,
-                        'suggested_command' => 'kill -TERM ' . $usage->process->pid,
-                    ],
+                    context: $context,
                 ));
             }
         }
@@ -89,7 +95,7 @@ final readonly class PortsAnalyzer
     }
 
     /**
-     * @param list<int|string> $ports
+     * @param  list<int|string>  $ports
      * @return list<int>
      */
     private function normalizePorts(array $ports, IssueCollection $issues): array
@@ -97,11 +103,11 @@ final readonly class PortsAnalyzer
         $normalized = [];
 
         foreach ($ports as $port) {
-            if (!is_numeric($port) || (string)(int)$port !== (string)$port || (int)$port < 1 || (int)$port > 65535) {
+            if (! is_numeric($port) || (string) (int) $port !== (string) $port || (int) $port < 1 || (int) $port > 65535) {
                 $issues->add(new Issue(
                     code: 'DD_PORT_INVALID_PORT',
                     severity: Severity::WARNING,
-                    message: 'Port ' . $port . ' is not a valid TCP port',
+                    message: 'Port '.$port.' is not a valid TCP port',
                     module: 'ports',
                     context: ['port' => $port],
                 ));
@@ -109,9 +115,24 @@ final readonly class PortsAnalyzer
                 continue;
             }
 
-            $normalized[] = (int)$port;
+            $normalized[] = (int) $port;
         }
 
         return array_values(array_unique($normalized));
+    }
+
+    private function terminationSuggestion(int $pid): ?string
+    {
+        if ($pid <= 0) {
+            return null;
+        }
+
+        $platform = $this->platform === Platform::OTHER ? Platform::current() : $this->platform;
+
+        return match ($platform) {
+            Platform::WINDOWS => 'taskkill /PID '.$pid,
+            Platform::LINUX, Platform::MACOS => 'kill -TERM '.$pid,
+            Platform::OTHER => null,
+        };
     }
 }

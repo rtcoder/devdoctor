@@ -4,37 +4,37 @@ declare(strict_types=1);
 
 namespace App\DevDoctor\Modules\Ports;
 
-use App\DevDoctor\Core\ProcessRunner;
+use App\DevDoctor\Core\CommandAvailability;
+use App\DevDoctor\Core\CommandAvailabilityInterface;
+use App\DevDoctor\Core\Platform;
 
 final readonly class WindowsNetstatPortProvider implements PortProviderInterface
 {
     public function __construct(
-        private ProcessRunner $processRunner = new ProcessRunner,
-    )
-    {
-    }
+        private PortCommandRunnerInterface $runner = new ProcessPortCommandRunner,
+        private CommandAvailabilityInterface $commands = new CommandAvailability,
+        private Platform $platform = Platform::OTHER,
+    ) {}
 
     public function available(): bool
     {
-        return PHP_OS_FAMILY === 'Windows'
-            && $this->processRunner->run(['where', 'netstat'], getcwd())->successful();
+        $platform = $this->platform === Platform::OTHER ? Platform::current() : $this->platform;
+
+        return $platform === Platform::WINDOWS && $this->commands->available('netstat');
     }
 
     public function usages(int $port): array
     {
-        $result = $this->processRunner->run(['netstat', '-ano', '-p', 'tcp'], getcwd());
+        $result = $this->runner->run(['netstat', '-ano', '-p', 'tcp']);
 
-        if (!$result->successful()) {
+        if (! $result->successful()) {
             return [];
         }
 
-        return $result->stdout
-                |> trim(...)
-                |> (fn($x) => explode(PHP_EOL, $x))
-                |> array_filter(...)
-                |> (fn($x) => array_map(fn(string $line): ?PortUsage => $this->parseLine($line, $port), $x))
-                |> array_filter(...)
-                |> array_values(...);
+        return array_values(array_filter(array_map(
+            fn (string $line): ?PortUsage => $this->parseLine($line, $port),
+            array_filter(explode(PHP_EOL, trim($result->stdout))),
+        )));
     }
 
     private function parseLine(string $line, int $port): ?PortUsage
@@ -45,23 +45,23 @@ final readonly class WindowsNetstatPortProvider implements PortProviderInterface
             return null;
         }
 
-        if (strtoupper($parts[3]) !== 'LISTENING' || !ctype_digit($parts[4])) {
+        if (strtoupper($parts[3]) !== 'LISTENING' || ! ctype_digit($parts[4])) {
             return null;
         }
 
-        if (!$this->addressUsesPort($parts[1], $port)) {
+        if (! $this->addressUsesPort($parts[1], $port)) {
             return null;
         }
 
         return new PortUsage(
             port: $port,
-            process: new ProcessInfo((int)$parts[4], 'pid ' . $parts[4]),
+            process: new ProcessInfo((int) $parts[4], 'pid '.$parts[4]),
             address: $parts[1],
         );
     }
 
     private function addressUsesPort(string $address, int $port): bool
     {
-        return str_ends_with($address, ':' . $port);
+        return str_ends_with($address, ':'.$port);
     }
 }

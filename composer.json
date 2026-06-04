@@ -40,6 +40,11 @@
             "pestphp/pest-plugin": true
         }
     },
+    "extra": {
+        "devdoctor": {
+            "version": "0.2.0"
+        }
+    },
     "minimum-stability": "stable",
     "prefer-stable": true,
     "bin": ["devdoctor"]

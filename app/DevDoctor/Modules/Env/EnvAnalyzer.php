@@ -13,12 +13,10 @@ use App\DevDoctor\Core\Severity;
 final readonly class EnvAnalyzer
 {
     public function __construct(
-        private EnvParser     $parser = new EnvParser,
+        private EnvParser $parser = new EnvParser,
         private SecretScanner $secretScanner = new SecretScanner,
-        private Redactor      $redactor = new Redactor,
-    )
-    {
-    }
+        private Redactor $redactor = new Redactor,
+    ) {}
 
     public function analyze(EnvAnalysisOptions $options): IssueCollection
     {
@@ -31,7 +29,7 @@ final readonly class EnvAnalyzer
         $this->checkFileExistence($issues, $env, $example, $options);
 
         foreach ([$env, $example] as $file) {
-            if (!$file->exists) {
+            if (! $file->exists) {
                 continue;
             }
 
@@ -63,21 +61,21 @@ final readonly class EnvAnalyzer
 
     private function checkFileExistence(IssueCollection $issues, EnvFile $env, EnvFile $example, EnvAnalysisOptions $options): void
     {
-        if (!$env->exists) {
+        if (! $env->exists) {
             $issues->add(new Issue(
                 code: 'DD_ENV_FILE_MISSING',
                 severity: Severity::ERROR,
-                message: $env->path . ' does not exist',
+                message: $env->path.' does not exist',
                 module: 'env',
                 file: $env->path,
             ));
         }
 
-        if (!$example->exists) {
+        if (! $example->exists) {
             $issues->add(new Issue(
                 code: 'DD_ENV_EXAMPLE_MISSING',
                 severity: $options->strict ? Severity::ERROR : Severity::WARNING,
-                message: $example->path . ' does not exist',
+                message: $example->path.' does not exist',
                 module: 'env',
                 file: $example->path,
             ));
@@ -91,7 +89,7 @@ final readonly class EnvAnalyzer
                 $issues->add(new Issue(
                     code: 'DD_ENV_DUPLICATE_KEY',
                     severity: Severity::ERROR,
-                    message: $key . ' is defined more than once',
+                    message: $key.' is defined more than once',
                     module: 'env',
                     file: $file->path,
                     line: $entry->line,
@@ -111,7 +109,7 @@ final readonly class EnvAnalyzer
             $issues->add(new Issue(
                 code: 'DD_ENV_INVALID_KEY_NAME',
                 severity: Severity::WARNING,
-                message: $entry->key . ' does not match expected env key format',
+                message: $entry->key.' does not match expected env key format',
                 module: 'env',
                 file: $file->path,
                 line: $entry->line,
@@ -130,7 +128,7 @@ final readonly class EnvAnalyzer
             $issues->add(new Issue(
                 code: 'DD_ENV_EMPTY_VALUE',
                 severity: Severity::WARNING,
-                message: $entry->key . ' is empty',
+                message: $entry->key.' is empty',
                 module: 'env',
                 file: $file->path,
                 line: $entry->line,
@@ -142,7 +140,7 @@ final readonly class EnvAnalyzer
     private function checkHeuristicUrls(IssueCollection $issues, EnvFile $file): void
     {
         foreach ($file->entries as $entry) {
-            if ($entry->value === '' || !$this->isLikelyUrlKey($entry->key)) {
+            if ($entry->value === '' || ! $this->isLikelyUrlKey($entry->key)) {
                 continue;
             }
 
@@ -153,7 +151,7 @@ final readonly class EnvAnalyzer
             $issues->add(new Issue(
                 code: 'DD_ENV_INVALID_TYPE',
                 severity: Severity::WARNING,
-                message: $entry->key . ' should look like a valid URL',
+                message: $entry->key.' should look like a valid URL',
                 module: 'env',
                 file: $file->path,
                 line: $entry->line,
@@ -164,19 +162,19 @@ final readonly class EnvAnalyzer
 
     private function checkKeyDiff(IssueCollection $issues, EnvFile $env, EnvFile $example, EnvAnalysisOptions $options): void
     {
-        if (!$env->exists || !$example->exists) {
+        if (! $env->exists || ! $example->exists) {
             return;
         }
 
         $severity = $options->strict ? Severity::ERROR : Severity::WARNING;
 
         foreach ($example->keys() as $key) {
-            if (!$env->has($key) && !in_array($key, $options->ignoreMissingInEnv, true)) {
+            if (! $env->has($key) && ! in_array($key, $options->ignoreMissingInEnv, true)) {
                 $entry = $example->get($key);
                 $issues->add(new Issue(
                     code: 'DD_ENV_MISSING_IN_ENV',
                     severity: $severity,
-                    message: $key . ' exists in ' . $example->path . ' but is missing in ' . $env->path,
+                    message: $key.' exists in '.$example->path.' but is missing in '.$env->path,
                     module: 'env',
                     file: $example->path,
                     line: $entry?->line,
@@ -186,12 +184,12 @@ final readonly class EnvAnalyzer
         }
 
         foreach ($env->keys() as $key) {
-            if (!$example->has($key) && !in_array($key, $options->ignoreMissingInExample, true)) {
+            if (! $example->has($key) && ! in_array($key, $options->ignoreMissingInExample, true)) {
                 $entry = $env->get($key);
                 $issues->add(new Issue(
                     code: 'DD_ENV_MISSING_IN_EXAMPLE',
                     severity: $severity,
-                    message: $key . ' exists in ' . $env->path . ' but is missing in ' . $example->path,
+                    message: $key.' exists in '.$env->path.' but is missing in '.$example->path,
                     module: 'env',
                     file: $env->path,
                     line: $entry?->line,
@@ -203,7 +201,7 @@ final readonly class EnvAnalyzer
 
     private function checkProductionDebug(IssueCollection $issues, EnvFile $env): void
     {
-        if (!$env->exists) {
+        if (! $env->exists) {
             return;
         }
 
@@ -244,19 +242,19 @@ final readonly class EnvAnalyzer
         foreach (array_unique([$exampleFile, '.env.dist', '.env.sample']) as $file) {
             $envFile = $this->parser->parseFile($paths->absolute($file), $paths->display($file));
 
-            if (!$envFile->exists) {
+            if (! $envFile->exists) {
                 continue;
             }
 
             foreach ($envFile->entries as $entry) {
-                if (!$this->secretScanner->isSuspicious($entry)) {
+                if (! $this->secretScanner->isSuspicious($entry)) {
                     continue;
                 }
 
                 $issues->add(new Issue(
                     code: 'DD_ENV_SECRET_IN_EXAMPLE',
                     severity: Severity::ERROR,
-                    message: $entry->key . ' appears to contain a real secret in ' . $envFile->path,
+                    message: $entry->key.' appears to contain a real secret in '.$envFile->path,
                     module: 'env',
                     file: $envFile->path,
                     line: $entry->line,
@@ -269,7 +267,7 @@ final readonly class EnvAnalyzer
 
     private function checkConfiguredRules(IssueCollection $issues, EnvFile $env, EnvAnalysisOptions $options): void
     {
-        if (!$env->exists) {
+        if (! $env->exists) {
             return;
         }
 
@@ -280,7 +278,7 @@ final readonly class EnvAnalyzer
                 $issues->add(new Issue(
                     code: 'DD_ENV_REQUIRED_MISSING',
                     severity: Severity::ERROR,
-                    message: $key . ' is required',
+                    message: $key.' is required',
                     module: 'env',
                     key: $key,
                 ));
@@ -292,7 +290,7 @@ final readonly class EnvAnalyzer
                         $issues->add(new Issue(
                             code: 'DD_ENV_REQUIRED_WHEN_MISSING',
                             severity: Severity::ERROR,
-                            message: $key . ' is required when ' . $otherKey . ' is ' . $this->stringValue($expected),
+                            message: $key.' is required when '.$otherKey.' is '.$this->stringValue($expected),
                             module: 'env',
                             key: $key,
                         ));
@@ -306,7 +304,7 @@ final readonly class EnvAnalyzer
                         $issues->add(new Issue(
                             code: 'DD_ENV_FORBIDDEN_WHEN_PRESENT',
                             severity: Severity::ERROR,
-                            message: $key . ' is forbidden when ' . $otherKey . ' is ' . $this->stringValue($expected),
+                            message: $key.' is forbidden when '.$otherKey.' is '.$this->stringValue($expected),
                             module: 'env',
                             file: $entry->file,
                             line: $entry->line,
@@ -320,11 +318,11 @@ final readonly class EnvAnalyzer
                 continue;
             }
 
-            if (isset($rule['allowed']) && is_array($rule['allowed']) && !in_array($entry->value, array_map($this->stringValue(...), $rule['allowed']), true)) {
+            if (isset($rule['allowed']) && is_array($rule['allowed']) && ! in_array($entry->value, array_map($this->stringValue(...), $rule['allowed']), true)) {
                 $issues->add(new Issue(
                     code: 'DD_ENV_INVALID_ALLOWED_VALUE',
                     severity: Severity::ERROR,
-                    message: $key . ' has a value that is not allowed',
+                    message: $key.' has a value that is not allowed',
                     module: 'env',
                     file: $entry->file,
                     line: $entry->line,
@@ -332,11 +330,11 @@ final readonly class EnvAnalyzer
                 ));
             }
 
-            if (isset($rule['type']) && is_string($rule['type']) && !$this->isValidType($entry->value, $rule['type'])) {
+            if (isset($rule['type']) && is_string($rule['type']) && ! $this->isValidType($entry->value, $rule['type'])) {
                 $issues->add(new Issue(
                     code: 'DD_ENV_INVALID_TYPE',
                     severity: Severity::ERROR,
-                    message: $key . ' must be ' . $rule['type'],
+                    message: $key.' must be '.$rule['type'],
                     module: 'env',
                     file: $entry->file,
                     line: $entry->line,
@@ -360,7 +358,7 @@ final readonly class EnvAnalyzer
 
     private function valueMatches(?string $actual, mixed $expected): bool
     {
-        return strtolower((string)$actual) === strtolower($this->stringValue($expected));
+        return strtolower((string) $actual) === strtolower($this->stringValue($expected));
     }
 
     private function stringValue(mixed $value): string
@@ -369,7 +367,7 @@ final readonly class EnvAnalyzer
             return $value ? 'true' : 'false';
         }
 
-        return (string)$value;
+        return (string) $value;
     }
 
     private function isLikelyUrlKey(string $key): bool

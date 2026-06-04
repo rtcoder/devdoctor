@@ -11,9 +11,7 @@ final readonly class ProcessGitRunner implements GitRunnerInterface
 {
     public function __construct(
         private ProcessRunner $processRunner = new ProcessRunner,
-    )
-    {
-    }
+    ) {}
 
     public function run(array $arguments, string $workingDirectory): ProcessResult
     {

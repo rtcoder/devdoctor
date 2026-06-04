@@ -2,6 +2,7 @@
 
 use App\DevDoctor\Modules\Composer\ComposerAnalyzer;
 use App\DevDoctor\Modules\Composer\ComposerOptions;
+use Tests\Support\FakeCommandAvailability;
 
 function composerFixture(array $files): string
 {
@@ -78,4 +79,15 @@ it('reports risky install and update scripts', function () {
     $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
 
     expect($codes)->toContain('DD_COMPOSER_SCRIPT_RISKY');
+});
+
+it('reports missing composer binary without using platform shell commands', function () {
+    $issues = (new ComposerAnalyzer(commands: new FakeCommandAvailability))->analyze(new ComposerOptions(path: composerFixture([
+        'composer.json' => '{"require":{"php":"^8.5"}}',
+        'composer.lock' => '{}',
+        'vendor/.gitkeep' => '',
+    ])));
+
+    expect(array_map(static fn ($issue): string => $issue->code, $issues->all()))
+        ->toContain('DD_COMPOSER_BINARY_MISSING');
 });

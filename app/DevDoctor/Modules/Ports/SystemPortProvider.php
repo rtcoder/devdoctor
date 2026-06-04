@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\DevDoctor\Modules\Ports;
 
+use App\DevDoctor\Core\Platform;
+
 final readonly class SystemPortProvider implements PortProviderInterface
 {
     /**
-     * @param list<PortProviderInterface>|null $providers
+     * @param  list<PortProviderInterface>|null  $providers
      */
     public function __construct(
         private ?array $providers = null,
-    )
-    {
-    }
+        private Platform $platform = Platform::OTHER,
+    ) {}
 
     public function available(): bool
     {
@@ -45,13 +46,16 @@ final readonly class SystemPortProvider implements PortProviderInterface
             return $this->providers;
         }
 
-        if (PHP_OS_FAMILY === 'Windows') {
+        $platform = $this->platform === Platform::OTHER ? Platform::current() : $this->platform;
+
+        if ($platform === Platform::WINDOWS) {
             return [new WindowsNetstatPortProvider];
         }
 
-        return [
-            new LsofPortProvider,
-            new SsPortProvider,
-        ];
+        if ($platform === Platform::LINUX) {
+            return [new LsofPortProvider, new SsPortProvider];
+        }
+
+        return $platform === Platform::MACOS ? [new LsofPortProvider] : [];
     }
 }

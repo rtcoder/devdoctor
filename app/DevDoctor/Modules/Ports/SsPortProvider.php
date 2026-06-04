@@ -4,42 +4,42 @@ declare(strict_types=1);
 
 namespace App\DevDoctor\Modules\Ports;
 
-use App\DevDoctor\Core\ProcessRunner;
+use App\DevDoctor\Core\CommandAvailability;
+use App\DevDoctor\Core\CommandAvailabilityInterface;
+use App\DevDoctor\Core\Platform;
 
 final readonly class SsPortProvider implements PortProviderInterface
 {
     public function __construct(
-        private ProcessRunner $processRunner = new ProcessRunner,
-    )
-    {
-    }
+        private PortCommandRunnerInterface $runner = new ProcessPortCommandRunner,
+        private CommandAvailabilityInterface $commands = new CommandAvailability,
+        private Platform $platform = Platform::OTHER,
+    ) {}
 
     public function available(): bool
     {
-        return PHP_OS_FAMILY !== 'Windows'
-            && $this->processRunner->run(['which', 'ss'], getcwd())->successful();
+        $platform = $this->platform === Platform::OTHER ? Platform::current() : $this->platform;
+
+        return $platform === Platform::LINUX && $this->commands->available('ss');
     }
 
     public function usages(int $port): array
     {
-        $result = $this->processRunner->run(['ss', '-ltnp', 'sport = :' . $port], getcwd());
+        $result = $this->runner->run(['ss', '-ltnp', 'sport = :'.$port]);
 
-        if (!$result->successful()) {
+        if (! $result->successful()) {
             return [];
         }
 
-        return $result->stdout
-                |> trim(...)
-                |> (fn($x) => explode(PHP_EOL, $x))
-                |> array_filter(...)
-                |> (fn($x) => array_map(fn(string $line): ?PortUsage => $this->parseLine($line, $port), $x))
-                |> array_filter(...)
-                |> array_values(...);
+        return array_values(array_filter(array_map(
+            fn (string $line): ?PortUsage => $this->parseLine($line, $port),
+            array_filter(explode(PHP_EOL, trim($result->stdout))),
+        )));
     }
 
     private function parseLine(string $line, int $port): ?PortUsage
     {
-        if (!str_starts_with(trim($line), 'LISTEN')) {
+        if (! str_starts_with(trim($line), 'LISTEN')) {
             return null;
         }
 
@@ -49,7 +49,7 @@ final readonly class SsPortProvider implements PortProviderInterface
 
         return new PortUsage(
             port: $port,
-            process: new ProcessInfo((int)$matches[2], $matches[1]),
+            process: new ProcessInfo((int) $matches[2], $matches[1]),
             address: $line,
         );
     }

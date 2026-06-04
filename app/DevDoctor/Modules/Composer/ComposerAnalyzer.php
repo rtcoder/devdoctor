@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\DevDoctor\Modules\Composer;
 
+use App\DevDoctor\Core\CommandAvailability;
+use App\DevDoctor\Core\CommandAvailabilityInterface;
 use App\DevDoctor\Core\Issue;
 use App\DevDoctor\Core\IssueCollection;
 use App\DevDoctor\Core\PathResolver;
@@ -15,6 +17,7 @@ final readonly class ComposerAnalyzer
 {
     public function __construct(
         private ProcessRunner $processRunner = new ProcessRunner,
+        private CommandAvailabilityInterface $commands = new CommandAvailability,
     ) {}
 
     public function analyze(ComposerOptions $options): IssueCollection
@@ -23,7 +26,7 @@ final readonly class ComposerAnalyzer
         $issues = new IssueCollection;
         $composerJson = $paths->absolute('composer.json');
 
-        if (!is_file($composerJson)) {
+        if (! is_file($composerJson)) {
             $issues->add(new Issue(
                 code: 'DD_COMPOSER_NOT_PROJECT',
                 severity: Severity::INFO,
@@ -35,7 +38,7 @@ final readonly class ComposerAnalyzer
         }
 
         try {
-            $data = json_decode((string)file_get_contents($composerJson), true, flags: JSON_THROW_ON_ERROR);
+            $data = json_decode((string) file_get_contents($composerJson), true, flags: JSON_THROW_ON_ERROR);
         } catch (JsonException $exception) {
             $issues->add(new Issue(
                 code: 'DD_COMPOSER_JSON_INVALID',
@@ -48,7 +51,7 @@ final readonly class ComposerAnalyzer
             return $issues;
         }
 
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             $issues->add(new Issue(
                 code: 'DD_COMPOSER_JSON_INVALID',
                 severity: Severity::ERROR,
@@ -89,11 +92,11 @@ final readonly class ComposerAnalyzer
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     private function checkLockFile(IssueCollection $issues, PathResolver $paths, array $data): void
     {
-        if (is_file($paths->absolute('composer.lock')) || !$this->hasDependencies($data)) {
+        if (is_file($paths->absolute('composer.lock')) || ! $this->hasDependencies($data)) {
             return;
         }
 
@@ -122,21 +125,21 @@ final readonly class ComposerAnalyzer
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     private function checkPhpVersion(IssueCollection $issues, array $data): void
     {
         $require = $this->requirements($data);
         $constraint = $require['php'] ?? null;
 
-        if (!is_string($constraint) || $this->phpVersionSatisfies(PHP_VERSION, $constraint)) {
+        if (! is_string($constraint) || $this->phpVersionSatisfies(PHP_VERSION, $constraint)) {
             return;
         }
 
         $issues->add(new Issue(
             code: 'DD_COMPOSER_PHP_VERSION_MISMATCH',
             severity: Severity::ERROR,
-            message: 'Current PHP ' . PHP_VERSION . ' does not satisfy composer requirement ' . $constraint,
+            message: 'Current PHP '.PHP_VERSION.' does not satisfy composer requirement '.$constraint,
             module: 'composer',
             file: 'composer.json',
             key: 'php',
@@ -144,12 +147,12 @@ final readonly class ComposerAnalyzer
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     private function checkExtensions(IssueCollection $issues, array $data): void
     {
         foreach ($this->requirements($data) as $package => $constraint) {
-            if (!is_string($package) || !str_starts_with($package, 'ext-')) {
+            if (! is_string($package) || ! str_starts_with($package, 'ext-')) {
                 continue;
             }
 
@@ -162,7 +165,7 @@ final readonly class ComposerAnalyzer
             $issues->add(new Issue(
                 code: 'DD_COMPOSER_EXTENSION_MISSING',
                 severity: Severity::ERROR,
-                message: 'Required PHP extension ' . $package . ' is not loaded',
+                message: 'Required PHP extension '.$package.' is not loaded',
                 module: 'composer',
                 file: 'composer.json',
                 key: $package,
@@ -175,34 +178,34 @@ final readonly class ComposerAnalyzer
     {
         $installedJson = $paths->absolute('vendor/composer/installed.json');
 
-        if (!is_file($installedJson)) {
+        if (! is_file($installedJson)) {
             return;
         }
 
         try {
-            $data = json_decode((string)file_get_contents($installedJson), true, flags: JSON_THROW_ON_ERROR);
+            $data = json_decode((string) file_get_contents($installedJson), true, flags: JSON_THROW_ON_ERROR);
         } catch (JsonException) {
             return;
         }
 
         $packages = $data['packages'] ?? $data;
 
-        if (!is_array($packages)) {
+        if (! is_array($packages)) {
             return;
         }
 
         foreach ($packages as $package) {
-            if (!is_array($package) || !array_key_exists('abandoned', $package) || ($package['abandoned'] ?? false) === false) {
+            if (! is_array($package) || ! array_key_exists('abandoned', $package) || ($package['abandoned'] ?? false) === false) {
                 continue;
             }
 
             $name = is_string($package['name'] ?? null) ? $package['name'] : 'unknown package';
-            $replacement = is_string($package['abandoned']) ? ' Use ' . $package['abandoned'] . ' instead.' : '';
+            $replacement = is_string($package['abandoned']) ? ' Use '.$package['abandoned'].' instead.' : '';
 
             $issues->add(new Issue(
                 code: 'DD_COMPOSER_PACKAGE_ABANDONED',
                 severity: Severity::WARNING,
-                message: $name . ' is marked as abandoned.' . $replacement,
+                message: $name.' is marked as abandoned.'.$replacement,
                 module: 'composer',
                 file: 'vendor/composer/installed.json',
                 key: $name,
@@ -211,13 +214,13 @@ final readonly class ComposerAnalyzer
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     private function checkRiskyScripts(IssueCollection $issues, array $data): void
     {
         $scripts = $data['scripts'] ?? [];
 
-        if (!is_array($scripts)) {
+        if (! is_array($scripts)) {
             return;
         }
 
@@ -226,14 +229,14 @@ final readonly class ComposerAnalyzer
             $commands = is_array($commands) ? $commands : [$commands];
 
             foreach ($commands as $command) {
-                if (!is_string($command) || !$this->isRiskyScript($command)) {
+                if (! is_string($command) || ! $this->isRiskyScript($command)) {
                     continue;
                 }
 
                 $issues->add(new Issue(
                     code: 'DD_COMPOSER_SCRIPT_RISKY',
                     severity: Severity::WARNING,
-                    message: $event . ' contains risky shell execution',
+                    message: $event.' contains risky shell execution',
                     module: 'composer',
                     file: 'composer.json',
                     key: $event,
@@ -244,7 +247,7 @@ final readonly class ComposerAnalyzer
 
     private function runComposerValidate(IssueCollection $issues, string $path): void
     {
-        if (!$this->processRunner->run(['which', 'composer'], $path)->successful()) {
+        if (! $this->commands->available('composer')) {
             $issues->add(new Issue(
                 code: 'DD_COMPOSER_BINARY_MISSING',
                 severity: Severity::WARNING,
@@ -271,7 +274,7 @@ final readonly class ComposerAnalyzer
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     private function hasDependencies(array $data): bool
     {
@@ -279,7 +282,7 @@ final readonly class ComposerAnalyzer
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     private function requirements(array $data): array
@@ -316,10 +319,10 @@ final readonly class ComposerAnalyzer
 
     private function satisfiesCaret(string $version, string $base): bool
     {
-        $major = (int)explode('.', $base)[0];
+        $major = (int) explode('.', $base)[0];
 
         return version_compare($version, $base, '>=')
-            && version_compare($version, (string)($major + 1) . '.0.0', '<');
+            && version_compare($version, (string) ($major + 1).'.0.0', '<');
     }
 
     private function isRiskyScript(string $command): bool

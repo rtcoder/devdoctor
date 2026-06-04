@@ -9,7 +9,7 @@ use App\DevDoctor\Core\ProcessResult;
 interface DockerRunnerInterface
 {
     /**
-     * @param list<string> $command
+     * @param  list<string>  $command
      */
     public function run(array $command, string $workingDirectory): ProcessResult;
 }

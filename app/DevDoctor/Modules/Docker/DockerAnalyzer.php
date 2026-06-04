@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\DevDoctor\Modules\Docker;
 
+use App\DevDoctor\Core\CommandAvailability;
+use App\DevDoctor\Core\CommandAvailabilityInterface;
 use App\DevDoctor\Core\Issue;
 use App\DevDoctor\Core\IssueCollection;
 use App\DevDoctor\Core\PathResolver;
@@ -26,9 +28,8 @@ final readonly class DockerAnalyzer
     public function __construct(
         private DockerRunnerInterface $runner = new ProcessDockerRunner,
         private PortProviderInterface $ports = new SystemPortProvider,
-    )
-    {
-    }
+        private CommandAvailabilityInterface $commands = new CommandAvailability,
+    ) {}
 
     public function analyze(DockerOptions $options): IssueCollection
     {
@@ -47,7 +48,7 @@ final readonly class DockerAnalyzer
             return $issues;
         }
 
-        if (!$this->dockerAvailable($issues, $options)) {
+        if (! $this->dockerAvailable($issues, $options)) {
             return $issues;
         }
 
@@ -102,7 +103,7 @@ final readonly class DockerAnalyzer
 
     private function dockerAvailable(IssueCollection $issues, DockerOptions $options): bool
     {
-        if (!$this->runner->run(['which', 'docker'], $options->path)->successful()) {
+        if (! $this->commands->available('docker')) {
             $issues->add(new Issue(
                 code: 'DD_DOCKER_BINARY_MISSING',
                 severity: Severity::WARNING,
@@ -113,7 +114,7 @@ final readonly class DockerAnalyzer
             return false;
         }
 
-        if (!$options->daemon) {
+        if (! $options->daemon) {
             return true;
         }
 
@@ -138,7 +139,7 @@ final readonly class DockerAnalyzer
      */
     private function parseCompose(IssueCollection $issues, string $composeFile): ?array
     {
-        if (!is_file($composeFile)) {
+        if (! is_file($composeFile)) {
             $issues->add(new Issue(
                 code: 'DD_DOCKER_COMPOSE_FILE_MISSING',
                 severity: Severity::ERROR,
@@ -164,7 +165,7 @@ final readonly class DockerAnalyzer
             return null;
         }
 
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             $issues->add(new Issue(
                 code: 'DD_DOCKER_COMPOSE_INVALID',
                 severity: Severity::ERROR,
@@ -198,7 +199,7 @@ final readonly class DockerAnalyzer
 
     private function checkMissingEnvReferences(IssueCollection $issues, PathResolver $paths, string $composeFile): void
     {
-        $content = (string)file_get_contents($composeFile);
+        $content = (string) file_get_contents($composeFile);
 
         if (preg_match_all('/\$\{([A-Za-z_][A-Za-z0-9_]*)(?:[:?+\-][^}]*)?}/', $content, $matches) !== false) {
             foreach (array_unique($matches[1] ?? []) as $name) {
@@ -209,7 +210,7 @@ final readonly class DockerAnalyzer
                 $issues->add(new Issue(
                     code: 'DD_DOCKER_ENV_REFERENCE_MISSING',
                     severity: Severity::WARNING,
-                    message: 'Compose references missing environment variable ' . $name,
+                    message: 'Compose references missing environment variable '.$name,
                     module: 'docker',
                     file: basename($composeFile),
                     key: $name,
@@ -219,13 +220,13 @@ final readonly class DockerAnalyzer
     }
 
     /**
-     * @param array<string, mixed> $compose
+     * @param  array<string, mixed>  $compose
      */
     private function checkHostPortConflicts(IssueCollection $issues, array $compose): void
     {
         $ports = $this->hostPorts($compose);
 
-        if ($ports === [] || !$this->ports->available()) {
+        if ($ports === [] || ! $this->ports->available()) {
             return;
         }
 
@@ -234,7 +235,7 @@ final readonly class DockerAnalyzer
                 $issues->add(new Issue(
                     code: 'DD_DOCKER_HOST_PORT_CONFLICT',
                     severity: Severity::WARNING,
-                    message: 'Compose host port ' . $port . ' is already in use.',
+                    message: 'Compose host port '.$port.' is already in use.',
                     module: 'docker',
                     context: [
                         'port' => $port,
@@ -250,16 +251,16 @@ final readonly class DockerAnalyzer
     {
         $result = $this->runner->run(['docker', 'compose', '-f', $composeFile, 'ps', '--format', 'json'], $path);
 
-        if (!$result->successful()) {
+        if (! $result->successful()) {
             return;
         }
 
         foreach ($this->decodeJsonLines($result->stdout) as $container) {
-            $state = strtolower((string)($container['State'] ?? $container['state'] ?? ''));
-            $status = strtolower((string)($container['Status'] ?? $container['status'] ?? ''));
-            $health = strtolower((string)($container['Health'] ?? $container['health'] ?? ''));
+            $state = strtolower((string) ($container['State'] ?? $container['state'] ?? ''));
+            $status = strtolower((string) ($container['Status'] ?? $container['status'] ?? ''));
+            $health = strtolower((string) ($container['Health'] ?? $container['health'] ?? ''));
 
-            if (!str_contains($state . $status . $health, 'unhealthy') && !str_contains($state . $status, 'restarting')) {
+            if (! str_contains($state.$status.$health, 'unhealthy') && ! str_contains($state.$status, 'restarting')) {
                 continue;
             }
 
@@ -268,7 +269,7 @@ final readonly class DockerAnalyzer
                 severity: Severity::WARNING,
                 message: 'Compose container is unhealthy or restarting.',
                 module: 'docker',
-                key: (string)($container['Service'] ?? $container['Name'] ?? 'container'),
+                key: (string) ($container['Service'] ?? $container['Name'] ?? 'container'),
                 context: array_filter([
                     'state' => $state,
                     'status' => $status,
@@ -286,12 +287,12 @@ final readonly class DockerAnalyzer
 
         $envFile = $paths->absolute('.env');
 
-        if (!is_file($envFile)) {
+        if (! is_file($envFile)) {
             return false;
         }
 
         foreach (file($envFile, FILE_IGNORE_NEW_LINES) ?: [] as $line) {
-            if (preg_match('/^\s*(?:export\s+)?' . preg_quote($name, '/') . '\s*=/', $line) === 1) {
+            if (preg_match('/^\s*(?:export\s+)?'.preg_quote($name, '/').'\s*=/', $line) === 1) {
                 return true;
             }
         }
@@ -300,7 +301,7 @@ final readonly class DockerAnalyzer
     }
 
     /**
-     * @param array<string, mixed> $compose
+     * @param  array<string, mixed>  $compose
      * @return list<int>
      */
     private function hostPorts(array $compose): array
@@ -308,12 +309,12 @@ final readonly class DockerAnalyzer
         $hostPorts = [];
         $services = $compose['services'] ?? [];
 
-        if (!is_array($services)) {
+        if (! is_array($services)) {
             return [];
         }
 
         foreach ($services as $service) {
-            if (!is_array($service) || !is_array($service['ports'] ?? null)) {
+            if (! is_array($service) || ! is_array($service['ports'] ?? null)) {
                 continue;
             }
 
@@ -334,14 +335,14 @@ final readonly class DockerAnalyzer
         if (is_array($port)) {
             $published = $port['published'] ?? null;
 
-            return is_numeric($published) ? (int)$published : null;
+            return is_numeric($published) ? (int) $published : null;
         }
 
-        if (!is_string($port) || preg_match('/(?:(?:\d+\.\d+\.\d+\.\d+|\[[^]]+]):)?(\d+):\d+(?:\/[a-z]+)?$/i', $port, $matches) !== 1) {
+        if (! is_string($port) || preg_match('/(?:(?:\d+\.\d+\.\d+\.\d+|\[[^]]+]):)?(\d+):\d+(?:\/[a-z]+)?$/i', $port, $matches) !== 1) {
             return null;
         }
 
-        return (int)$matches[1];
+        return (int) $matches[1];
     }
 
     /**

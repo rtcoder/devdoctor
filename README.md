@@ -4,7 +4,11 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
+Current version: `0.2.0`
+
 ## Installation
+
+DevDoctor requires PHP 8.5 or newer.
 
 ```bash
 composer install
@@ -54,6 +58,19 @@ php devdoctor ci --modules=env,composer,git,docker --no-fail-on-warnings
 ```
 
 `ports` uses platform-specific read-only providers: `lsof` on macOS/Linux, `ss` as a Linux fallback, and `netstat -ano` on Windows. If no supported provider is available, DevDoctor reports `DD_PORT_PROVIDER_UNAVAILABLE` instead of failing unexpectedly.
+
+## Platform Support
+
+DevDoctor targets Linux, macOS, and Windows:
+
+| Capability | Linux | macOS | Windows |
+| --- | --- | --- | --- |
+| Command discovery | Native executable lookup | Native executable lookup | Native executable lookup |
+| Port listeners | `lsof`, then `ss` | `lsof` | `netstat -ano` |
+| Process suggestion | `kill -TERM <pid>` | `kill -TERM <pid>` | `taskkill /PID <pid>` |
+| Composer, Git, Docker | Supported when their executables are installed | Supported when their executables are installed | Supported when their executables are installed |
+
+Platform-specific commands are only suggested. DevDoctor never terminates a process automatically.
 
 ## Table Output
 

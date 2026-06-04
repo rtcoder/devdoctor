@@ -1,5 +1,6 @@
 <?php
 
+use App\DevDoctor\Core\CommandAvailabilityInterface;
 use App\DevDoctor\Core\IssueCollection;
 use App\DevDoctor\Core\ProcessResult;
 use App\DevDoctor\Modules\Docker\DockerAnalyzer;
@@ -8,6 +9,7 @@ use App\DevDoctor\Modules\Docker\DockerRunnerInterface;
 use App\DevDoctor\Modules\Ports\PortProviderInterface;
 use App\DevDoctor\Modules\Ports\PortUsage;
 use App\DevDoctor\Modules\Ports\ProcessInfo;
+use Tests\Support\FakeCommandAvailability;
 
 it('does not require docker when no compose file exists', function () {
     $issues = analyzeDocker(new FakeDockerRunner([]));
@@ -19,9 +21,7 @@ it('reports missing docker binary for compose projects', function () {
     $path = dockerTempPath();
     dockerCompose($path, "services:\n  app:\n    image: nginx\n");
 
-    $issues = analyzeDocker(new FakeDockerRunner([
-        'which docker' => new ProcessResult(1, '', ''),
-    ], $path), new DockerOptions($path));
+    $issues = analyzeDocker(new FakeDockerRunner([], $path), new DockerOptions($path), commands: new FakeCommandAvailability);
 
     expect(dockerCodes($issues))->toBe(['DD_DOCKER_BINARY_MISSING']);
 });
@@ -109,11 +109,19 @@ it('reports ready compose projects', function () {
     expect(dockerCodes($issues))->toBe(['DD_DOCKER_READY']);
 });
 
-function analyzeDocker(FakeDockerRunner $runner, ?DockerOptions $options = null, ?PortProviderInterface $ports = null): IssueCollection
-{
+function analyzeDocker(
+    FakeDockerRunner $runner,
+    ?DockerOptions $options = null,
+    ?PortProviderInterface $ports = null,
+    ?CommandAvailabilityInterface $commands = null,
+): IssueCollection {
     $path = $options?->path ?? dockerTempPath();
 
-    return (new DockerAnalyzer($runner, $ports ?? new FakeDockerPorts))->analyze($options ?? new DockerOptions($path));
+    return (new DockerAnalyzer(
+        $runner,
+        $ports ?? new FakeDockerPorts,
+        $commands ?? new FakeCommandAvailability(['docker']),
+    ))->analyze($options ?? new DockerOptions($path));
 }
 
 function dockerOk(string $stdout): ProcessResult
