@@ -2,7 +2,7 @@
 
 Issue codes are stable identifiers intended for CI parsing, baselines, and integrations. Messages may improve over time; automation should match codes.
 
-The machine-readable candidate v1 catalog is available at [`schemas/v1/issue-codes.json`](../schemas/v1/issue-codes.json). Codes cannot be removed or change meaning without being marked deprecated. New codes may be added.
+The machine-readable v1 catalog is available at [`schemas/v1/issue-codes.json`](../schemas/v1/issue-codes.json). Codes cannot be removed or change meaning without being marked deprecated. New codes may be added.
 
 ## CI
 

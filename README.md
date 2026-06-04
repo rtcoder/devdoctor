@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
-Current version: `0.15.0`
+Current version: `1.0.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Release builds are standalone PHAR executables:
 
 ```bash
-php devdoctor app:build devdoctor --build-version=0.15.0 --no-interaction
+php devdoctor app:build devdoctor --build-version=1.0.0 --no-interaction
 php builds/devdoctor --version
 ```
 
@@ -211,9 +211,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v0.15.0
+- uses: rtcoder/devdoctor@v1.0.0
   with:
-    version: v0.15.0
+    version: v1.0.0
     format: sarif
 ```
 
@@ -291,11 +291,11 @@ The wizard detects supported env files and project presets, previews the YAML, a
 
 ## Stable Contracts
 
-- JSON output includes `schema_version` and follows the candidate v1 schema at [schemas/v1/devdoctor-output.schema.json](schemas/v1/devdoctor-output.schema.json).
+- JSON output includes `schema_version` and follows the stable v1 schema at [schemas/v1/devdoctor-output.schema.json](schemas/v1/devdoctor-output.schema.json).
 - [schemas/devdoctor-output.schema.json](schemas/devdoctor-output.schema.json) remains an alias for the latest schema.
 - Issue identifiers are listed in [docs/issue-codes.md](docs/issue-codes.md) and the machine-readable [schemas/v1/issue-codes.json](schemas/v1/issue-codes.json).
 - Automation should match issue codes rather than human-readable messages.
-- Until `v1.0.0`, schema v1 and the issue code catalog are public contract candidates. After `v1.0.0`, v1 will not receive breaking changes, existing codes will not be removed or repurposed without deprecation, and new codes may be added.
+- Schema v1 will not receive breaking changes during `v1.x`. Existing issue codes will not be removed or repurposed without deprecation, and new codes may be added.
 - The version recorded in `composer.json` under `extra.devdoctor.version` matches the Git release tag.
 
 ## Documentation
@@ -349,7 +349,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor --build-version=0.15.0 --no-interaction
+php devdoctor app:build devdoctor --build-version=1.0.0 --no-interaction
 php builds/devdoctor --version
 ```
 

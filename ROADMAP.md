@@ -201,4 +201,4 @@ After the first complete version:
 - `v0.13.0`: versioned JSON schema and machine-readable issue code catalog. Complete.
 - `v0.14.0`: static documentation site and pinned CI examples. Complete.
 - `v0.15.0`: Composer package identity hardening and DevDoctor namespace migration. Complete.
-- `v1.0`: stable JSON schema, stable issue code catalog, documentation site, public Composer package, and CI examples for GitHub Actions, GitLab CI, and Bitbucket Pipelines.
+- `v1.0.0`: stable JSON schema, stable issue code catalog, documentation site, public Composer package identity, and CI examples for GitHub Actions, GitLab CI, and Bitbucket Pipelines. Complete.

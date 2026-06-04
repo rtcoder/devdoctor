@@ -100,9 +100,9 @@ it('ships static documentation and pinned CI examples', function () {
         expect(is_file($root.'/'.$path))->toBeTrue($path);
     }
 
-    expect(file_get_contents($root.'/docs/examples/github-actions.yml'))->toContain('v0.15.0')
-        ->and(file_get_contents($root.'/docs/examples/gitlab-ci.yml'))->toContain('v0.15.0')
-        ->and(file_get_contents($root.'/docs/examples/bitbucket-pipelines.yml'))->toContain('v0.15.0');
+    expect(file_get_contents($root.'/docs/examples/github-actions.yml'))->toContain('v1.0.0')
+        ->and(file_get_contents($root.'/docs/examples/gitlab-ci.yml'))->toContain('v1.0.0')
+        ->and(file_get_contents($root.'/docs/examples/bitbucket-pipelines.yml'))->toContain('v1.0.0');
 });
 
 it('catalogs every issue code used by the application', function () {
