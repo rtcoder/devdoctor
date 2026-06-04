@@ -57,7 +57,7 @@ jobs:
         run: composer install --no-interaction --prefer-dist
 
       - name: Build executable
-        run: php devdoctor app:build devdoctor --build-version=0.10.0 --no-interaction
+        run: php devdoctor app:build devdoctor --build-version=0.10.1 --no-interaction
 
       - name: Test executable
         run: php builds/devdoctor --version

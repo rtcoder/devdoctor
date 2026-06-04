@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
-Current version: `0.10.0`
+Current version: `0.10.1`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Release builds are standalone PHAR executables:
 
 ```bash
-php devdoctor app:build devdoctor --build-version=0.10.0 --no-interaction
+php devdoctor app:build devdoctor --build-version=0.10.1 --no-interaction
 php builds/devdoctor --version
 ```
 
@@ -38,6 +38,7 @@ git        Check Git repository hygiene
 docker     Check Docker and Docker Compose project health
 ci         Run CI-safe DevDoctor diagnostics
 presets    Detect supported project framework and tooling presets
+init       Generate an initial devdoctor.yml configuration
 ```
 
 All public commands support the shared options:
@@ -64,6 +65,7 @@ php devdoctor git --require-clean --scan-large-files
 php devdoctor docker --compose-file=docker-compose.yml
 php devdoctor ci --modules=env,composer,git,docker --no-fail-on-warnings
 php devdoctor presets --format=json
+php devdoctor init --dry-run
 ```
 
 `ports` uses platform-specific read-only providers: `lsof` on macOS/Linux, `ss` as a Linux fallback, and `netstat -ano` on Windows. If no supported provider is available, DevDoctor reports `DD_PORT_PROVIDER_UNAVAILABLE` instead of failing unexpectedly.
@@ -212,6 +214,16 @@ php devdoctor env --config=devdoctor.yml
 php devdoctor ci --config=devdoctor.yml
 ```
 
+Generate an initial configuration with the interactive wizard:
+
+```bash
+php devdoctor init
+php devdoctor init --dry-run
+php devdoctor init --config=config/devdoctor.yml
+```
+
+The wizard detects supported env files and project presets, previews the YAML, and writes only after confirmation. It never copies environment values into the generated file. Existing files require `--force` and a second confirmation. In CI or `--no-interaction` mode, use `--dry-run`.
+
 ## Exit Codes
 
 ```text
@@ -247,7 +259,7 @@ DevDoctor is read-only by default:
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor --build-version=0.10.0 --no-interaction
+php devdoctor app:build devdoctor --build-version=0.10.1 --no-interaction
 php builds/devdoctor --version
 ```
 

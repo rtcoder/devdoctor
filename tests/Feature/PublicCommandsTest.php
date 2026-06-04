@@ -58,6 +58,41 @@ it('runs presets diagnostics with json output', function () {
         ->and(array_column($output['modules'][0]['issues'], 'key'))->toBe(['node', 'vite']);
 });
 
+it('prints config wizard output in dry run mode', function () {
+    $path = sys_get_temp_dir().'/devdoctor-init-command-'.bin2hex(random_bytes(4));
+    mkdir($path);
+    file_put_contents($path.'/.env.example', "APP_DEBUG=false\n");
+
+    $exitCode = Artisan::call('init', ['--path' => $path, '--dry-run' => true]);
+    $output = Artisan::output();
+
+    expect($exitCode)->toBe(0)
+        ->and($output)->toContain('modules:')
+        ->and($output)->toContain('APP_DEBUG:')
+        ->and(is_file($path.'/devdoctor.yml'))->toBeFalse();
+});
+
+it('requires dry run for non interactive config generation', function () {
+    $path = sys_get_temp_dir().'/devdoctor-init-non-interactive-'.bin2hex(random_bytes(4));
+    mkdir($path);
+
+    $this->artisan('init', ['--path' => $path, '--ci' => true])
+        ->assertExitCode(3)
+        ->expectsOutputToContain('Writing config requires an interactive confirmation');
+});
+
+it('does not overwrite config without force', function () {
+    $path = sys_get_temp_dir().'/devdoctor-init-existing-'.bin2hex(random_bytes(4));
+    mkdir($path);
+    file_put_contents($path.'/devdoctor.yml', "existing: true\n");
+
+    $this->artisan('init', ['--path' => $path])
+        ->assertExitCode(3)
+        ->expectsOutputToContain('already exists');
+
+    expect(file_get_contents($path.'/devdoctor.yml'))->toBe("existing: true\n");
+});
+
 it('runs default ci modules without ports', function () {
     $path = sys_get_temp_dir().'/devdoctor-ci-command-'.bin2hex(random_bytes(4));
     mkdir($path);
