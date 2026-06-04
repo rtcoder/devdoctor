@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
-Current version: `0.3.0`
+Current version: `0.8.0`
 
 ## Installation
 
@@ -19,6 +19,13 @@ DevDoctor currently runs from the project checkout:
 
 ```bash
 php devdoctor <command>
+```
+
+Release builds are standalone PHAR executables:
+
+```bash
+php devdoctor app:build devdoctor --build-version=0.8.0 --no-interaction
+php builds/devdoctor --version
 ```
 
 ## Commands
@@ -138,6 +145,8 @@ php devdoctor ci --no-fail-on-warnings
 
 Unknown modules return exit code `3`. Selected modules are always included in JSON output.
 
+The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5. It also builds and smoke-tests the PHAR executable.
+
 ## Configuration
 
 DevDoctor reads `devdoctor.yml` for env rules:
@@ -187,6 +196,13 @@ php devdoctor ci --config=devdoctor.yml
 5 = internal error / unexpected exception
 ```
 
+## Stable Contracts
+
+- JSON output follows [schemas/devdoctor-output.schema.json](schemas/devdoctor-output.schema.json).
+- Stable issue identifiers are listed in [docs/issue-codes.md](docs/issue-codes.md).
+- Automation should match issue codes rather than human-readable messages.
+- The version recorded in `composer.json` under `extra.devdoctor.version` matches the Git release tag.
+
 ## Safety
 
 DevDoctor is read-only by default:
@@ -203,6 +219,8 @@ DevDoctor is read-only by default:
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
+php devdoctor app:build devdoctor --build-version=0.8.0 --no-interaction
+php builds/devdoctor --version
 ```
 
 ## Roadmap

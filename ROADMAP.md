@@ -9,6 +9,7 @@ Current state:
 - Public commands are implemented: `env`, `ports`, `docker`, `composer`, `git`, and `ci`.
 - Core diagnostics, rendering, redaction, path normalization, config loading, and process execution are in place.
 - `env`, `ports`, `composer`, `git`, `docker`, and `ci` have focused tests and read-only behavior.
+- Cross-platform CI, PHAR smoke tests, a JSON schema, and a stable issue code catalog are included.
 
 ## Milestone 0.1.1 - Foundation Cleanup
 
@@ -183,6 +184,8 @@ Goal: reach the first complete version that satisfies the acceptance criteria.
 - Clean up issue code names and output consistency.
 - Run the full test suite.
 - Prepare a release tag once acceptance criteria are met.
+
+Release status: complete.
 
 ## Later Roadmap
 

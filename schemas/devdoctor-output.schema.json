@@ -1,0 +1,66 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://github.com/rtcoder/devdoctor/blob/main/schemas/devdoctor-output.schema.json",
+    "title": "DevDoctor JSON Output",
+    "type": "object",
+    "required": ["tool", "status", "summary", "modules"],
+    "properties": {
+        "tool": {
+            "const": "devdoctor"
+        },
+        "status": {
+            "enum": ["passed", "warning", "failed"]
+        },
+        "summary": {
+            "$ref": "#/$defs/summary"
+        },
+        "modules": {
+            "type": "array",
+            "items": {
+                "$ref": "#/$defs/module"
+            }
+        }
+    },
+    "additionalProperties": false,
+    "$defs": {
+        "summary": {
+            "type": "object",
+            "required": ["errors", "warnings", "info"],
+            "properties": {
+                "errors": {"type": "integer", "minimum": 0},
+                "warnings": {"type": "integer", "minimum": 0},
+                "info": {"type": "integer", "minimum": 0}
+            },
+            "additionalProperties": false
+        },
+        "module": {
+            "type": "object",
+            "required": ["name", "status", "summary", "issues"],
+            "properties": {
+                "name": {"type": "string"},
+                "status": {"enum": ["passed", "warning", "failed"]},
+                "summary": {"$ref": "#/$defs/summary"},
+                "issues": {
+                    "type": "array",
+                    "items": {"$ref": "#/$defs/issue"}
+                }
+            },
+            "additionalProperties": false
+        },
+        "issue": {
+            "type": "object",
+            "required": ["code", "severity", "message"],
+            "properties": {
+                "code": {"type": "string", "pattern": "^DD_[A-Z0-9_]+$"},
+                "severity": {"enum": ["error", "warning", "info"]},
+                "message": {"type": "string"},
+                "module": {"type": "string"},
+                "file": {"type": "string"},
+                "line": {"type": "integer", "minimum": 1},
+                "key": {"type": "string"},
+                "context": {"type": "object"}
+            },
+            "additionalProperties": false
+        }
+    }
+}
