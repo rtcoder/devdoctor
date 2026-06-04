@@ -6,6 +6,10 @@ namespace App\DevDoctor\Core;
 
 final readonly class Issue
 {
+    public ?string $hint;
+
+    public ?FixSuggestion $fix;
+
     /**
      * @param  array<string, mixed>  $context
      */
@@ -18,22 +22,32 @@ final readonly class Issue
         public ?int $line = null,
         public ?string $key = null,
         public array $context = [],
-    ) {}
+        ?string $hint = null,
+        ?FixSuggestion $fix = null,
+    ) {
+        $suggestion = IssueSuggestionCatalog::for($code, $context);
+        $this->hint = $hint ?? $suggestion['hint'];
+        $this->fix = $fix ?? $suggestion['fix'];
+    }
 
     /**
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
+        $redactor = new Redactor;
+
         return array_filter([
             'code' => $this->code,
             'severity' => $this->severity->value,
-            'message' => $this->message,
+            'message' => $redactor->redactText($this->message),
             'module' => $this->module,
             'file' => $this->file,
             'line' => $this->line,
             'key' => $this->key,
-            'context' => $this->context,
+            'context' => $redactor->redactContext($this->context),
+            'hint' => $this->hint === null ? null : $redactor->redactText($this->hint),
+            'fix' => $this->fix?->toArray($redactor),
         ], static fn (mixed $value): bool => $value !== null && $value !== []);
     }
 }

@@ -58,7 +58,18 @@
                 "file": {"type": "string"},
                 "line": {"type": "integer", "minimum": 1},
                 "key": {"type": "string"},
-                "context": {"type": "object"}
+                "context": {"type": "object"},
+                "hint": {"type": "string"},
+                "fix": {
+                    "type": "object",
+                    "required": ["description", "destructive"],
+                    "properties": {
+                        "description": {"type": "string"},
+                        "command": {"type": "string"},
+                        "destructive": {"type": "boolean"}
+                    },
+                    "additionalProperties": false
+                }
             },
             "additionalProperties": false
         }

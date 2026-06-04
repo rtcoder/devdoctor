@@ -6,6 +6,7 @@ namespace App\DevDoctor\Core\Output;
 
 use App\DevDoctor\Core\Issue;
 use App\DevDoctor\Core\ModuleResult;
+use App\DevDoctor\Core\Redactor;
 use App\DevDoctor\Core\Severity;
 
 final class TableRenderer
@@ -15,6 +16,7 @@ final class TableRenderer
      */
     public function render(array $results): string
     {
+        $redactor = new Redactor;
         $lines = ['DevDoctor', ''];
         $lines[] = sprintf('%-10s %-8s %6s %8s %5s', 'Module', 'Status', 'Errors', 'Warnings', 'Info');
 
@@ -42,6 +44,18 @@ final class TableRenderer
 
             foreach ($issues as $issue) {
                 $lines[] = '  '.$this->formatIssue($issue);
+
+                if ($issue->hint !== null) {
+                    $lines[] = '    Hint: '.$redactor->redactText($issue->hint);
+                }
+
+                if ($issue->fix !== null) {
+                    $lines[] = '    Fix: '.$redactor->redactText($issue->fix->description);
+
+                    if ($issue->fix->command !== null) {
+                        $lines[] = '    Suggested command: '.$redactor->redactText($issue->fix->command);
+                    }
+                }
             }
         }
 

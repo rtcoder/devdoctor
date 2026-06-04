@@ -1,6 +1,7 @@
 <?php
 
 use App\DevDoctor\Core\ExitCode;
+use App\DevDoctor\Core\FixSuggestion;
 use App\DevDoctor\Core\Issue;
 use App\DevDoctor\Core\IssueCollection;
 use App\DevDoctor\Core\ModuleResult;
@@ -28,7 +29,14 @@ it('summarizes issues and maps exit codes', function () {
 
 it('renders valid json output', function () {
     $result = new ModuleResult('env', new IssueCollection([
-        new Issue('DD_ENV_READY', Severity::INFO, 'ready', 'env'),
+        new Issue(
+            'DD_ENV_MISSING_IN_ENV',
+            Severity::WARNING,
+            'missing',
+            'env',
+            hint: 'Add it.',
+            fix: new FixSuggestion('Add the key.', 'printf token=secret-value'),
+        ),
     ]));
 
     $json = app(JsonRenderer::class)->render([$result]);
@@ -36,12 +44,21 @@ it('renders valid json output', function () {
 
     expect(json_last_error())->toBe(JSON_ERROR_NONE)
         ->and($decoded['tool'])->toBe('devdoctor')
-        ->and($decoded['modules'][0]['name'])->toBe('env');
+        ->and($decoded['modules'][0]['name'])->toBe('env')
+        ->and($decoded['modules'][0]['issues'][0]['hint'])->toBe('Add it.')
+        ->and($decoded['modules'][0]['issues'][0]['fix']['command'])->not->toContain('secret-value');
 });
 
 it('renders table output', function () {
     $result = new ModuleResult('env', new IssueCollection([
-        new Issue('DD_ENV_READY', Severity::INFO, 'ready', 'env'),
+        new Issue(
+            'DD_ENV_MISSING_IN_ENV',
+            Severity::WARNING,
+            'missing',
+            'env',
+            hint: 'Add the missing key.',
+            fix: new FixSuggestion('Add the key.', 'edit .env'),
+        ),
     ]));
 
     $table = app(TableRenderer::class)->render([$result]);
@@ -49,8 +66,24 @@ it('renders table output', function () {
     expect($table)
         ->toContain('DevDoctor')
         ->toContain('env')
-        ->toContain('passed')
-        ->toContain('DD_ENV_READY');
+        ->toContain('warning')
+        ->toContain('DD_ENV_MISSING_IN_ENV')
+        ->toContain('Hint: Add the missing key.')
+        ->toContain('Suggested command: edit .env');
+});
+
+it('provides catalog suggestions for actionable issues', function () {
+    $issue = new Issue(
+        'DD_PORT_IN_USE',
+        Severity::WARNING,
+        'occupied',
+        'ports',
+        context: ['suggested_command' => 'kill -TERM 123'],
+    );
+
+    expect($issue->hint)->not->toBeNull()
+        ->and($issue->fix?->command)->toBe('kill -TERM 123')
+        ->and($issue->fix?->destructive)->toBeTrue();
 });
 
 it('redacts sensitive values', function () {

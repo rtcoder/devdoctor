@@ -6,6 +6,15 @@ namespace App\DevDoctor\Core;
 
 final class Redactor
 {
+    public function redactText(string $value): string
+    {
+        return preg_replace(
+            '/(?i)(secret|token|password|passwd|api[_-]?key|private[_-]?key|credential|auth)(\s*[=:]\s*)([^\s,;]+)/',
+            '$1$2********',
+            $value,
+        ) ?? $value;
+    }
+
     public function redact(?string $value): string
     {
         if ($value === null || $value === '') {

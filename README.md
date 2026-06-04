@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
-Current version: `0.9.0`
+Current version: `0.10.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Release builds are standalone PHAR executables:
 
 ```bash
-php devdoctor app:build devdoctor --build-version=0.9.0 --no-interaction
+php devdoctor app:build devdoctor --build-version=0.10.0 --no-interaction
 php builds/devdoctor --version
 ```
 
@@ -119,34 +119,40 @@ env        warning       0        1     0
 
 Warnings
   [DD_ENV_MISSING_IN_ENV] .env.example:2 QUEUE_CONNECTION QUEUE_CONNECTION exists in .env.example but is missing in .env
+    Hint: Add the key to the environment file or ignore it explicitly when it is optional.
 ```
+
+Actionable findings may include a hint and a suggested command. Suggested commands are never executed by DevDoctor. Commands that can change system state, such as terminating a process, are marked as destructive in JSON output.
 
 ## JSON Output
 
 ```json
 {
     "tool": "devdoctor",
-    "status": "passed",
+    "status": "warning",
     "summary": {
         "errors": 0,
-        "warnings": 0,
-        "info": 1
+        "warnings": 1,
+        "info": 0
     },
     "modules": [
         {
             "name": "env",
-            "status": "passed",
+            "status": "warning",
             "summary": {
                 "errors": 0,
-                "warnings": 0,
-                "info": 1
+                "warnings": 1,
+                "info": 0
             },
             "issues": [
                 {
-                    "code": "DD_ENV_READY",
-                    "severity": "info",
-                    "message": "Env diagnostics found no issues.",
-                    "module": "env"
+                    "code": "DD_ENV_MISSING_IN_ENV",
+                    "severity": "warning",
+                    "message": "QUEUE_CONNECTION exists in .env.example but is missing in .env",
+                    "module": "env",
+                    "file": ".env.example",
+                    "key": "QUEUE_CONNECTION",
+                    "hint": "Add the key to the environment file or ignore it explicitly when it is optional."
                 }
             ]
         }
@@ -231,6 +237,7 @@ DevDoctor is read-only by default:
 - It does not rewrite `.env`, Compose, Composer, Git, or project files.
 - It does not run `composer install`, `composer update`, Composer scripts, or internet-dependent audits.
 - It does not run `docker compose up`, `start`, `stop`, `rm`, or `prune`.
+- Hints and suggested commands are informational only and are never executed.
 - Port diagnostics may suggest `kill -TERM <pid>`, but never execute it.
 - Basic diagnostics do not require telemetry or internet access.
 
@@ -240,7 +247,7 @@ DevDoctor is read-only by default:
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor --build-version=0.9.0 --no-interaction
+php devdoctor app:build devdoctor --build-version=0.10.0 --no-interaction
 php builds/devdoctor --version
 ```
 
