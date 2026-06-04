@@ -18,17 +18,18 @@ final class TableRenderer
     {
         $redactor = new Redactor;
         $lines = ['DevDoctor', ''];
-        $lines[] = sprintf('%-10s %-8s %6s %8s %5s', 'Module', 'Status', 'Errors', 'Warnings', 'Info');
+        $lines[] = sprintf('%-10s %-8s %6s %8s %5s %10s', 'Module', 'Status', 'Errors', 'Warnings', 'Info', 'Suppressed');
 
         foreach ($results as $result) {
             $summary = $result->issues->summary();
             $lines[] = sprintf(
-                '%-10s %-8s %6d %8d %5d',
+                '%-10s %-8s %6d %8d %5d %10d',
                 $result->name,
                 $result->status()->value,
                 $summary['errors'],
                 $summary['warnings'],
                 $summary['info'],
+                $summary['suppressed'],
             );
         }
 
@@ -95,6 +96,6 @@ final class TableRenderer
 
         $prefix = $location === '' ? '' : $location.' ';
 
-        return sprintf('[%s] %s%s', $issue->code, $prefix, $issue->message);
+        return sprintf('[%s]%s %s%s', $issue->code, $issue->suppressed ? ' [suppressed]' : '', $prefix, $issue->message);
     }
 }

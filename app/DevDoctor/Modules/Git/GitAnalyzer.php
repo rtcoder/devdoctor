@@ -58,7 +58,7 @@ final readonly class GitAnalyzer
             $this->checkLargeUntrackedFiles($issues, $paths, $options);
         }
 
-        if ($issues->summary() === ['errors' => 0, 'warnings' => 0, 'info' => 0]) {
+        if ($issues->isEmpty()) {
             $issues->add(new Issue(
                 code: 'DD_GIT_READY',
                 severity: Severity::INFO,

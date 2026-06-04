@@ -100,6 +100,13 @@ final class SarifRenderer
             ]];
         }
 
+        if ($issue->suppressed) {
+            $result['suppressions'] = [[
+                'kind' => 'external',
+                'justification' => 'Matched DevDoctor baseline.',
+            ]];
+        }
+
         return $result;
     }
 

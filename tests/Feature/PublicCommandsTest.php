@@ -161,6 +161,49 @@ it('renders ci diagnostics as sarif', function () {
         ->and($output['runs'][0]['results'][0]['ruleId'])->toBe('DD_ENV_MISSING_IN_ENV');
 });
 
+it('writes and applies ci baselines without hiding findings', function () {
+    $path = sys_get_temp_dir().'/devdoctor-ci-baseline-'.bin2hex(random_bytes(4));
+    mkdir($path);
+    file_put_contents($path.'/.env', "APP_ENV=local\n");
+    file_put_contents($path.'/.env.example', "APP_ENV=local\nQUEUE_CONNECTION=sync\n");
+
+    $writeExitCode = Artisan::call('ci', [
+        '--path' => $path,
+        '--modules' => 'env',
+        '--format' => 'json',
+        '--write-baseline' => 'devdoctor-baseline.json',
+    ]);
+
+    expect($writeExitCode)->toBe(1)
+        ->and(is_file($path.'/devdoctor-baseline.json'))->toBeTrue();
+
+    $exitCode = Artisan::call('ci', [
+        '--path' => $path,
+        '--modules' => 'env',
+        '--format' => 'json',
+        '--baseline' => 'devdoctor-baseline.json',
+    ]);
+    $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
+
+    expect($exitCode)->toBe(0)
+        ->and($output['summary']['suppressed'])->toBe(1)
+        ->and($output['modules'][0]['issues'][0]['suppressed'])->toBeTrue();
+});
+
+it('reports missing and invalid ci baselines', function () {
+    $path = sys_get_temp_dir().'/devdoctor-ci-invalid-baseline-'.bin2hex(random_bytes(4));
+    mkdir($path);
+    file_put_contents($path.'/invalid.json', '{}');
+
+    $this->artisan('ci', ['--path' => $path, '--baseline' => 'missing.json', '--format' => 'json'])
+        ->assertExitCode(4)
+        ->expectsOutputToContain('DD_CI_BASELINE_MISSING');
+
+    $this->artisan('ci', ['--path' => $path, '--baseline' => 'invalid.json', '--format' => 'json'])
+        ->assertExitCode(3)
+        ->expectsOutputToContain('DD_CI_BASELINE_INVALID');
+});
+
 it('returns invalid config exit code for malformed devdoctor yaml', function () {
     $path = sys_get_temp_dir().'/devdoctor-invalid-config-'.bin2hex(random_bytes(4));
     mkdir($path);

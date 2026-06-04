@@ -38,7 +38,7 @@ final class FakePortProvider implements PortProviderInterface
 it('reports no issue for a free port', function () {
     $issues = (new PortsAnalyzer(new FakePortProvider))->analyze(new PortsOptions(path: '.', ports: [8000]));
 
-    expect($issues->summary())->toBe(['errors' => 0, 'warnings' => 0, 'info' => 1])
+    expect($issues->summary())->toBe(['errors' => 0, 'warnings' => 0, 'info' => 1, 'suppressed' => 0])
         ->and($issues->all()[0]->code)->toBe('DD_PORTS_READY');
 });
 

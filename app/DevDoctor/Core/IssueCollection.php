@@ -62,16 +62,21 @@ final class IssueCollection
         return $this->count(Severity::WARNING) > 0;
     }
 
+    public function isEmpty(): bool
+    {
+        return $this->issues === [];
+    }
+
     public function count(Severity $severity): int
     {
         return count(array_filter(
             $this->issues,
-            static fn (Issue $issue): bool => $issue->severity === $severity,
+            static fn (Issue $issue): bool => $issue->severity === $severity && ! $issue->suppressed,
         ));
     }
 
     /**
-     * @return array{errors: int, warnings: int, info: int}
+     * @return array{errors: int, warnings: int, info: int, suppressed: int}
      */
     public function summary(): array
     {
@@ -79,6 +84,10 @@ final class IssueCollection
             'errors' => $this->count(Severity::ERROR),
             'warnings' => $this->count(Severity::WARNING),
             'info' => $this->count(Severity::INFO),
+            'suppressed' => count(array_filter(
+                $this->issues,
+                static fn (Issue $issue): bool => $issue->suppressed,
+            )),
         ];
     }
 }

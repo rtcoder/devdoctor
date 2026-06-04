@@ -14,13 +14,14 @@ final class JsonRenderer
      */
     public function render(array $results): string
     {
-        $errors = $warnings = $info = 0;
+        $errors = $warnings = $info = $suppressed = 0;
 
         foreach ($results as $result) {
             $summary = $result->issues->summary();
             $errors += $summary['errors'];
             $warnings += $summary['warnings'];
             $info += $summary['info'];
+            $suppressed += $summary['suppressed'];
         }
 
         return json_encode([
@@ -29,11 +30,13 @@ final class JsonRenderer
                 'errors' => $errors,
                 'warnings' => $warnings,
                 'info' => $info,
+                'suppressed' => $suppressed,
             ])->value,
             'summary' => [
                 'errors' => $errors,
                 'warnings' => $warnings,
                 'info' => $info,
+                'suppressed' => $suppressed,
             ],
             'modules' => array_map(
                 static fn (ModuleResult $result): array => $result->toArray(),

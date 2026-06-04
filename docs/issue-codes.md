@@ -4,6 +4,9 @@ Issue codes are stable identifiers intended for CI parsing, baselines, and futur
 
 ## CI
 
+- `DD_CI_BASELINE_EXISTS`
+- `DD_CI_BASELINE_INVALID`
+- `DD_CI_BASELINE_MISSING`
 - `DD_CI_UNKNOWN_MODULE`
 
 ## Composer

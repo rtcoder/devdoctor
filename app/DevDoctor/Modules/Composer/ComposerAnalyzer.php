@@ -79,7 +79,7 @@ final readonly class ComposerAnalyzer
             $this->runComposerValidate($issues, $options->path);
         }
 
-        if ($issues->summary() === ['errors' => 0, 'warnings' => 0, 'info' => 0]) {
+        if ($issues->isEmpty()) {
             $issues->add(new Issue(
                 code: 'DD_COMPOSER_READY',
                 severity: Severity::INFO,

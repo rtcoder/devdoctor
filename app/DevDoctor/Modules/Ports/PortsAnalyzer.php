@@ -82,7 +82,7 @@ final readonly class PortsAnalyzer
             }
         }
 
-        if ($issues->summary() === ['errors' => 0, 'warnings' => 0, 'info' => 0]) {
+        if ($issues->isEmpty()) {
             $issues->add(new Issue(
                 code: 'DD_PORTS_READY',
                 severity: Severity::INFO,

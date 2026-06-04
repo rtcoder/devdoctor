@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
-Current version: `0.11.0`
+Current version: `0.11.1`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Release builds are standalone PHAR executables:
 
 ```bash
-php devdoctor app:build devdoctor --build-version=0.11.0 --no-interaction
+php devdoctor app:build devdoctor --build-version=0.11.1 --no-interaction
 php builds/devdoctor --version
 ```
 
@@ -137,7 +137,8 @@ Actionable findings may include a hint and a suggested command. Suggested comman
     "summary": {
         "errors": 0,
         "warnings": 1,
-        "info": 0
+        "info": 0,
+        "suppressed": 0
     },
     "modules": [
         {
@@ -146,7 +147,8 @@ Actionable findings may include a hint and a suggested command. Suggested comman
             "summary": {
                 "errors": 0,
                 "warnings": 1,
-                "info": 0
+                "info": 0,
+                "suppressed": 0
             },
             "issues": [
                 {
@@ -156,7 +158,8 @@ Actionable findings may include a hint and a suggested command. Suggested comman
                     "module": "env",
                     "file": ".env.example",
                     "key": "QUEUE_CONNECTION",
-                    "hint": "Add the key to the environment file or ignore it explicitly when it is optional."
+                    "hint": "Add the key to the environment file or ignore it explicitly when it is optional.",
+                    "suppressed": false
                 }
             ]
         }
@@ -187,6 +190,17 @@ php devdoctor ci --no-fail-on-warnings
 Unknown modules return exit code `3`. Selected modules are always included in JSON output.
 
 The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5. It also builds and smoke-tests the PHAR executable.
+
+## Baselines
+
+Baselines let an existing project acknowledge current warnings and errors while continuing to fail CI for new findings:
+
+```bash
+php devdoctor ci --write-baseline=devdoctor-baseline.json
+php devdoctor ci --baseline=devdoctor-baseline.json
+```
+
+Baseline fingerprints use issue code, module, normalized file path, and key. They do not depend on messages or line numbers. Suppressed findings remain visible in table, JSON, and SARIF output, but they do not affect status or exit code. Only warnings and errors are written. Use `--force` to intentionally replace an existing baseline.
 
 ## Configuration
 
@@ -271,7 +285,7 @@ DevDoctor is read-only by default:
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor --build-version=0.11.0 --no-interaction
+php devdoctor app:build devdoctor --build-version=0.11.1 --no-interaction
 php builds/devdoctor --version
 ```
 

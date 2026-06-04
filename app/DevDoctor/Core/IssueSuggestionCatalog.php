@@ -16,6 +16,9 @@ final class IssueSuggestionCatalog
 
         return match ($code) {
             'DD_CI_UNKNOWN_MODULE' => self::suggest('Use one of the documented CI module names.'),
+            'DD_CI_BASELINE_MISSING' => self::suggest('Create the baseline file with --write-baseline or correct the provided path.'),
+            'DD_CI_BASELINE_INVALID' => self::suggest('Regenerate the baseline file with --write-baseline.'),
+            'DD_CI_BASELINE_EXISTS' => self::suggest('Review the existing baseline before replacing it with --force.'),
             'DD_ENV_DUPLICATE_KEY' => self::suggest('Keep a single declaration for this key so its effective value is unambiguous.'),
             'DD_ENV_EMPTY_VALUE' => self::suggest('Set a meaningful value or explicitly ignore the key in devdoctor.yml.'),
             'DD_ENV_EXAMPLE_MISSING' => self::suggest('Create the example file and document every required environment key.'),

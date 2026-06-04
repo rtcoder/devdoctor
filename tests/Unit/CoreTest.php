@@ -25,7 +25,21 @@ it('summarizes issues and maps exit codes', function () {
         'errors' => 1,
         'warnings' => 1,
         'info' => 1,
+        'suppressed' => 0,
     ])->and(ExitCode::fromIssues($issues))->toBe(ExitCode::ERRORS);
+});
+
+it('excludes suppressed issues from status and exit code summaries', function () {
+    $issues = new IssueCollection([
+        (new Issue('DD_TEST_WARNING', Severity::WARNING, 'warning'))->withSuppressed(),
+    ]);
+
+    expect($issues->summary())->toBe([
+        'errors' => 0,
+        'warnings' => 0,
+        'info' => 0,
+        'suppressed' => 1,
+    ])->and(ExitCode::fromIssues($issues))->toBe(ExitCode::OK);
 });
 
 it('renders valid json output', function () {

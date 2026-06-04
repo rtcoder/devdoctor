@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Commands;
 
 use App\Commands\Concerns\RendersDiagnostics;
+use App\DevDoctor\Core\Baseline\BaselineManager;
+use App\DevDoctor\Core\Baseline\InvalidBaseline;
 use App\DevDoctor\Core\Config\ConfigLoader;
 use App\DevDoctor\Core\Config\InvalidDevDoctorConfig;
 use App\DevDoctor\Core\ExitCode;
@@ -39,7 +41,10 @@ final class CiCommand extends Command
         {--exclude= : Comma-separated modules to exclude}
         {--fail-on-warnings : Return a non-zero exit code for warnings}
         {--no-fail-on-warnings : Return zero when diagnostics only contain warnings}
-        {--config=devdoctor.yml : DevDoctor config file name}';
+        {--config=devdoctor.yml : DevDoctor config file name}
+        {--baseline= : Baseline file to apply}
+        {--write-baseline= : Write warning and error fingerprints to a baseline file}
+        {--force : Allow replacing an existing baseline file}';
 
     protected $description = 'Run CI-safe DevDoctor diagnostics.';
 
@@ -72,6 +77,20 @@ final class CiCommand extends Command
             } else {
                 return $this->renderDiagnostics($result['results'], $result['exitCode']);
             }
+        }
+
+        $baselineResult = $this->applyBaseline($path, $results);
+
+        if (array_key_exists('exitCode', $baselineResult)) {
+            return $this->renderDiagnostics($baselineResult['results'], $baselineResult['exitCode']);
+        }
+
+        $results = $baselineResult;
+
+        $writeResult = $this->writeBaseline($path, $results);
+
+        if ($writeResult !== null) {
+            return $this->renderDiagnostics($writeResult['results'], $writeResult['exitCode']);
         }
 
         return $this->renderDiagnostics(
@@ -200,5 +219,85 @@ final class CiCommand extends Command
         }
 
         return false;
+    }
+
+    /**
+     * @param  list<ModuleResult>  $results
+     * @return list<ModuleResult>|array{results: list<ModuleResult>, exitCode: ExitCode}
+     */
+    private function applyBaseline(string $path, array $results): array
+    {
+        $baselineFile = (string) ($this->option('baseline') ?: '');
+
+        if ($baselineFile === '') {
+            return $results;
+        }
+
+        $baselinePath = PathResolver::fromBasePath($path)->absolute($baselineFile);
+
+        if (! is_file($baselinePath)) {
+            return $this->baselineError('DD_CI_BASELINE_MISSING', 'Baseline file does not exist: '.$baselineFile, ExitCode::MISSING_DEPENDENCY);
+        }
+
+        try {
+            $baseline = app(BaselineManager::class)->load($baselinePath);
+        } catch (InvalidBaseline $exception) {
+            return $this->baselineError('DD_CI_BASELINE_INVALID', $exception->getMessage(), ExitCode::INVALID_CONFIG);
+        }
+
+        return app(BaselineManager::class)->apply($baseline, $results);
+    }
+
+    /**
+     * @param  list<ModuleResult>  $results
+     * @return array{results: list<ModuleResult>, exitCode: ExitCode}|null
+     */
+    private function writeBaseline(string $path, array $results): ?array
+    {
+        $baselineFile = (string) ($this->option('write-baseline') ?: '');
+
+        if ($baselineFile === '') {
+            return null;
+        }
+
+        $baselinePath = PathResolver::fromBasePath($path)->absolute($baselineFile);
+
+        if (is_file($baselinePath) && ! (bool) $this->option('force')) {
+            return $this->baselineError(
+                'DD_CI_BASELINE_EXISTS',
+                'Baseline file already exists: '.$baselineFile.'. Use --force to replace it.',
+                ExitCode::INVALID_CONFIG,
+            );
+        }
+
+        $directory = dirname($baselinePath);
+
+        if (! is_dir($directory)) {
+            mkdir($directory, recursive: true);
+        }
+
+        app(BaselineManager::class)->write($baselinePath, $results);
+
+        return null;
+    }
+
+    /**
+     * @return array{results: list<ModuleResult>, exitCode: ExitCode}
+     */
+    private function baselineError(string $code, string $message, ExitCode $exitCode): array
+    {
+        return [
+            'results' => [
+                new ModuleResult('ci', new IssueCollection([
+                    new Issue(
+                        code: $code,
+                        severity: Severity::ERROR,
+                        message: $message,
+                        module: 'ci',
+                    ),
+                ])),
+            ],
+            'exitCode' => $exitCode,
+        ];
     }
 }

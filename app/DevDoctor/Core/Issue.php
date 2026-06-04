@@ -24,6 +24,7 @@ final readonly class Issue
         public array $context = [],
         ?string $hint = null,
         ?FixSuggestion $fix = null,
+        public bool $suppressed = false,
     ) {
         $suggestion = IssueSuggestionCatalog::for($code, $context);
         $this->hint = $hint ?? $suggestion['hint'];
@@ -48,6 +49,24 @@ final readonly class Issue
             'context' => $redactor->redactContext($this->context),
             'hint' => $this->hint === null ? null : $redactor->redactText($this->hint),
             'fix' => $this->fix?->toArray($redactor),
+            'suppressed' => $this->suppressed,
         ], static fn (mixed $value): bool => $value !== null && $value !== []);
+    }
+
+    public function withSuppressed(): self
+    {
+        return new self(
+            code: $this->code,
+            severity: $this->severity,
+            message: $this->message,
+            module: $this->module,
+            file: $this->file,
+            line: $this->line,
+            key: $this->key,
+            context: $this->context,
+            hint: $this->hint,
+            fix: $this->fix,
+            suppressed: true,
+        );
     }
 }

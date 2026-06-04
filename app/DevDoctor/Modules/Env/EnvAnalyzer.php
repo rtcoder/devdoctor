@@ -47,7 +47,7 @@ final readonly class EnvAnalyzer
             $this->scanSecrets($issues, $paths, $options->exampleFile);
         }
 
-        if ($issues->summary() === ['errors' => 0, 'warnings' => 0, 'info' => 0]) {
+        if ($issues->isEmpty()) {
             $issues->add(new Issue(
                 code: 'DD_ENV_READY',
                 severity: Severity::INFO,
