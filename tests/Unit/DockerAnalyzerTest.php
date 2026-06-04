@@ -47,20 +47,20 @@ it('reports daemon and compose config failures', function () {
 
 it('reports invalid compose yaml and missing env references', function () {
     $path = dockerTempPath();
-    dockerCompose($path, "services:\n  app: [");
+    $composeFile = dockerCompose($path, "services:\n  app: [");
 
     $issues = analyzeDocker(new FakeDockerRunner([
         'which docker' => dockerOk("/usr/bin/docker\n"),
-        'docker compose -f '.$path.'/docker-compose.yml config' => dockerOk(''),
+        'docker compose -f '.$composeFile.' config' => dockerOk(''),
     ], $path), new DockerOptions($path, daemon: false, containers: false));
 
     expect(dockerCodes($issues))->toContain('DD_DOCKER_COMPOSE_INVALID');
 
-    dockerCompose($path, "services:\n  app:\n    image: \${DD_TEST_IMAGE_MISSING}\n");
+    $composeFile = dockerCompose($path, "services:\n  app:\n    image: \${DD_TEST_IMAGE_MISSING}\n");
 
     $issues = analyzeDocker(new FakeDockerRunner([
         'which docker' => dockerOk("/usr/bin/docker\n"),
-        'docker compose -f '.$path.'/docker-compose.yml config' => dockerOk(''),
+        'docker compose -f '.$composeFile.' config' => dockerOk(''),
     ], $path), new DockerOptions($path, daemon: false, containers: false));
 
     expect(dockerCodes($issues))->toBe(['DD_DOCKER_ENV_REFERENCE_MISSING']);
@@ -68,7 +68,7 @@ it('reports invalid compose yaml and missing env references', function () {
 
 it('respects compose interpolation defaults and required operators', function () {
     $path = dockerTempPath();
-    dockerCompose($path, <<<'YAML'
+    $composeFile = dockerCompose($path, <<<'YAML'
 services:
   app:
     image: ${OPTIONAL_IMAGE:-nginx}
@@ -78,7 +78,7 @@ services:
 YAML);
 
     $issues = analyzeDocker(new FakeDockerRunner([
-        'docker compose -f '.$path.'/docker-compose.yml config' => dockerOk(''),
+        'docker compose -f '.$composeFile.' config' => dockerOk(''),
     ], $path), new DockerOptions($path, daemon: false, containers: false));
 
     expect(dockerCodes($issues))->toBe(['DD_DOCKER_ENV_REFERENCE_MISSING'])
@@ -87,11 +87,11 @@ YAML);
 
 it('reports compose host port conflicts', function () {
     $path = dockerTempPath();
-    dockerCompose($path, "services:\n  web:\n    image: nginx\n    ports:\n      - '8080:80'\n");
+    $composeFile = dockerCompose($path, "services:\n  web:\n    image: nginx\n    ports:\n      - '8080:80'\n");
 
     $issues = analyzeDocker(new FakeDockerRunner([
         'which docker' => dockerOk("/usr/bin/docker\n"),
-        'docker compose -f '.$path.'/docker-compose.yml config' => dockerOk(''),
+        'docker compose -f '.$composeFile.' config' => dockerOk(''),
     ], $path), new DockerOptions($path, daemon: false, containers: false), new FakeDockerPorts([8080]));
 
     expect(dockerCodes($issues))->toBe(['DD_DOCKER_HOST_PORT_CONFLICT']);
@@ -158,7 +158,7 @@ function dockerCodes(IssueCollection $issues): array
 
 function dockerTempPath(): string
 {
-    $path = sys_get_temp_dir().'/devdoctor-docker-'.bin2hex(random_bytes(4));
+    $path = sys_get_temp_dir().DIRECTORY_SEPARATOR.'devdoctor-docker-'.bin2hex(random_bytes(4));
     mkdir($path);
 
     return $path;
@@ -166,9 +166,10 @@ function dockerTempPath(): string
 
 function dockerCompose(string $path, string $content): string
 {
-    file_put_contents($path.'/docker-compose.yml', $content);
+    $composeFile = $path.DIRECTORY_SEPARATOR.'docker-compose.yml';
+    file_put_contents($composeFile, $content);
 
-    return $path.'/docker-compose.yml';
+    return $composeFile;
 }
 
 final class FakeDockerRunner implements DockerRunnerInterface

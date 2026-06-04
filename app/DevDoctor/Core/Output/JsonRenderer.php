@@ -26,6 +26,7 @@ final class JsonRenderer
 
         return json_encode([
             'tool' => 'devdoctor',
+            'schema_version' => '1.0',
             'status' => ModuleStatus::fromSummary([
                 'errors' => $errors,
                 'warnings' => $warnings,

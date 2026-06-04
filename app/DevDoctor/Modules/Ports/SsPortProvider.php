@@ -33,7 +33,7 @@ final readonly class SsPortProvider implements PortProviderInterface
 
         return array_values(array_filter(array_map(
             fn (string $line): ?PortUsage => $this->parseLine($line, $port),
-            array_filter(explode(PHP_EOL, trim($result->stdout))),
+            array_filter(preg_split('/\R/', trim($result->stdout)) ?: []),
         )));
     }
 

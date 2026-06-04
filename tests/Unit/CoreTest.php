@@ -59,6 +59,7 @@ it('renders valid json output', function () {
 
     expect(json_last_error())->toBe(JSON_ERROR_NONE)
         ->and($decoded['tool'])->toBe('devdoctor')
+        ->and($decoded['schema_version'])->toBe('1.0')
         ->and($decoded['modules'][0]['name'])->toBe('env')
         ->and($decoded['modules'][0]['issues'][0]['hint'])->toBe('Add it.')
         ->and($decoded['modules'][0]['issues'][0]['fix']['command'])->not->toContain('secret-value');
@@ -138,11 +139,12 @@ it('redacts sensitive values', function () {
 });
 
 it('normalizes displayed paths relative to the base path', function () {
-    $resolver = PathResolver::fromBasePath('/tmp/devdoctor-project');
+    $basePath = sys_get_temp_dir().DIRECTORY_SEPARATOR.'devdoctor-project';
+    $resolver = PathResolver::fromBasePath($basePath);
 
-    expect($resolver->absolute('.env'))->toBe('/tmp/devdoctor-project/.env')
-        ->and($resolver->display('/tmp/devdoctor-project/config/devdoctor.yml'))->toBe('config/devdoctor.yml')
-        ->and($resolver->display('/elsewhere/file.txt'))->toBe('/elsewhere/file.txt');
+    expect($resolver->absolute('.env'))->toBe($basePath.DIRECTORY_SEPARATOR.'.env')
+        ->and($resolver->display($basePath.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'devdoctor.yml'))->toBe('config/devdoctor.yml')
+        ->and($resolver->display(DIRECTORY_SEPARATOR.'elsewhere'.DIRECTORY_SEPARATOR.'file.txt'))->toBe(DIRECTORY_SEPARATOR.'elsewhere'.DIRECTORY_SEPARATOR.'file.txt');
 });
 
 it('runs processes and captures output', function () {

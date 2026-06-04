@@ -31,7 +31,8 @@ final readonly class LsofPortProvider implements PortProviderInterface
             return [];
         }
 
-        $lines = array_values(array_filter(explode(PHP_EOL, trim($result->stdout))));
+        $lines = preg_split('/\R/', trim($result->stdout)) ?: [];
+        $lines = array_values(array_filter($lines));
         array_shift($lines);
 
         return array_values(array_filter(array_map(
