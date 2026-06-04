@@ -23,6 +23,7 @@ use App\DevDoctor\Modules\Git\GitAnalyzer;
 use App\DevDoctor\Modules\Git\GitOptions;
 use App\DevDoctor\Modules\Ports\PortsAnalyzer;
 use App\DevDoctor\Modules\Ports\PortsOptions;
+use App\DevDoctor\Modules\Presets\PresetsAnalyzer;
 use LaravelZero\Framework\Commands\Command;
 
 final class CiCommand extends Command
@@ -95,7 +96,7 @@ final class CiCommand extends Command
      */
     private function knownModules(): array
     {
-        return ['env', 'composer', 'git', 'docker', 'ports'];
+        return ['env', 'composer', 'git', 'docker', 'ports', 'presets'];
     }
 
     /**
@@ -137,6 +138,7 @@ final class CiCommand extends Command
                 common: true,
                 strict: (bool) $this->option('strict'),
             ))),
+            'presets' => new ModuleResult('presets', app(PresetsAnalyzer::class)->analyze($path)),
         };
     }
 

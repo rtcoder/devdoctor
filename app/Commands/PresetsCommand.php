@@ -1,0 +1,30 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Commands;
+
+use App\Commands\Concerns\RendersDiagnostics;
+use App\DevDoctor\Core\ModuleResult;
+use App\DevDoctor\Modules\Presets\PresetsAnalyzer;
+use LaravelZero\Framework\Commands\Command;
+
+final class PresetsCommand extends Command
+{
+    use RendersDiagnostics;
+
+    protected $signature = 'presets
+        {--path=. : Project path to inspect}
+        {--format=table : Output format: table or json}
+        {--ci : Use CI-safe behavior}
+        {--strict : Treat warnings as errors where supported}';
+
+    protected $description = 'Detect supported project framework and tooling presets.';
+
+    public function handle(): int
+    {
+        return $this->renderDiagnostics([
+            new ModuleResult('presets', app(PresetsAnalyzer::class)->analyze((string) $this->option('path'))),
+        ]);
+    }
+}

@@ -46,6 +46,18 @@ it('runs docker diagnostics with json output', function () {
         ->expectsOutputToContain('DD_DOCKER_NO_COMPOSE_PROJECT');
 });
 
+it('runs presets diagnostics with json output', function () {
+    $path = sys_get_temp_dir().'/devdoctor-presets-command-'.bin2hex(random_bytes(4));
+    mkdir($path);
+    file_put_contents($path.'/package.json', '{"devDependencies":{"vite":"^7.0"}}');
+
+    $exitCode = Artisan::call('presets', ['--path' => $path, '--format' => 'json']);
+    $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
+
+    expect($exitCode)->toBe(0)
+        ->and(array_column($output['modules'][0]['issues'], 'key'))->toBe(['node', 'vite']);
+});
+
 it('runs default ci modules without ports', function () {
     $path = sys_get_temp_dir().'/devdoctor-ci-command-'.bin2hex(random_bytes(4));
     mkdir($path);
@@ -73,6 +85,10 @@ it('supports ci module selection exclude and unknown module handling', function 
     $this->artisan('ci', ['--path' => $path, '--modules' => 'env,nope', '--format' => 'json'])
         ->assertExitCode(3)
         ->expectsOutputToContain('DD_CI_UNKNOWN_MODULE');
+
+    $this->artisan('ci', ['--path' => $path, '--modules' => 'presets', '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('"name": "presets"');
 });
 
 it('supports ci fail on warnings controls', function () {

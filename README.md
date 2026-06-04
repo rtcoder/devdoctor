@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
-Current version: `0.8.0`
+Current version: `0.9.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Release builds are standalone PHAR executables:
 
 ```bash
-php devdoctor app:build devdoctor --build-version=0.8.0 --no-interaction
+php devdoctor app:build devdoctor --build-version=0.9.0 --no-interaction
 php builds/devdoctor --version
 ```
 
@@ -37,6 +37,7 @@ composer   Check Composer project health
 git        Check Git repository hygiene
 docker     Check Docker and Docker Compose project health
 ci         Run CI-safe DevDoctor diagnostics
+presets    Detect supported project framework and tooling presets
 ```
 
 All public commands support the shared options:
@@ -62,6 +63,7 @@ php devdoctor composer
 php devdoctor git --require-clean --scan-large-files
 php devdoctor docker --compose-file=docker-compose.yml
 php devdoctor ci --modules=env,composer,git,docker --no-fail-on-warnings
+php devdoctor presets --format=json
 ```
 
 `ports` uses platform-specific read-only providers: `lsof` on macOS/Linux, `ss` as a Linux fallback, and `netstat -ano` on Windows. If no supported provider is available, DevDoctor reports `DD_PORT_PROVIDER_UNAVAILABLE` instead of failing unexpectedly.
@@ -87,6 +89,25 @@ Platform-specific commands are only suggested. DevDoctor never terminates a proc
 - Windows port diagnostics use `tasklist` when available to resolve a PID to a process name.
 - Composer reports `DD_COMPOSER_LOCK_OUTDATED` when `composer.lock` is older than `composer.json`.
 - Process execution uses argument arrays and supports project paths containing spaces.
+
+## Project Presets
+
+The `presets` command detects supported project stacks from files and declared dependencies without running project tools:
+
+| Preset | Detection evidence |
+| --- | --- |
+| Laravel | `laravel/framework` or `artisan` |
+| Symfony | `symfony/framework-bundle` or `bin/console` |
+| Node.js | `package.json` |
+| Vite | `vite` dependency or a `vite.config.*` file |
+| Next.js | `next` dependency |
+| Docker Compose | A supported Compose file |
+
+Preset detection is informational and can be included in CI explicitly:
+
+```bash
+php devdoctor ci --modules=presets,env,composer,git,docker
+```
 
 ## Table Output
 
@@ -219,7 +240,7 @@ DevDoctor is read-only by default:
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor --build-version=0.8.0 --no-interaction
+php devdoctor app:build devdoctor --build-version=0.9.0 --no-interaction
 php builds/devdoctor --version
 ```
 

@@ -6,10 +6,10 @@ Current state:
 
 - Laravel Zero 12.x is initialized.
 - The `devdoctor` binary exists.
-- Public commands are implemented: `env`, `ports`, `docker`, `composer`, `git`, and `ci`.
+- Public commands are implemented: `env`, `ports`, `docker`, `composer`, `git`, `ci`, and `presets`.
 - Core diagnostics, rendering, redaction, path normalization, config loading, and process execution are in place.
 - `env`, `ports`, `composer`, `git`, `docker`, and `ci` have focused tests and read-only behavior.
-- Cross-platform CI, PHAR smoke tests, a JSON schema, and a stable issue code catalog are included.
+- Cross-platform CI, PHAR smoke tests, a JSON schema, a stable issue code catalog, and project preset detection are included.
 
 ## Milestone 0.1.1 - Foundation Cleanup
 
@@ -191,7 +191,7 @@ Release status: complete.
 
 After the first complete version:
 
-- `v0.9`: framework presets for Laravel, Symfony, Node, Vite, Next.js, and Docker Compose.
+- `v0.9`: framework presets for Laravel, Symfony, Node, Vite, Next.js, and Docker Compose. Complete.
 - `v0.10`: better hints/fixes and a config wizard.
 - `v0.11`: SARIF output, GitHub Action wrapper, and baseline file support.
 - `v0.12`: PHAR release automation, signed builds, and Homebrew tap.

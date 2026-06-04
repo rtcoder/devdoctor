@@ -76,3 +76,8 @@ Issue codes are stable identifiers intended for CI parsing, baselines, and futur
 - `DD_PORT_MULTIPLE_LISTENERS`
 - `DD_PORT_PRIVILEGED`
 - `DD_PORT_PROVIDER_UNAVAILABLE`
+
+## Presets
+
+- `DD_PRESET_DETECTED`
+- `DD_PRESET_NONE_DETECTED`
