@@ -147,6 +147,20 @@ it('rejects invalid output formats consistently', function () {
         ->expectsOutputToContain('Invalid --format value');
 });
 
+it('renders ci diagnostics as sarif', function () {
+    $path = sys_get_temp_dir().'/devdoctor-ci-sarif-'.bin2hex(random_bytes(4));
+    mkdir($path);
+    file_put_contents($path.'/.env', "APP_ENV=local\n");
+    file_put_contents($path.'/.env.example', "APP_ENV=local\nQUEUE_CONNECTION=sync\n");
+
+    $exitCode = Artisan::call('ci', ['--path' => $path, '--modules' => 'env', '--format' => 'sarif']);
+    $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
+
+    expect($exitCode)->toBe(1)
+        ->and($output['version'])->toBe('2.1.0')
+        ->and($output['runs'][0]['results'][0]['ruleId'])->toBe('DD_ENV_MISSING_IN_ENV');
+});
+
 it('returns invalid config exit code for malformed devdoctor yaml', function () {
     $path = sys_get_temp_dir().'/devdoctor-invalid-config-'.bin2hex(random_bytes(4));
     mkdir($path);

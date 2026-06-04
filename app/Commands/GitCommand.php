@@ -16,7 +16,7 @@ final class GitCommand extends Command
 
     protected $signature = 'git
         {--path=. : Project path to inspect}
-        {--format=table : Output format: table or json}
+        {--format=table : Output format: table, json, or sarif}
         {--ci : Use CI-safe behavior}
         {--strict : Treat warnings as errors where supported}
         {--require-clean : Return an error when the worktree is dirty}

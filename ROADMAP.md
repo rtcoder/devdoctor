@@ -194,6 +194,7 @@ After the first complete version:
 - `v0.9`: framework presets for Laravel, Symfony, Node, Vite, Next.js, and Docker Compose. Complete.
 - `v0.10.0`: actionable hints and read-only fix suggestions. Complete.
 - `v0.10.1`: interactive config wizard. Complete.
-- `v0.11`: SARIF output, GitHub Action wrapper, and baseline file support.
+- `v0.11.0`: SARIF output. Complete.
+- `v0.11.1`: baseline file support.
 - `v0.12`: PHAR release automation, signed builds, and Homebrew tap.
 - `v1.0`: stable JSON schema, stable issue code catalog, documentation site, public Composer package, and CI examples for GitHub Actions, GitLab CI, and Bitbucket Pipelines.

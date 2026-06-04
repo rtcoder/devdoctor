@@ -9,4 +9,6 @@ enum OutputFormat: string
     case TABLE = 'table';
 
     case JSON = 'json';
+
+    case SARIF = 'sarif';
 }

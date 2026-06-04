@@ -6,6 +6,7 @@ use App\DevDoctor\Core\Issue;
 use App\DevDoctor\Core\IssueCollection;
 use App\DevDoctor\Core\ModuleResult;
 use App\DevDoctor\Core\Output\JsonRenderer;
+use App\DevDoctor\Core\Output\SarifRenderer;
 use App\DevDoctor\Core\Output\TableRenderer;
 use App\DevDoctor\Core\PathResolver;
 use App\DevDoctor\Core\Platform;
@@ -70,6 +71,30 @@ it('renders table output', function () {
         ->toContain('DD_ENV_MISSING_IN_ENV')
         ->toContain('Hint: Add the missing key.')
         ->toContain('Suggested command: edit .env');
+});
+
+it('renders deterministic sarif output with locations and fingerprints', function () {
+    $result = new ModuleResult('env', new IssueCollection([
+        new Issue(
+            'DD_ENV_MISSING_IN_ENV',
+            Severity::WARNING,
+            'missing',
+            'env',
+            '.env.example',
+            3,
+            'APP_KEY',
+        ),
+    ]));
+
+    $sarif = json_decode(app(SarifRenderer::class)->render([$result]), true, flags: JSON_THROW_ON_ERROR);
+    $finding = $sarif['runs'][0]['results'][0];
+
+    expect($sarif['version'])->toBe('2.1.0')
+        ->and($finding['ruleId'])->toBe('DD_ENV_MISSING_IN_ENV')
+        ->and($finding['level'])->toBe('warning')
+        ->and($finding['locations'][0]['physicalLocation']['artifactLocation']['uri'])->toBe('.env.example')
+        ->and($finding['locations'][0]['physicalLocation']['region']['startLine'])->toBe(3)
+        ->and($finding['partialFingerprints'])->toHaveKey('devdoctorFingerprint/v1');
 });
 
 it('provides catalog suggestions for actionable issues', function () {

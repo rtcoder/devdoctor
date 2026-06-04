@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
-Current version: `0.10.1`
+Current version: `0.11.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Release builds are standalone PHAR executables:
 
 ```bash
-php devdoctor app:build devdoctor --build-version=0.10.1 --no-interaction
+php devdoctor app:build devdoctor --build-version=0.11.0 --no-interaction
 php builds/devdoctor --version
 ```
 
@@ -46,6 +46,8 @@ All public commands support the shared options:
 ```bash
 --path=. --format=table --ci --strict
 ```
+
+Supported diagnostic output formats are `table`, `json`, and `sarif`.
 
 Laravel Zero already defines a global `--env` option, so DevDoctor exposes the env-file selector as `--env-file`:
 
@@ -162,6 +164,16 @@ Actionable findings may include a hint and a suggested command. Suggested comman
 }
 ```
 
+## SARIF Output
+
+Use SARIF 2.1.0 for code scanning integrations:
+
+```bash
+php devdoctor ci --format=sarif > devdoctor.sarif
+```
+
+Each result maps the issue code to a SARIF rule id, includes relative file locations when available, and carries a stable `devdoctorFingerprint/v1` based on code, module, file, and key. Hints and fix descriptions are included as metadata; suggested commands are never executed.
+
 ## CI
 
 The CI aggregator runs `env`, `composer`, `git`, and `docker` by default. `ports` is excluded by default because port state depends on the runner machine.
@@ -259,7 +271,7 @@ DevDoctor is read-only by default:
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor --build-version=0.10.1 --no-interaction
+php devdoctor app:build devdoctor --build-version=0.11.0 --no-interaction
 php builds/devdoctor --version
 ```
 

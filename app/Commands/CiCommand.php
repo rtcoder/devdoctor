@@ -32,7 +32,7 @@ final class CiCommand extends Command
 
     protected $signature = 'ci
         {--path=. : Project path to inspect}
-        {--format=table : Output format: table or json}
+        {--format=table : Output format: table, json, or sarif}
         {--ci : Use CI-safe behavior}
         {--strict : Treat warnings as errors where supported}
         {--modules= : Comma-separated modules to run}

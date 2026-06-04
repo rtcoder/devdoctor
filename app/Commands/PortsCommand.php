@@ -20,7 +20,7 @@ final class PortsCommand extends Command
         {--ports= : Comma-separated ports to inspect}
         {--common : Check built-in common development ports}
         {--include-docker : Attempt to correlate Docker port usage when available}
-        {--format=table : Output format: table or json}
+        {--format=table : Output format: table, json, or sarif}
         {--ci : Use CI-safe behavior}
         {--strict : Treat warnings as errors where supported}';
 

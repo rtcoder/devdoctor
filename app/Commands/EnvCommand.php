@@ -26,7 +26,7 @@ final class EnvCommand extends Command
         {--env-file=.env : Env file name}
         {--example=.env.example : Example env file name}
         {--config=devdoctor.yml : DevDoctor config file name}
-        {--format=table : Output format: table or json}
+        {--format=table : Output format: table, json, or sarif}
         {--ci : Use CI-safe behavior}
         {--strict : Treat warnings as errors where supported}
         {--no-secrets : Disable secret scanning for this run}';

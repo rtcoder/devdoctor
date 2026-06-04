@@ -8,6 +8,7 @@ use App\DevDoctor\Core\ExitCode;
 use App\DevDoctor\Core\ModuleResult;
 use App\DevDoctor\Core\Output\JsonRenderer;
 use App\DevDoctor\Core\Output\OutputFormat;
+use App\DevDoctor\Core\Output\SarifRenderer;
 use App\DevDoctor\Core\Output\TableRenderer;
 
 trait RendersDiagnostics
@@ -20,14 +21,16 @@ trait RendersDiagnostics
         $format = OutputFormat::tryFrom((string) $this->option('format'));
 
         if ($format === null) {
-            $this->output->writeln('Invalid --format value. Expected "table" or "json".');
+            $this->output->writeln('Invalid --format value. Expected "table", "json", or "sarif".');
 
             return ExitCode::INVALID_CONFIG->value;
         }
 
-        $output = $format === OutputFormat::JSON
-            ? app(JsonRenderer::class)->render($results)
-            : app(TableRenderer::class)->render($results);
+        $output = match ($format) {
+            OutputFormat::JSON => app(JsonRenderer::class)->render($results),
+            OutputFormat::SARIF => app(SarifRenderer::class)->render($results),
+            OutputFormat::TABLE => app(TableRenderer::class)->render($results),
+        };
 
         $this->output->write($output);
 

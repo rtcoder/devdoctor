@@ -16,7 +16,7 @@ final class ComposerCommand extends Command
 
     protected $signature = 'composer
         {--path=. : Project path to inspect}
-        {--format=table : Output format: table or json}
+        {--format=table : Output format: table, json, or sarif}
         {--ci : Use CI-safe behavior}
         {--strict : Treat warnings as errors where supported}
         {--no-scripts : Skip Composer script inspection}
