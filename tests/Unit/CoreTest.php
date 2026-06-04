@@ -102,3 +102,13 @@ it('maps operating system families to platforms', function () {
         ->and(Platform::fromOsFamily('Windows'))->toBe(Platform::WINDOWS)
         ->and(Platform::fromOsFamily('SomethingElse'))->toBe(Platform::OTHER);
 });
+
+it('runs processes from working directories with spaces', function () {
+    $path = sys_get_temp_dir().'/devdoctor path '.bin2hex(random_bytes(4));
+    mkdir($path);
+
+    $result = app(ProcessRunner::class)->run(['php', '-r', 'echo getcwd();'], $path);
+
+    expect($result->successful())->toBeTrue()
+        ->and(realpath($result->stdout))->toBe(realpath($path));
+});

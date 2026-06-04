@@ -55,7 +55,7 @@ final readonly class WindowsNetstatPortProvider implements PortProviderInterface
 
         return new PortUsage(
             port: $port,
-            process: new ProcessInfo((int) $parts[4], 'pid '.$parts[4]),
+            process: new ProcessInfo((int) $parts[4], $this->processName((int) $parts[4])),
             address: $parts[1],
         );
     }
@@ -63,5 +63,23 @@ final readonly class WindowsNetstatPortProvider implements PortProviderInterface
     private function addressUsesPort(string $address, int $port): bool
     {
         return str_ends_with($address, ':'.$port);
+    }
+
+    private function processName(int $pid): string
+    {
+        if (! $this->commands->available('tasklist')) {
+            return 'pid '.$pid;
+        }
+
+        $result = $this->runner->run(['tasklist', '/FI', 'PID eq '.$pid, '/FO', 'CSV', '/NH']);
+
+        if (! $result->successful()) {
+            return 'pid '.$pid;
+        }
+
+        $row = str_getcsv(trim($result->stdout));
+        $name = $row[0] ?? '';
+
+        return is_string($name) && $name !== '' ? $name : 'pid '.$pid;
     }
 }

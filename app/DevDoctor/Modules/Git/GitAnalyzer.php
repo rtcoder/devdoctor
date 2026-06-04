@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\DevDoctor\Modules\Git;
 
+use App\DevDoctor\Core\CommandAvailability;
+use App\DevDoctor\Core\CommandAvailabilityInterface;
 use App\DevDoctor\Core\Issue;
 use App\DevDoctor\Core\IssueCollection;
 use App\DevDoctor\Core\PathResolver;
@@ -13,12 +15,24 @@ final readonly class GitAnalyzer
 {
     public function __construct(
         private GitRunnerInterface $git = new ProcessGitRunner,
+        private CommandAvailabilityInterface $commands = new CommandAvailability,
     ) {}
 
     public function analyze(GitOptions $options): IssueCollection
     {
         $paths = PathResolver::fromBasePath($options->path);
         $issues = new IssueCollection;
+
+        if (! $this->commands->available('git')) {
+            $issues->add(new Issue(
+                code: 'DD_GIT_BINARY_MISSING',
+                severity: Severity::WARNING,
+                message: 'Git binary was not found.',
+                module: 'git',
+            ));
+
+            return $issues;
+        }
 
         if (! $this->isRepository($options->path)) {
             $issues->add(new Issue(

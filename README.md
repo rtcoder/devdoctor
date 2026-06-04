@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
-Current version: `0.2.0`
+Current version: `0.3.0`
 
 ## Installation
 
@@ -71,6 +71,15 @@ DevDoctor targets Linux, macOS, and Windows:
 | Composer, Git, Docker | Supported when their executables are installed | Supported when their executables are installed | Supported when their executables are installed |
 
 Platform-specific commands are only suggested. DevDoctor never terminates a process automatically.
+
+## Diagnostic Details
+
+- Compose interpolation understands required references such as `${VAR}` and `${VAR?message}`.
+- Compose references with defaults such as `${VAR:-default}` and `${VAR-default}` do not produce missing-variable warnings.
+- Git reports `DD_GIT_BINARY_MISSING` when Git is unavailable instead of treating the path as a non-repository.
+- Windows port diagnostics use `tasklist` when available to resolve a PID to a process name.
+- Composer reports `DD_COMPOSER_LOCK_OUTDATED` when `composer.lock` is older than `composer.json`.
+- Process execution uses argument arrays and supports project paths containing spaces.
 
 ## Table Output
 

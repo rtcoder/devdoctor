@@ -47,6 +47,21 @@ it('reports missing lock and vendor when dependencies exist', function () {
         ->and($codes)->toContain('DD_COMPOSER_VENDOR_MISSING');
 });
 
+it('reports composer lock files older than composer json', function () {
+    $path = composerFixture([
+        'composer.json' => '{"require":{"php":"^8.5"}}',
+        'composer.lock' => '{}',
+        'vendor/.gitkeep' => '',
+    ]);
+    touch($path.'/composer.lock', time() - 60);
+    touch($path.'/composer.json', time());
+
+    $issues = (new ComposerAnalyzer)->analyze(new ComposerOptions(path: $path, validate: false));
+
+    expect(array_map(static fn ($issue): string => $issue->code, $issues->all()))
+        ->toContain('DD_COMPOSER_LOCK_OUTDATED');
+});
+
 it('reports php version mismatch and missing extensions', function () {
     $issues = (new ComposerAnalyzer)->analyze(new ComposerOptions(path: composerFixture([
         'composer.json' => '{"require":{"php":"^99.0","ext-definitelymissing":"*"}}',

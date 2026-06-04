@@ -29,6 +29,7 @@ final readonly class DockerAnalyzer
         private DockerRunnerInterface $runner = new ProcessDockerRunner,
         private PortProviderInterface $ports = new SystemPortProvider,
         private CommandAvailabilityInterface $commands = new CommandAvailability,
+        private ComposeEnvReferenceScanner $envReferences = new ComposeEnvReferenceScanner,
     ) {}
 
     public function analyze(DockerOptions $options): IssueCollection
@@ -201,21 +202,19 @@ final readonly class DockerAnalyzer
     {
         $content = (string) file_get_contents($composeFile);
 
-        if (preg_match_all('/\$\{([A-Za-z_][A-Za-z0-9_]*)(?:[:?+\-][^}]*)?}/', $content, $matches) !== false) {
-            foreach (array_unique($matches[1] ?? []) as $name) {
-                if ($this->envValueExists($paths, $name)) {
-                    continue;
-                }
-
-                $issues->add(new Issue(
-                    code: 'DD_DOCKER_ENV_REFERENCE_MISSING',
-                    severity: Severity::WARNING,
-                    message: 'Compose references missing environment variable '.$name,
-                    module: 'docker',
-                    file: basename($composeFile),
-                    key: $name,
-                ));
+        foreach ($this->envReferences->requiredReferences($content) as $name) {
+            if ($this->envValueExists($paths, $name)) {
+                continue;
             }
+
+            $issues->add(new Issue(
+                code: 'DD_DOCKER_ENV_REFERENCE_MISSING',
+                severity: Severity::WARNING,
+                message: 'Compose references missing environment variable '.$name,
+                module: 'docker',
+                file: basename($composeFile),
+                key: $name,
+            ));
         }
     }
 

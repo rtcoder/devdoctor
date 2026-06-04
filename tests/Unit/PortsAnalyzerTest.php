@@ -153,9 +153,15 @@ it('parses windows netstat listeners', function () {
             "  Proto  Local Address          Foreign Address        State           PID\r\n  TCP    0.0.0.0:5173           0.0.0.0:0              LISTENING       3456\r\n",
             '',
         ),
+        'tasklist /FI PID eq 3456 /FO CSV /NH' => new ProcessResult(
+            0,
+            "\"node.exe\",\"3456\",\"Console\",\"1\",\"42,000 K\"\r\n",
+            '',
+        ),
     ]);
-    $provider = new WindowsNetstatPortProvider($runner, new FakeCommandAvailability(['netstat']), Platform::WINDOWS);
+    $provider = new WindowsNetstatPortProvider($runner, new FakeCommandAvailability(['netstat', 'tasklist']), Platform::WINDOWS);
 
     expect($provider->available())->toBeTrue()
-        ->and($provider->usages(5173)[0]->process->pid)->toBe(3456);
+        ->and($provider->usages(5173)[0]->process->pid)->toBe(3456)
+        ->and($provider->usages(5173)[0]->process->command)->toBe('node.exe');
 });

@@ -96,14 +96,29 @@ final readonly class ComposerAnalyzer
      */
     private function checkLockFile(IssueCollection $issues, PathResolver $paths, array $data): void
     {
-        if (is_file($paths->absolute('composer.lock')) || ! $this->hasDependencies($data)) {
+        $composerJson = $paths->absolute('composer.json');
+        $composerLock = $paths->absolute('composer.lock');
+
+        if (! is_file($composerLock) && $this->hasDependencies($data)) {
+            $issues->add(new Issue(
+                code: 'DD_COMPOSER_LOCK_MISSING',
+                severity: Severity::WARNING,
+                message: 'composer.lock is missing while composer.json declares dependencies',
+                module: 'composer',
+                file: 'composer.lock',
+            ));
+
+            return;
+        }
+
+        if (! is_file($composerLock) || filemtime($composerLock) >= filemtime($composerJson)) {
             return;
         }
 
         $issues->add(new Issue(
-            code: 'DD_COMPOSER_LOCK_MISSING',
+            code: 'DD_COMPOSER_LOCK_OUTDATED',
             severity: Severity::WARNING,
-            message: 'composer.lock is missing while composer.json declares dependencies',
+            message: 'composer.lock is older than composer.json and may be outdated',
             module: 'composer',
             file: 'composer.lock',
         ));

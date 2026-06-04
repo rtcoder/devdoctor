@@ -66,6 +66,25 @@ it('reports invalid compose yaml and missing env references', function () {
     expect(dockerCodes($issues))->toBe(['DD_DOCKER_ENV_REFERENCE_MISSING']);
 });
 
+it('respects compose interpolation defaults and required operators', function () {
+    $path = dockerTempPath();
+    dockerCompose($path, <<<'YAML'
+services:
+  app:
+    image: ${OPTIONAL_IMAGE:-nginx}
+    environment:
+      OPTIONAL_VALUE: ${OPTIONAL_VALUE-default}
+      REQUIRED_VALUE: ${REQUIRED_VALUE?must be set}
+YAML);
+
+    $issues = analyzeDocker(new FakeDockerRunner([
+        'docker compose -f '.$path.'/docker-compose.yml config' => dockerOk(''),
+    ], $path), new DockerOptions($path, daemon: false, containers: false));
+
+    expect(dockerCodes($issues))->toBe(['DD_DOCKER_ENV_REFERENCE_MISSING'])
+        ->and($issues->all()[0]->key)->toBe('REQUIRED_VALUE');
+});
+
 it('reports compose host port conflicts', function () {
     $path = dockerTempPath();
     dockerCompose($path, "services:\n  web:\n    image: nginx\n    ports:\n      - '8080:80'\n");

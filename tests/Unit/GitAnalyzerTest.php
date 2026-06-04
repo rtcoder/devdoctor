@@ -1,10 +1,18 @@
 <?php
 
+use App\DevDoctor\Core\CommandAvailabilityInterface;
 use App\DevDoctor\Core\IssueCollection;
 use App\DevDoctor\Core\ProcessResult;
 use App\DevDoctor\Modules\Git\GitAnalyzer;
 use App\DevDoctor\Modules\Git\GitOptions;
 use App\DevDoctor\Modules\Git\GitRunnerInterface;
+use Tests\Support\FakeCommandAvailability;
+
+it('reports a missing git binary', function () {
+    $issues = analyzeGit(new FakeGitRunner([]), commands: new FakeCommandAvailability);
+
+    expect(gitCodes($issues))->toBe(['DD_GIT_BINARY_MISSING']);
+});
 
 it('reports paths outside git repositories as info', function () {
     $issues = analyzeGit(new FakeGitRunner([
@@ -123,11 +131,14 @@ it('reports ready git repositories', function () {
     expect(gitCodes($issues))->toBe(['DD_GIT_READY']);
 });
 
-function analyzeGit(FakeGitRunner $runner, ?GitOptions $options = null): IssueCollection
-{
+function analyzeGit(
+    FakeGitRunner $runner,
+    ?GitOptions $options = null,
+    ?CommandAvailabilityInterface $commands = null,
+): IssueCollection {
     $path = $options?->path ?? gitTempPath();
 
-    return (new GitAnalyzer($runner))->analyze($options ?? new GitOptions($path));
+    return (new GitAnalyzer($runner, $commands ?? new FakeCommandAvailability(['git'])))->analyze($options ?? new GitOptions($path));
 }
 
 function gitOk(string $stdout): ProcessResult
