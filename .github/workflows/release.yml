@@ -13,6 +13,8 @@ jobs:
   release:
     name: Build and publish release
     runs-on: ubuntu-latest
+    env:
+      HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4
@@ -22,6 +24,7 @@ jobs:
         with:
           php-version: "8.5"
           coverage: none
+          extensions: fileinfo
 
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
@@ -67,3 +70,11 @@ jobs:
             devdoctor.phar.sha256 \
             devdoctor.phar.sig \
             devdoctor.phar.pem
+
+      - name: Update Homebrew tap
+        if: env.HOMEBREW_TAP_TOKEN != ''
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          sha256="$(cut -d ' ' -f 1 devdoctor.phar.sha256)"
+          bash .github/scripts/update-homebrew-tap.sh "${version}" "${sha256}"

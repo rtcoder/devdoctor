@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
-Current version: `0.12.0`
+Current version: `0.12.1`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Release builds are standalone PHAR executables:
 
 ```bash
-php devdoctor app:build devdoctor --build-version=0.12.0 --no-interaction
+php devdoctor app:build devdoctor --build-version=0.12.1 --no-interaction
 php builds/devdoctor --version
 ```
 
@@ -196,9 +196,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v0.12.0
+- uses: rtcoder/devdoctor@v0.12.1
   with:
-    version: v0.12.0
+    version: v0.12.1
     format: sarif
 ```
 
@@ -311,13 +311,24 @@ cosign verify-blob \
   devdoctor.phar
 ```
 
+## Homebrew
+
+DevDoctor is available from the `rtcoder/tap` Homebrew tap:
+
+```bash
+brew tap rtcoder/tap
+brew install devdoctor
+```
+
+The release workflow can update `rtcoder/homebrew-tap` after each tag when the repository secret `HOMEBREW_TAP_TOKEN` is configured with write access to the tap.
+
 ## Development
 
 ```bash
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor --build-version=0.12.0 --no-interaction
+php devdoctor app:build devdoctor --build-version=0.12.1 --no-interaction
 php builds/devdoctor --version
 ```
 

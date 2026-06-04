@@ -19,7 +19,8 @@ it('ships release workflow and composite action metadata', function () {
     expect($action['runs']['using'])->toBe('composite')
         ->and($action['inputs'])->toHaveKey('version')
         ->and($release['permissions']['contents'])->toBe('write')
-        ->and($release['permissions']['id-token'])->toBe('write');
+        ->and($release['permissions']['id-token'])->toBe('write')
+        ->and(file_get_contents($root.'/.github/scripts/update-homebrew-tap.sh'))->toContain('rtcoder/homebrew-tap');
 });
 
 it('documents every issue code used by the application', function () {

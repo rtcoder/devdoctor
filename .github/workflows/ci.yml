@@ -27,6 +27,7 @@ jobs:
         with:
           php-version: "8.5"
           coverage: none
+          extensions: fileinfo
 
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
@@ -52,6 +53,7 @@ jobs:
         with:
           php-version: "8.5"
           coverage: none
+          extensions: fileinfo
 
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
