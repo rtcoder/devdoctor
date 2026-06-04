@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
-Current version: `0.11.1`
+Current version: `0.12.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Release builds are standalone PHAR executables:
 
 ```bash
-php devdoctor app:build devdoctor --build-version=0.11.1 --no-interaction
+php devdoctor app:build devdoctor --build-version=0.12.0 --no-interaction
 php builds/devdoctor --version
 ```
 
@@ -191,6 +191,19 @@ Unknown modules return exit code `3`. Selected modules are always included in JS
 
 The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5. It also builds and smoke-tests the PHAR executable.
 
+### GitHub Action
+
+The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
+
+```yaml
+- uses: rtcoder/devdoctor@v0.12.0
+  with:
+    version: v0.12.0
+    format: sarif
+```
+
+Always pin both the Action ref and the `version` input. The Action does not use `latest`.
+
 ## Baselines
 
 Baselines let an existing project acknowledge current warnings and errors while continuing to fail CI for new findings:
@@ -279,13 +292,32 @@ DevDoctor is read-only by default:
 - Port diagnostics may suggest `kill -TERM <pid>`, but never execute it.
 - Basic diagnostics do not require telemetry or internet access.
 
+## Release Verification
+
+Tagged releases publish `devdoctor.phar`, its SHA-256 checksum, a Cosign signature, and a Sigstore certificate. Verify the checksum before running a downloaded PHAR:
+
+```bash
+sha256sum --check devdoctor.phar.sha256
+```
+
+Verify the keyless signature with Cosign:
+
+```bash
+cosign verify-blob \
+  --certificate devdoctor.phar.pem \
+  --signature devdoctor.phar.sig \
+  --certificate-identity-regexp 'https://github.com/rtcoder/devdoctor/' \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+  devdoctor.phar
+```
+
 ## Development
 
 ```bash
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor --build-version=0.11.1 --no-interaction
+php devdoctor app:build devdoctor --build-version=0.12.0 --no-interaction
 php builds/devdoctor --version
 ```
 

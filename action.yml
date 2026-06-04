@@ -1,0 +1,42 @@
+name: DevDoctor
+description: Run DevDoctor CI diagnostics from a verified release PHAR.
+
+inputs:
+  version:
+    description: Explicit DevDoctor release tag, for example v0.12.0.
+    required: true
+  modules:
+    description: Comma-separated modules to run.
+    required: false
+    default: env,composer,git,docker
+  format:
+    description: "Output format: table, json, or sarif."
+    required: false
+    default: table
+  path:
+    description: Project path to inspect.
+    required: false
+    default: .
+  extra-args:
+    description: Additional arguments passed to devdoctor ci.
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: "8.5"
+        coverage: none
+
+    - name: Download, verify, and run DevDoctor
+      shell: pwsh
+      run: >-
+        & "${{ github.action_path }}/.github/scripts/run-devdoctor.ps1"
+        -Version "${{ inputs.version }}"
+        -Modules "${{ inputs.modules }}"
+        -Format "${{ inputs.format }}"
+        -Path "${{ inputs.path }}"
+        -ExtraArgs "${{ inputs.extra-args }}"

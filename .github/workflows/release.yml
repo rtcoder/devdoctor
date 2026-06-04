@@ -1,0 +1,69 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    name: Build and publish release
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.5"
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Verify tag version
+        shell: bash
+        run: |
+          version="$(php -r '$data=json_decode(file_get_contents("composer.json"), true); echo $data["extra"]["devdoctor"]["version"];')"
+          test "v${version}" = "${GITHUB_REF_NAME}"
+
+      - name: Validate release
+        run: |
+          composer validate --strict --no-check-publish
+          php devdoctor test
+          php vendor/bin/pint --test
+
+      - name: Build PHAR
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          php devdoctor app:build devdoctor --build-version="${version}" --no-interaction
+          mv builds/devdoctor devdoctor.phar
+          php devdoctor.phar --version
+          sha256sum devdoctor.phar > devdoctor.phar.sha256
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign PHAR
+        run: |
+          cosign sign-blob --yes \
+            --output-signature devdoctor.phar.sig \
+            --output-certificate devdoctor.phar.pem \
+            devdoctor.phar
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            --generate-notes \
+            devdoctor.phar \
+            devdoctor.phar.sha256 \
+            devdoctor.phar.sig \
+            devdoctor.phar.pem

@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\Yaml\Yaml;
+
 it('ships valid JSON schema and Box configuration', function () {
     $root = dirname(__DIR__, 2);
     $schema = json_decode((string) file_get_contents($root.'/schemas/devdoctor-output.schema.json'), true, flags: JSON_THROW_ON_ERROR);
@@ -7,6 +9,17 @@ it('ships valid JSON schema and Box configuration', function () {
 
     expect($schema['title'])->toBe('DevDoctor JSON Output')
         ->and($box['directories'])->toContain('app');
+});
+
+it('ships release workflow and composite action metadata', function () {
+    $root = dirname(__DIR__, 2);
+    $action = Yaml::parseFile($root.'/action.yml');
+    $release = Yaml::parseFile($root.'/.github/workflows/release.yml');
+
+    expect($action['runs']['using'])->toBe('composite')
+        ->and($action['inputs'])->toHaveKey('version')
+        ->and($release['permissions']['contents'])->toBe('write')
+        ->and($release['permissions']['id-token'])->toBe('write');
 });
 
 it('documents every issue code used by the application', function () {

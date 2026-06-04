@@ -196,5 +196,6 @@ After the first complete version:
 - `v0.10.1`: interactive config wizard. Complete.
 - `v0.11.0`: SARIF output. Complete.
 - `v0.11.1`: baseline file support. Complete.
-- `v0.12`: PHAR release automation, signed builds, and Homebrew tap.
+- `v0.12.0`: release automation, signed PHAR builds, and GitHub Action. Complete.
+- `v0.12.1`: Homebrew tap.
 - `v1.0`: stable JSON schema, stable issue code catalog, documentation site, public Composer package, and CI examples for GitHub Actions, GitLab CI, and Bitbucket Pipelines.
