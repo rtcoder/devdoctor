@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Commands - DevDoctor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <h1>Commands</h1>
+    <p class="lead">Each diagnostic command is read-only and supports `--path`, `--format`, `--ci`, and `--strict` where applicable.</p>
+    <nav><a href="index.html">Home</a><a href="config.html">Config</a><a href="output-formats.html">Output Formats</a></nav>
+</header>
+<main>
+    <table>
+        <thead><tr><th>Command</th><th>Purpose</th><th>Example</th></tr></thead>
+        <tbody>
+        <tr><td><code>env</code></td><td>Check dotenv files and configured env rules.</td><td><code>php devdoctor env --strict</code></td></tr>
+        <tr><td><code>ports</code></td><td>Check local development port conflicts.</td><td><code>php devdoctor ports --common</code></td></tr>
+        <tr><td><code>composer</code></td><td>Check Composer project health without install/update.</td><td><code>php devdoctor composer</code></td></tr>
+        <tr><td><code>git</code></td><td>Check repository hygiene and sensitive files.</td><td><code>php devdoctor git --require-clean</code></td></tr>
+        <tr><td><code>docker</code></td><td>Check Compose files, daemon state, ports, and containers.</td><td><code>php devdoctor docker --compose-file=docker-compose.yml</code></td></tr>
+        <tr><td><code>ci</code></td><td>Run CI-safe diagnostics and aggregate exit codes.</td><td><code>php devdoctor ci --modules=env,composer,git,docker</code></td></tr>
+        <tr><td><code>presets</code></td><td>Detect supported project presets.</td><td><code>php devdoctor presets --format=json</code></td></tr>
+        <tr><td><code>init</code></td><td>Preview and optionally write `devdoctor.yml`.</td><td><code>php devdoctor init --dry-run</code></td></tr>
+        </tbody>
+    </table>
+</main>
+<footer><a href="index.html">Back to documentation index</a></footer>
+</body>
+</html>

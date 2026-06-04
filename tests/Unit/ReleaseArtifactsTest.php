@@ -18,12 +18,40 @@ it('ships release workflow and composite action metadata', function () {
     $root = dirname(__DIR__, 2);
     $action = Yaml::parseFile($root.'/action.yml');
     $release = Yaml::parseFile($root.'/.github/workflows/release.yml');
+    $pages = Yaml::parseFile($root.'/.github/workflows/pages.yml');
 
     expect($action['runs']['using'])->toBe('composite')
         ->and($action['inputs'])->toHaveKey('version')
         ->and($release['permissions']['contents'])->toBe('write')
         ->and($release['permissions']['id-token'])->toBe('write')
+        ->and($pages['permissions']['pages'])->toBe('write')
         ->and(file_get_contents($root.'/.github/scripts/update-homebrew-tap.sh'))->toContain('rtcoder/homebrew-tap');
+});
+
+it('ships static documentation and pinned CI examples', function () {
+    $root = dirname(__DIR__, 2);
+
+    foreach ([
+        'docs/index.html',
+        'docs/installation.html',
+        'docs/commands.html',
+        'docs/config.html',
+        'docs/output-formats.html',
+        'docs/baseline.html',
+        'docs/safety.html',
+        'docs/contracts.html',
+        'docs/release-verification.html',
+        'docs/ci.html',
+        'docs/examples/github-actions.yml',
+        'docs/examples/gitlab-ci.yml',
+        'docs/examples/bitbucket-pipelines.yml',
+    ] as $path) {
+        expect(is_file($root.'/'.$path))->toBeTrue($path);
+    }
+
+    expect(file_get_contents($root.'/docs/examples/github-actions.yml'))->toContain('v0.14.0')
+        ->and(file_get_contents($root.'/docs/examples/gitlab-ci.yml'))->toContain('v0.14.0')
+        ->and(file_get_contents($root.'/docs/examples/bitbucket-pipelines.yml'))->toContain('v0.14.0');
 });
 
 it('catalogs every issue code used by the application', function () {

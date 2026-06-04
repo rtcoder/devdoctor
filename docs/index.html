@@ -2,9 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>DevDoctor Docs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DevDoctor Documentation</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
+<header>
+    <h1>DevDoctor Documentation</h1>
+    <p class="lead">Read-only developer diagnostics for environment files, ports, Composer, Git, Docker, and CI.</p>
+    <nav>
+        <a href="installation.html">Installation</a>
+        <a href="commands.html">Commands</a>
+        <a href="config.html">Config</a>
+        <a href="output-formats.html">Output Formats</a>
+        <a href="baseline.html">Baseline</a>
+        <a href="ci.html">CI Examples</a>
+        <a href="safety.html">Safety</a>
+        <a href="contracts.html">Contracts</a>
+        <a href="release-verification.html">Release Verification</a>
+    </nav>
+</header>
+<main>
+    <section class="grid">
+        <article class="tile">
+            <h2>Start</h2>
+            <p>Install DevDoctor from source, Composer, PHAR, GitHub Action, or Homebrew.</p>
+            <a href="installation.html">Read installation docs</a>
+        </article>
+        <article class="tile">
+            <h2>Run Diagnostics</h2>
+            <p>Use focused commands locally or `devdoctor ci` for non-interactive checks.</p>
+            <a href="commands.html">See command reference</a>
+        </article>
+        <article class="tile">
+            <h2>Integrate</h2>
+            <p>Use JSON, SARIF, baselines, and pinned CI examples for repeatable automation.</p>
+            <a href="ci.html">Open CI examples</a>
+        </article>
+        <article class="tile">
+            <h2>Trust Outputs</h2>
+            <p>Review schema v1, issue code policy, release checksums, and signature verification.</p>
+            <a href="contracts.html">Review public contracts</a>
+        </article>
+    </section>
+</main>
+<footer>
+    DevDoctor docs are static files published from the repository `docs/` directory.
+</footer>
 </body>
 </html>

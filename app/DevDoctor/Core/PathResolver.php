@@ -30,7 +30,7 @@ final readonly class PathResolver
         $base = $this->basePath.DIRECTORY_SEPARATOR;
 
         if (str_starts_with($absolute, $base)) {
-            return substr($absolute, strlen($base));
+            return str_replace('\\', '/', substr($absolute, strlen($base)));
         }
 
         if ($absolute === $this->basePath) {
