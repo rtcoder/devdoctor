@@ -6,7 +6,7 @@ Current state:
 
 - Laravel Zero 12.x is initialized.
 - The `devdoctor` binary exists.
-- Public commands are implemented: `env`, `ports`, `docker`, `composer`, `git`, `ci`, and `presets`.
+- Public commands are implemented: `env`, `ports`, `php`, `docker`, `composer`, `git`, `ci`, and `presets`.
 - Core diagnostics, rendering, redaction, path normalization, config loading, and process execution are in place.
 - `env`, `ports`, `composer`, `git`, `docker`, and `ci` have focused tests and read-only behavior.
 - Cross-platform CI, PHAR smoke tests, a JSON schema, a stable issue code catalog, and project preset detection are included.
@@ -202,3 +202,4 @@ After the first complete version:
 - `v0.14.0`: static documentation site and pinned CI examples. Complete.
 - `v0.15.0`: Composer package identity hardening and DevDoctor namespace migration. Complete.
 - `v1.0.0`: stable JSON schema, stable issue code catalog, documentation site, public Composer package identity, and CI examples for GitHub Actions, GitLab CI, and Bitbucket Pipelines. Complete.
+- `v1.1.0`: PHP runtime diagnostics for composer platform requirements, extensions, memory limits, php.ini loading, and Xdebug in CI. Complete.

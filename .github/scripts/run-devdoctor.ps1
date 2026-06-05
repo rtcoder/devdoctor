@@ -2,7 +2,7 @@ param(
     [Parameter(Mandatory = $true)]
     [string] $Version,
 
-    [string] $Modules = "env,composer,git,docker",
+    [string] $Modules = "env,php,composer,git,docker",
 
     [string] $Format = "table",
 

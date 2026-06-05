@@ -18,10 +18,11 @@
         <tbody>
         <tr><td><code>env</code></td><td>Check dotenv files and configured env rules.</td><td><code>php devdoctor env --strict</code></td></tr>
         <tr><td><code>ports</code></td><td>Check local development port conflicts.</td><td><code>php devdoctor ports --common</code></td></tr>
+        <tr><td><code>php</code></td><td>Check PHP runtime, composer platform requirements, memory, php.ini, and Xdebug in CI.</td><td><code>php devdoctor php --ci</code></td></tr>
         <tr><td><code>composer</code></td><td>Check Composer project health without install/update.</td><td><code>php devdoctor composer</code></td></tr>
         <tr><td><code>git</code></td><td>Check repository hygiene and sensitive files.</td><td><code>php devdoctor git --require-clean</code></td></tr>
         <tr><td><code>docker</code></td><td>Check Compose files, daemon state, ports, and containers.</td><td><code>php devdoctor docker --compose-file=docker-compose.yml</code></td></tr>
-        <tr><td><code>ci</code></td><td>Run CI-safe diagnostics and aggregate exit codes.</td><td><code>php devdoctor ci --modules=env,composer,git,docker</code></td></tr>
+        <tr><td><code>ci</code></td><td>Run CI-safe diagnostics and aggregate exit codes.</td><td><code>php devdoctor ci --modules=env,php,composer,git,docker</code></td></tr>
         <tr><td><code>presets</code></td><td>Detect supported project presets.</td><td><code>php devdoctor presets --format=json</code></td></tr>
         <tr><td><code>init</code></td><td>Preview and optionally write `devdoctor.yml`.</td><td><code>php devdoctor init --dry-run</code></td></tr>
         </tbody>

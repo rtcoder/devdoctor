@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.0.0`
+Current version: `1.1.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.0.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.1.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -50,6 +50,7 @@ vendor/bin/devdoctor ci
 env        Check dotenv files and DevDoctor env rules
 ports      Check local development port conflicts
 composer   Check Composer project health
+php        Check PHP runtime and platform health
 git        Check Git repository hygiene
 docker     Check Docker and Docker Compose project health
 ci         Run CI-safe DevDoctor diagnostics
@@ -78,10 +79,12 @@ php devdoctor env
 php devdoctor env --format=json --strict
 php devdoctor ports --common
 php devdoctor ports --port=3000 --port=5173
+php devdoctor php
+php devdoctor php --ci --minimum-memory=256
 php devdoctor composer
 php devdoctor git --require-clean --scan-large-files
 php devdoctor docker --compose-file=docker-compose.yml
-php devdoctor ci --modules=env,composer,git,docker --no-fail-on-warnings
+php devdoctor ci --modules=env,php,composer,git,docker --no-fail-on-warnings
 php devdoctor presets --format=json
 php devdoctor init --dry-run
 ```
@@ -97,6 +100,7 @@ DevDoctor targets Linux, macOS, and Windows:
 | Command discovery | Native executable lookup | Native executable lookup | Native executable lookup |
 | Port listeners | `lsof`, then `ss` | `lsof` | `netstat -ano` |
 | Process suggestion | `kill -TERM <pid>` | `kill -TERM <pid>` | `taskkill /PID <pid>` |
+| PHP runtime diagnostics | Supported | Supported | Supported |
 | Composer, Git, Docker | Supported when their executables are installed | Supported when their executables are installed | Supported when their executables are installed |
 
 Platform-specific commands are only suggested. DevDoctor never terminates a process automatically.
@@ -107,6 +111,7 @@ Platform-specific commands are only suggested. DevDoctor never terminates a proc
 - Compose references with defaults such as `${VAR:-default}` and `${VAR-default}` do not produce missing-variable warnings.
 - Git reports `DD_GIT_BINARY_MISSING` when Git is unavailable instead of treating the path as a non-repository.
 - Windows port diagnostics use `tasklist` when available to resolve a PID to a process name.
+- PHP diagnostics compare the active CLI runtime with `composer.json`, required `ext-*` packages, `memory_limit`, loaded `php.ini`, and Xdebug state in CI.
 - Composer reports `DD_COMPOSER_LOCK_OUTDATED` when `composer.lock` is older than `composer.json`.
 - Process execution uses argument arrays and supports project paths containing spaces.
 
@@ -126,7 +131,7 @@ The `presets` command detects supported project stacks from files and declared d
 Preset detection is informational and can be included in CI explicitly:
 
 ```bash
-php devdoctor ci --modules=presets,env,composer,git,docker
+php devdoctor ci --modules=presets,env,php,composer,git,docker
 ```
 
 ## Table Output
@@ -196,11 +201,11 @@ Each result maps the issue code to a SARIF rule id, includes relative file locat
 
 ## CI
 
-The CI aggregator runs `env`, `composer`, `git`, and `docker` by default. `ports` is excluded by default because port state depends on the runner machine.
+The CI aggregator runs `env`, `php`, `composer`, `git`, and `docker` by default. `ports` is excluded by default because port state depends on the runner machine.
 
 ```bash
 php devdoctor ci --format=json
-php devdoctor ci --modules=env,composer --exclude=composer
+php devdoctor ci --modules=env,php,composer --exclude=composer
 php devdoctor ci --no-fail-on-warnings
 ```
 
@@ -213,9 +218,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.0.0
+- uses: rtcoder/devdoctor@v1.1.0
   with:
-    version: v1.0.0
+    version: v1.1.0
     format: sarif
 ```
 
@@ -369,7 +374,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.0.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.1.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version

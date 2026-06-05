@@ -8,7 +8,7 @@ inputs:
   modules:
     description: Comma-separated modules to run.
     required: false
-    default: env,composer,git,docker
+    default: env,php,composer,git,docker
   format:
     description: "Output format: table, json, or sarif."
     required: false

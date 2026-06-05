@@ -28,6 +28,15 @@ it('runs composer diagnostics with json output', function () {
         ->expectsOutputToContain('DD_COMPOSER_NOT_PROJECT');
 });
 
+it('runs php diagnostics with json output', function () {
+    $path = sys_get_temp_dir().'/devdoctor-php-command-'.bin2hex(random_bytes(4));
+    mkdir($path);
+
+    $this->artisan('php', ['--path' => $path, '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('"name": "php"');
+});
+
 it('runs git diagnostics with json output', function () {
     $path = sys_get_temp_dir().'/devdoctor-git-command-'.bin2hex(random_bytes(4));
     mkdir($path);
@@ -103,7 +112,7 @@ it('runs default ci modules without ports', function () {
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect($exitCode)->toBe(0)
-        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'composer', 'git', 'docker']);
+        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'composer', 'git', 'docker']);
 });
 
 it('supports ci module selection exclude and unknown module handling', function () {
