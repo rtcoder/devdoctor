@@ -36,6 +36,10 @@ final readonly class EcosystemModuleSelector
             $modules[] = ModuleName::GO->value;
         }
 
+        if ($this->hasAny($presets, [ProjectPreset::RUST])) {
+            $modules[] = ModuleName::RUST->value;
+        }
+
         return array_values(array_unique($modules));
     }
 

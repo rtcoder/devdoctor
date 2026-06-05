@@ -37,6 +37,8 @@ use DevDoctor\Modules\Python\PythonAnalyzer;
 use DevDoctor\Modules\Python\PythonOptions;
 use DevDoctor\Modules\Queue\QueueAnalyzer;
 use DevDoctor\Modules\Queue\QueueOptions;
+use DevDoctor\Modules\Rust\RustAnalyzer;
+use DevDoctor\Modules\Rust\RustOptions;
 use DevDoctor\Modules\Security\SecurityAnalyzer;
 use DevDoctor\Modules\Security\SecurityOptions;
 
@@ -56,6 +58,7 @@ final class DiagnosticModuleRunner
             ModuleName::FRONTEND,
             ModuleName::PYTHON,
             ModuleName::GO,
+            ModuleName::RUST,
             ModuleName::LARAVEL,
             ModuleName::COMPOSER,
             ModuleName::DATABASE,
@@ -101,6 +104,10 @@ final class DiagnosticModuleRunner
                 strict: $options->strict,
             ))),
             ModuleName::GO->value => new ModuleResult(ModuleName::GO, app(GoAnalyzer::class)->analyze(new GoOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
+            ModuleName::RUST->value => new ModuleResult(ModuleName::RUST, app(RustAnalyzer::class)->analyze(new RustOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),
