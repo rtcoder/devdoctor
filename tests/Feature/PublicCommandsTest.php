@@ -65,6 +65,43 @@ it('runs security diagnostics with json output', function () {
         ->expectsOutputToContain('DD_SECURITY_READY');
 });
 
+it('runs health diagnostics with json output', function () {
+    $path = sys_get_temp_dir().'/devdoctor-health-command-'.bin2hex(random_bytes(4));
+    mkdir($path);
+    file_put_contents($path.'/.env', "APP_ENV=local\n");
+    file_put_contents($path.'/.env.example', "APP_ENV=local\n");
+    file_put_contents($path.'/.gitignore', ".env\n");
+
+    $exitCode = Artisan::call('health', ['--path' => $path, '--format' => 'json']);
+    $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
+
+    expect($exitCode)->toBe(0)
+        ->and(array_column($output['modules'], 'name'))->toBe(['presets', 'env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'security']);
+});
+
+it('supports health module selection ports opt in and unknown modules', function () {
+    $path = sys_get_temp_dir().'/devdoctor-health-select-'.bin2hex(random_bytes(4));
+    mkdir($path);
+    file_put_contents($path.'/.env', "APP_ENV=local\n");
+    file_put_contents($path.'/.env.example', "APP_ENV=local\n");
+    file_put_contents($path.'/.gitignore', ".env\n");
+
+    $exitCode = Artisan::call('health', ['--path' => $path, '--include-ports' => true, '--format' => 'json']);
+    $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
+
+    expect($exitCode)->toBeGreaterThanOrEqual(0)
+        ->and(array_column($output['modules'], 'name'))->toContain('ports');
+
+    $this->artisan('health', ['--path' => $path, '--modules' => 'env,security', '--exclude' => 'security', '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('"name": "env"')
+        ->doesntExpectOutputToContain('"name": "security"');
+
+    $this->artisan('health', ['--path' => $path, '--modules' => 'env,nope', '--format' => 'json'])
+        ->assertExitCode(3)
+        ->expectsOutputToContain('DD_HEALTH_UNKNOWN_MODULE');
+});
+
 it('runs git diagnostics with json output', function () {
     $path = sys_get_temp_dir().'/devdoctor-git-command-'.bin2hex(random_bytes(4));
     mkdir($path);

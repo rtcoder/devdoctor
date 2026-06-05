@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.4.0`
+Current version: `1.5.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.4.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.5.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -56,6 +56,7 @@ laravel    Check Laravel application health
 security   Check project security posture
 git        Check Git repository hygiene
 docker     Check Docker and Docker Compose project health
+health     Run a broad local project health check
 ci         Run CI-safe DevDoctor diagnostics
 presets    Detect supported project framework and tooling presets
 init       Generate an initial devdoctor.yml configuration
@@ -90,6 +91,8 @@ php devdoctor security
 php devdoctor composer
 php devdoctor git --require-clean --scan-large-files
 php devdoctor docker --compose-file=docker-compose.yml
+php devdoctor health
+php devdoctor health --include-ports
 php devdoctor ci --modules=env,php,node,laravel,composer,git,docker --no-fail-on-warnings
 php devdoctor presets --format=json
 php devdoctor init --dry-run
@@ -124,6 +127,7 @@ Platform-specific commands are only suggested. DevDoctor never terminates a proc
 - Node.js diagnostics inspect `package.json`, package manager lockfiles, `node_modules`, `engines.node`, `.nvmrc`, `.node-version`, and risky package scripts.
 - Laravel diagnostics inspect `.env`, `APP_KEY`, production debug mode, `APP_URL`, runtime directories, and config cache state.
 - Security diagnostics inspect env example secrets, hard-coded secret patterns, risky Composer and package scripts, Docker privileged mode, Docker socket mounts, and `.env` ignore gaps.
+- Health aggregates local project diagnostics across `presets`, `env`, `php`, `node`, `laravel`, `composer`, `git`, `docker`, and `security`; add `--include-ports` to include common local port checks.
 - Composer reports `DD_COMPOSER_LOCK_OUTDATED` when `composer.lock` is older than `composer.json`.
 - Process execution uses argument arrays and supports project paths containing spaces.
 
@@ -211,6 +215,18 @@ php devdoctor ci --format=sarif > devdoctor.sarif
 
 Each result maps the issue code to a SARIF rule id, includes relative file locations when available, and carries a stable `devdoctorFingerprint/v1` based on code, module, file, and key. Hints and fix descriptions are included as metadata; suggested commands are never executed.
 
+## Health
+
+The health command is a local, broad project overview. It uses the same output formats as other diagnostics and keeps `ports` opt-in to avoid machine-specific noise:
+
+```bash
+php devdoctor health --format=json
+php devdoctor health --include-ports
+php devdoctor health --modules=env,security --exclude=security
+```
+
+Unknown health modules return exit code `3`.
+
 ## CI
 
 The CI aggregator runs `env`, `php`, `node`, `laravel`, `composer`, `git`, and `docker` by default. `ports` and `security` are excluded by default because they can depend on local machine state or intentionally present local files.
@@ -231,9 +247,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.4.0
+- uses: rtcoder/devdoctor@v1.5.0
   with:
-    version: v1.4.0
+    version: v1.5.0
     format: sarif
 ```
 
@@ -387,7 +403,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.4.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.5.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version

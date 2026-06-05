@@ -5,6 +5,7 @@
         {"code": "DD_CI_BASELINE_INVALID", "module": "ci", "description": "The baseline file is invalid.", "introduced": "0.11.1", "status": "active"},
         {"code": "DD_CI_BASELINE_MISSING", "module": "ci", "description": "The requested baseline file is missing.", "introduced": "0.11.1", "status": "active"},
         {"code": "DD_CI_UNKNOWN_MODULE", "module": "ci", "description": "An unknown CI module was requested.", "introduced": "0.8.0", "status": "active"},
+        {"code": "DD_HEALTH_UNKNOWN_MODULE", "module": "health", "description": "An unknown health module was requested.", "introduced": "1.5.0", "status": "active"},
         {"code": "DD_COMPOSER_BINARY_MISSING", "module": "composer", "description": "The Composer binary is unavailable.", "introduced": "0.8.0", "status": "active"},
         {"code": "DD_COMPOSER_EXTENSION_MISSING", "module": "composer", "description": "A required PHP extension is missing.", "introduced": "0.8.0", "status": "active"},
         {"code": "DD_COMPOSER_JSON_INVALID", "module": "composer", "description": "composer.json is invalid.", "introduced": "0.8.0", "status": "active"},

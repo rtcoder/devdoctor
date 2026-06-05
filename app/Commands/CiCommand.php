@@ -7,33 +7,14 @@ namespace DevDoctor\Commands;
 use DevDoctor\Commands\Concerns\RendersDiagnostics;
 use DevDoctor\Core\Baseline\BaselineManager;
 use DevDoctor\Core\Baseline\InvalidBaseline;
-use DevDoctor\Core\Config\ConfigLoader;
-use DevDoctor\Core\Config\InvalidDevDoctorConfig;
+use DevDoctor\Core\DiagnosticModuleRunner;
+use DevDoctor\Core\DiagnosticRunOptions;
 use DevDoctor\Core\ExitCode;
 use DevDoctor\Core\Issue;
 use DevDoctor\Core\IssueCollection;
 use DevDoctor\Core\ModuleResult;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\Severity;
-use DevDoctor\Modules\Composer\ComposerAnalyzer;
-use DevDoctor\Modules\Composer\ComposerOptions;
-use DevDoctor\Modules\Docker\DockerAnalyzer;
-use DevDoctor\Modules\Docker\DockerOptions;
-use DevDoctor\Modules\Env\EnvAnalysisOptions;
-use DevDoctor\Modules\Env\EnvAnalyzer;
-use DevDoctor\Modules\Git\GitAnalyzer;
-use DevDoctor\Modules\Git\GitOptions;
-use DevDoctor\Modules\Laravel\LaravelAnalyzer;
-use DevDoctor\Modules\Laravel\LaravelOptions;
-use DevDoctor\Modules\Node\NodeAnalyzer;
-use DevDoctor\Modules\Node\NodeOptions;
-use DevDoctor\Modules\Php\PhpAnalyzer;
-use DevDoctor\Modules\Php\PhpOptions;
-use DevDoctor\Modules\Ports\PortsAnalyzer;
-use DevDoctor\Modules\Ports\PortsOptions;
-use DevDoctor\Modules\Presets\PresetsAnalyzer;
-use DevDoctor\Modules\Security\SecurityAnalyzer;
-use DevDoctor\Modules\Security\SecurityOptions;
 use LaravelZero\Framework\Commands\Command;
 
 final class CiCommand extends Command
@@ -56,11 +37,11 @@ final class CiCommand extends Command
 
     protected $description = 'Run CI-safe DevDoctor diagnostics.';
 
-    public function handle(): int
+    public function handle(DiagnosticModuleRunner $runner): int
     {
         $path = (string) $this->option('path');
         $modules = $this->selectedModules();
-        $unknown = array_values(array_diff($modules, $this->knownModules()));
+        $unknown = array_values(array_diff($modules, $runner->knownModules()));
 
         if ($unknown !== []) {
             return $this->renderDiagnostics([
@@ -76,9 +57,20 @@ final class CiCommand extends Command
         }
 
         $results = [];
+        $options = new DiagnosticRunOptions(
+            path: $path,
+            strict: (bool) $this->option('strict'),
+            ci: true,
+            configFile: (string) $this->option('config'),
+            portsCommon: true,
+            gitRequireClean: true,
+            gitRequireUpstream: false,
+            gitScanSensitive: true,
+            gitScanLargeFiles: true,
+        );
 
         foreach ($modules as $module) {
-            $result = $this->runModule($module, $path);
+            $result = $runner->run($module, $options);
 
             if ($result instanceof ModuleResult) {
                 $results[] = $result;
@@ -121,106 +113,12 @@ final class CiCommand extends Command
     /**
      * @return list<string>
      */
-    private function knownModules(): array
-    {
-        return ['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'ports', 'presets', 'security'];
-    }
-
-    /**
-     * @return list<string>
-     */
     private function stringList(string $value): array
     {
         return array_values(array_filter(
             array_map(static fn (string $item): string => trim($item), explode(',', $value)),
             static fn (string $item): bool => $item !== '',
         ));
-    }
-
-    /**
-     * @return ModuleResult|array{results: list<ModuleResult>, exitCode: ExitCode}
-     */
-    private function runModule(string $module, string $path): ModuleResult|array
-    {
-        return match ($module) {
-            'env' => $this->runEnv($path),
-            'php' => new ModuleResult('php', app(PhpAnalyzer::class)->analyze(new PhpOptions(
-                path: $path,
-                ci: true,
-                strict: (bool) $this->option('strict'),
-            ))),
-            'node' => new ModuleResult('node', app(NodeAnalyzer::class)->analyze(new NodeOptions(
-                path: $path,
-                strict: (bool) $this->option('strict'),
-            ))),
-            'laravel' => new ModuleResult('laravel', app(LaravelAnalyzer::class)->analyze(new LaravelOptions(
-                path: $path,
-                strict: (bool) $this->option('strict'),
-            ))),
-            'composer' => new ModuleResult('composer', app(ComposerAnalyzer::class)->analyze(new ComposerOptions(
-                path: $path,
-                strict: (bool) $this->option('strict'),
-            ))),
-            'git' => new ModuleResult('git', app(GitAnalyzer::class)->analyze(new GitOptions(
-                path: $path,
-                strict: (bool) $this->option('strict'),
-                requireClean: true,
-                requireUpstream: false,
-                scanSensitive: true,
-                scanLargeFiles: true,
-            ))),
-            'docker' => new ModuleResult('docker', app(DockerAnalyzer::class)->analyze(new DockerOptions(
-                path: $path,
-                strict: (bool) $this->option('strict'),
-            ))),
-            'ports' => new ModuleResult('ports', app(PortsAnalyzer::class)->analyze(new PortsOptions(
-                path: $path,
-                common: true,
-                strict: (bool) $this->option('strict'),
-            ))),
-            'presets' => new ModuleResult('presets', app(PresetsAnalyzer::class)->analyze($path)),
-            'security' => new ModuleResult('security', app(SecurityAnalyzer::class)->analyze(new SecurityOptions(
-                path: $path,
-                strict: (bool) $this->option('strict'),
-            ))),
-        };
-    }
-
-    /**
-     * @return ModuleResult|array{results: list<ModuleResult>, exitCode: ExitCode}
-     */
-    private function runEnv(string $path): ModuleResult|array
-    {
-        $paths = PathResolver::fromBasePath($path);
-
-        try {
-            $config = app(ConfigLoader::class)->load($paths->absolute((string) $this->option('config')));
-        } catch (InvalidDevDoctorConfig $exception) {
-            return [
-                'results' => [
-                    new ModuleResult('env', new IssueCollection([
-                        new Issue(
-                            code: 'DD_ENV_INVALID_CONFIG',
-                            severity: Severity::ERROR,
-                            message: $exception->getMessage(),
-                            module: 'env',
-                            file: $paths->display((string) $this->option('config')),
-                        ),
-                    ])),
-                ],
-                'exitCode' => ExitCode::INVALID_CONFIG,
-            ];
-        }
-
-        return new ModuleResult('env', app(EnvAnalyzer::class)->analyze(new EnvAnalysisOptions(
-            path: $path,
-            envFile: $config->envFile,
-            exampleFile: $config->exampleFile,
-            strict: (bool) $this->option('strict'),
-            rules: $config->envRules,
-            ignoreMissingInEnv: $config->ignoreMissingInEnv,
-            ignoreMissingInExample: $config->ignoreMissingInExample,
-        )));
     }
 
     private function failOnWarnings(): bool

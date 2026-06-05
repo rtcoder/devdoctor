@@ -6,7 +6,7 @@ Current state:
 
 - Laravel Zero 12.x is initialized.
 - The `devdoctor` binary exists.
-- Public commands are implemented: `env`, `ports`, `php`, `node`, `laravel`, `security`, `docker`, `composer`, `git`, `ci`, and `presets`.
+- Public commands are implemented: `env`, `ports`, `php`, `node`, `laravel`, `security`, `docker`, `composer`, `git`, `health`, `ci`, and `presets`.
 - Core diagnostics, rendering, redaction, path normalization, config loading, and process execution are in place.
 - `env`, `ports`, `composer`, `git`, `docker`, and `ci` have focused tests and read-only behavior.
 - Cross-platform CI, PHAR smoke tests, a JSON schema, a stable issue code catalog, and project preset detection are included.
@@ -206,3 +206,4 @@ After the first complete version:
 - `v1.2.0`: Node.js diagnostics for package.json, lockfiles, package manager alignment, node_modules, runtime version files, and risky scripts. Complete.
 - `v1.3.0`: Laravel diagnostics for .env, APP_KEY, production debug mode, APP_URL, runtime directories, and config cache state. Complete.
 - `v1.4.0`: Security diagnostics for env example secrets, hard-coded secret patterns, risky scripts, Docker privileged mode, Docker socket mounts, and .env ignore gaps. Complete.
+- `v1.5.0`: Health aggregator for broad local project diagnostics with opt-in port checks. Complete.

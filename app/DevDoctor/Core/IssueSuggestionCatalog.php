@@ -16,6 +16,7 @@ final class IssueSuggestionCatalog
 
         return match ($code) {
             'DD_CI_UNKNOWN_MODULE' => self::suggest('Use one of the documented CI module names.'),
+            'DD_HEALTH_UNKNOWN_MODULE' => self::suggest('Use one of the documented health module names or remove it from --modules.'),
             'DD_CI_BASELINE_MISSING' => self::suggest('Create the baseline file with --write-baseline or correct the provided path.'),
             'DD_CI_BASELINE_INVALID' => self::suggest('Regenerate the baseline file with --write-baseline.'),
             'DD_CI_BASELINE_EXISTS' => self::suggest('Review the existing baseline before replacing it with --force.'),
