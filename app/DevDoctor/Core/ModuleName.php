@@ -8,6 +8,7 @@ enum ModuleName: string
 {
     case CI = 'ci';
     case COMPOSER = 'composer';
+    case DATABASE = 'db';
     case DOCKER = 'docker';
     case ENV = 'env';
     case GIT = 'git';

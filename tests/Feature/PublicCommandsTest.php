@@ -5,8 +5,8 @@ use Illuminate\Support\Facades\Artisan;
 it('exposes the env command with json output', function () {
     $path = sys_get_temp_dir().'/devdoctor-env-'.bin2hex(random_bytes(4));
     mkdir($path);
-    file_put_contents($path.'/.env', "APP_ENV=local\n");
-    file_put_contents($path.'/.env.example', "APP_ENV=local\n");
+    file_put_contents($path.'/.env', "APP_ENV=local\nDB_CONNECTION=sqlite\nDB_DATABASE=:memory:\n");
+    file_put_contents($path.'/.env.example', "APP_ENV=local\nDB_CONNECTION=sqlite\nDB_DATABASE=:memory:\n");
 
     $this->artisan('env', ['--path' => $path, '--format' => 'json'])
         ->assertExitCode(0)
@@ -35,6 +35,16 @@ it('runs php diagnostics with json output', function () {
     $this->artisan('php', ['--path' => $path, '--format' => 'json'])
         ->assertExitCode(0)
         ->expectsOutputToContain('"name": "php"');
+});
+
+it('runs database diagnostics with json output', function () {
+    $path = sys_get_temp_dir().'/devdoctor-db-command-'.bin2hex(random_bytes(4));
+    mkdir($path);
+    file_put_contents($path.'/.env', "DB_CONNECTION=sqlite\nDB_DATABASE=:memory:\n");
+
+    $this->artisan('db', ['--path' => $path, '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('DD_DB_READY');
 });
 
 it('runs node diagnostics with json output', function () {
@@ -68,15 +78,15 @@ it('runs security diagnostics with json output', function () {
 it('runs health diagnostics with json output', function () {
     $path = sys_get_temp_dir().'/devdoctor-health-command-'.bin2hex(random_bytes(4));
     mkdir($path);
-    file_put_contents($path.'/.env', "APP_ENV=local\n");
-    file_put_contents($path.'/.env.example', "APP_ENV=local\n");
+    file_put_contents($path.'/.env', "APP_ENV=local\nDB_CONNECTION=sqlite\nDB_DATABASE=:memory:\n");
+    file_put_contents($path.'/.env.example', "APP_ENV=local\nDB_CONNECTION=sqlite\nDB_DATABASE=:memory:\n");
     file_put_contents($path.'/.gitignore', ".env\n");
 
     $exitCode = Artisan::call('health', ['--path' => $path, '--format' => 'json']);
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect($exitCode)->toBe(0)
-        ->and(array_column($output['modules'], 'name'))->toBe(['presets', 'env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'security']);
+        ->and(array_column($output['modules'], 'name'))->toBe(['presets', 'env', 'php', 'node', 'laravel', 'composer', 'db', 'git', 'docker', 'security']);
 });
 
 it('supports health module selection ports opt in and unknown modules', function () {
@@ -202,6 +212,10 @@ it('supports ci module selection exclude and unknown module handling', function 
     $this->artisan('ci', ['--path' => $path, '--modules' => 'security', '--format' => 'json'])
         ->assertExitCode(0)
         ->expectsOutputToContain('"name": "security"');
+
+    $this->artisan('ci', ['--path' => $path, '--modules' => 'db', '--format' => 'json'])
+        ->assertExitCode(1)
+        ->expectsOutputToContain('"name": "db"');
 });
 
 it('supports ci fail on warnings controls', function () {

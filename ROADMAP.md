@@ -207,3 +207,4 @@ After the first complete version:
 - `v1.3.0`: Laravel diagnostics for .env, APP_KEY, production debug mode, APP_URL, runtime directories, and config cache state. Complete.
 - `v1.4.0`: Security diagnostics for env example secrets, hard-coded secret patterns, risky scripts, Docker privileged mode, Docker socket mounts, and .env ignore gaps. Complete.
 - `v1.5.0`: Health aggregator for broad local project diagnostics with opt-in port checks. Complete.
+- `v1.6.0`: Database configuration diagnostics with optional read-only PDO connection checks. Complete.

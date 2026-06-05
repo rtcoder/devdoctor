@@ -8,6 +8,8 @@ use DevDoctor\Core\Config\ConfigLoader;
 use DevDoctor\Core\Config\InvalidDevDoctorConfig;
 use DevDoctor\Modules\Composer\ComposerAnalyzer;
 use DevDoctor\Modules\Composer\ComposerOptions;
+use DevDoctor\Modules\Database\DatabaseAnalyzer;
+use DevDoctor\Modules\Database\DatabaseOptions;
 use DevDoctor\Modules\Docker\DockerAnalyzer;
 use DevDoctor\Modules\Docker\DockerOptions;
 use DevDoctor\Modules\Env\EnvAnalysisOptions;
@@ -39,6 +41,7 @@ final class DiagnosticModuleRunner
             ModuleName::NODE,
             ModuleName::LARAVEL,
             ModuleName::COMPOSER,
+            ModuleName::DATABASE,
             ModuleName::GIT,
             ModuleName::DOCKER,
             ModuleName::PORTS,
@@ -68,6 +71,10 @@ final class DiagnosticModuleRunner
                 strict: $options->strict,
             ))),
             ModuleName::COMPOSER->value => new ModuleResult(ModuleName::COMPOSER, app(ComposerAnalyzer::class)->analyze(new ComposerOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
+            ModuleName::DATABASE->value => new ModuleResult(ModuleName::DATABASE, app(DatabaseAnalyzer::class)->analyze(new DatabaseOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),
