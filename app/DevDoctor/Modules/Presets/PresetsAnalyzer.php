@@ -7,6 +7,7 @@ namespace DevDoctor\Modules\Presets;
 use DevDoctor\Core\Issue;
 use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\Severity;
 
 final readonly class PresetsAnalyzer
@@ -25,7 +26,7 @@ final readonly class PresetsAnalyzer
                 code: IssueCode::DD_PRESET_NONE_DETECTED,
                 severity: Severity::INFO,
                 message: 'No supported project presets detected.',
-                module: 'presets',
+                module: ModuleName::PRESETS,
             ));
 
             return $issues;
@@ -36,7 +37,7 @@ final readonly class PresetsAnalyzer
                 code: IssueCode::DD_PRESET_DETECTED,
                 severity: Severity::INFO,
                 message: $match->preset->label().' project preset detected.',
-                module: 'presets',
+                module: ModuleName::PRESETS,
                 file: $match->evidenceFile,
                 key: $match->preset->value,
                 context: ['preset' => $match->preset->value],

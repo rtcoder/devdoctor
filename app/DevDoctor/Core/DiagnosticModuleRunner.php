@@ -102,7 +102,7 @@ final class DiagnosticModuleRunner
                             code: IssueCode::DD_ENV_INVALID_CONFIG,
                             severity: Severity::ERROR,
                             message: $exception->getMessage(),
-                            module: 'env',
+                            module: ModuleName::ENV,
                             file: $paths->display($options->configFile),
                         ),
                     ])),

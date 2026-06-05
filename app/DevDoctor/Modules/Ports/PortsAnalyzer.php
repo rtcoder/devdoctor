@@ -7,6 +7,7 @@ namespace DevDoctor\Modules\Ports;
 use DevDoctor\Core\Issue;
 use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\Platform;
 use DevDoctor\Core\Severity;
 
@@ -32,7 +33,7 @@ final readonly class PortsAnalyzer
                 code: IssueCode::DD_PORT_PROVIDER_UNAVAILABLE,
                 severity: Severity::WARNING,
                 message: 'No supported port provider is available',
-                module: 'ports',
+                module: ModuleName::PORTS,
             ));
 
             return $issues;
@@ -44,7 +45,7 @@ final readonly class PortsAnalyzer
                     code: IssueCode::DD_PORT_PRIVILEGED,
                     severity: Severity::INFO,
                     message: 'Port '.$port.' may require elevated permissions to bind',
-                    module: 'ports',
+                    module: ModuleName::PORTS,
                     context: ['port' => $port],
                 ));
             }
@@ -56,7 +57,7 @@ final readonly class PortsAnalyzer
                     code: IssueCode::DD_PORT_MULTIPLE_LISTENERS,
                     severity: $options->strict ? Severity::ERROR : Severity::WARNING,
                     message: 'Port '.$port.' has multiple listeners',
-                    module: 'ports',
+                    module: ModuleName::PORTS,
                     context: ['port' => $port],
                 ));
             }
@@ -77,7 +78,7 @@ final readonly class PortsAnalyzer
                     code: IssueCode::DD_PORT_IN_USE,
                     severity: $options->strict ? Severity::ERROR : Severity::WARNING,
                     message: 'Port '.$port.' is used by '.$usage->process->command.' (PID '.$usage->process->pid.')',
-                    module: 'ports',
+                    module: ModuleName::PORTS,
                     context: $context,
                 ));
             }
@@ -88,7 +89,7 @@ final readonly class PortsAnalyzer
                 code: IssueCode::DD_PORTS_READY,
                 severity: Severity::INFO,
                 message: 'No checked ports are currently in use.',
-                module: 'ports',
+                module: ModuleName::PORTS,
             ));
         }
 
@@ -109,7 +110,7 @@ final readonly class PortsAnalyzer
                     code: IssueCode::DD_PORT_INVALID_PORT,
                     severity: Severity::WARNING,
                     message: 'Port '.$port.' is not a valid TCP port',
-                    module: 'ports',
+                    module: ModuleName::PORTS,
                     context: ['port' => $port],
                 ));
 

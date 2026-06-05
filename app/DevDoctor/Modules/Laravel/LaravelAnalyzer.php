@@ -7,6 +7,7 @@ namespace DevDoctor\Modules\Laravel;
 use DevDoctor\Core\Issue;
 use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\Severity;
 use DevDoctor\Modules\Env\EnvEntry;
@@ -30,7 +31,7 @@ final readonly class LaravelAnalyzer
                 code: IssueCode::DD_LARAVEL_NOT_PROJECT,
                 severity: Severity::INFO,
                 message: 'No Laravel project detected',
-                module: 'laravel',
+                module: ModuleName::LARAVEL,
             ));
 
             return $issues;
@@ -43,7 +44,7 @@ final readonly class LaravelAnalyzer
                 code: IssueCode::DD_LARAVEL_ENV_MISSING,
                 severity: Severity::WARNING,
                 message: '.env file is missing for this Laravel project',
-                module: 'laravel',
+                module: ModuleName::LARAVEL,
                 file: '.env',
             ));
         } else {
@@ -59,7 +60,7 @@ final readonly class LaravelAnalyzer
                 code: IssueCode::DD_LARAVEL_READY,
                 severity: Severity::INFO,
                 message: 'Laravel diagnostics found no actionable issues.',
-                module: 'laravel',
+                module: ModuleName::LARAVEL,
             ));
         }
 
@@ -105,7 +106,7 @@ final readonly class LaravelAnalyzer
                 code: IssueCode::DD_LARAVEL_APP_KEY_MISSING,
                 severity: Severity::ERROR,
                 message: 'APP_KEY is missing or empty',
-                module: 'laravel',
+                module: ModuleName::LARAVEL,
                 file: '.env',
                 key: 'APP_KEY',
             ));
@@ -119,7 +120,7 @@ final readonly class LaravelAnalyzer
                 code: IssueCode::DD_LARAVEL_PROD_DEBUG,
                 severity: Severity::ERROR,
                 message: 'APP_DEBUG is enabled while APP_ENV is production',
-                module: 'laravel',
+                module: ModuleName::LARAVEL,
                 file: '.env',
                 key: 'APP_DEBUG',
             ));
@@ -132,7 +133,7 @@ final readonly class LaravelAnalyzer
                 code: IssueCode::DD_LARAVEL_APP_URL_DEFAULT,
                 severity: Severity::WARNING,
                 message: 'APP_URL is missing or still uses the default localhost value',
-                module: 'laravel',
+                module: ModuleName::LARAVEL,
                 file: '.env',
                 key: 'APP_URL',
             ));
@@ -153,7 +154,7 @@ final readonly class LaravelAnalyzer
                 code: IssueCode::DD_LARAVEL_DIRECTORY_MISSING,
                 severity: $options->strict ? Severity::ERROR : Severity::WARNING,
                 message: $directory.' directory is missing',
-                module: 'laravel',
+                module: ModuleName::LARAVEL,
                 file: $directory,
             ));
 
@@ -168,7 +169,7 @@ final readonly class LaravelAnalyzer
             code: IssueCode::DD_LARAVEL_DIRECTORY_NOT_WRITABLE,
             severity: $options->strict ? Severity::ERROR : Severity::WARNING,
             message: $directory.' directory is not writable by the current user',
-            module: 'laravel',
+            module: ModuleName::LARAVEL,
             file: $directory,
         ));
     }
@@ -183,7 +184,7 @@ final readonly class LaravelAnalyzer
             code: IssueCode::DD_LARAVEL_CONFIG_CACHED,
             severity: Severity::INFO,
             message: 'Laravel config cache file exists; remember to rebuild it after environment changes',
-            module: 'laravel',
+            module: ModuleName::LARAVEL,
             file: 'bootstrap/cache/config.php',
         ));
     }

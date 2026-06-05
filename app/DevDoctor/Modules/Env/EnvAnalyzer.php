@@ -7,6 +7,7 @@ namespace DevDoctor\Modules\Env;
 use DevDoctor\Core\Issue;
 use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\Redactor;
 use DevDoctor\Core\Severity;
@@ -53,7 +54,7 @@ final readonly class EnvAnalyzer
                 code: IssueCode::DD_ENV_READY,
                 severity: Severity::INFO,
                 message: 'Env diagnostics found no issues.',
-                module: 'env',
+                module: ModuleName::ENV,
             ));
         }
 
@@ -67,7 +68,7 @@ final readonly class EnvAnalyzer
                 code: IssueCode::DD_ENV_FILE_MISSING,
                 severity: Severity::ERROR,
                 message: $env->path.' does not exist',
-                module: 'env',
+                module: ModuleName::ENV,
                 file: $env->path,
             ));
         }
@@ -77,7 +78,7 @@ final readonly class EnvAnalyzer
                 code: IssueCode::DD_ENV_EXAMPLE_MISSING,
                 severity: $options->strict ? Severity::ERROR : Severity::WARNING,
                 message: $example->path.' does not exist',
-                module: 'env',
+                module: ModuleName::ENV,
                 file: $example->path,
             ));
         }
@@ -91,7 +92,7 @@ final readonly class EnvAnalyzer
                     code: IssueCode::DD_ENV_DUPLICATE_KEY,
                     severity: Severity::ERROR,
                     message: $key.' is defined more than once',
-                    module: 'env',
+                    module: ModuleName::ENV,
                     file: $file->path,
                     line: $entry->line,
                     key: $key,
@@ -111,7 +112,7 @@ final readonly class EnvAnalyzer
                 code: IssueCode::DD_ENV_INVALID_KEY_NAME,
                 severity: Severity::WARNING,
                 message: $entry->key.' does not match expected env key format',
-                module: 'env',
+                module: ModuleName::ENV,
                 file: $file->path,
                 line: $entry->line,
                 key: $entry->key,
@@ -130,7 +131,7 @@ final readonly class EnvAnalyzer
                 code: IssueCode::DD_ENV_EMPTY_VALUE,
                 severity: Severity::WARNING,
                 message: $entry->key.' is empty',
-                module: 'env',
+                module: ModuleName::ENV,
                 file: $file->path,
                 line: $entry->line,
                 key: $entry->key,
@@ -153,7 +154,7 @@ final readonly class EnvAnalyzer
                 code: IssueCode::DD_ENV_INVALID_TYPE,
                 severity: Severity::WARNING,
                 message: $entry->key.' should look like a valid URL',
-                module: 'env',
+                module: ModuleName::ENV,
                 file: $file->path,
                 line: $entry->line,
                 key: $entry->key,
@@ -176,7 +177,7 @@ final readonly class EnvAnalyzer
                     code: IssueCode::DD_ENV_MISSING_IN_ENV,
                     severity: $severity,
                     message: $key.' exists in '.$example->path.' but is missing in '.$env->path,
-                    module: 'env',
+                    module: ModuleName::ENV,
                     file: $example->path,
                     line: $entry?->line,
                     key: $key,
@@ -191,7 +192,7 @@ final readonly class EnvAnalyzer
                     code: IssueCode::DD_ENV_MISSING_IN_EXAMPLE,
                     severity: $severity,
                     message: $key.' exists in '.$env->path.' but is missing in '.$example->path,
-                    module: 'env',
+                    module: ModuleName::ENV,
                     file: $env->path,
                     line: $entry?->line,
                     key: $key,
@@ -217,7 +218,7 @@ final readonly class EnvAnalyzer
                 code: IssueCode::DD_ENV_PROD_DEBUG,
                 severity: Severity::ERROR,
                 message: 'APP_DEBUG=true while APP_ENV=production',
-                module: 'env',
+                module: ModuleName::ENV,
                 file: $env->path,
                 line: $entry?->line,
                 key: 'APP_DEBUG',
@@ -230,7 +231,7 @@ final readonly class EnvAnalyzer
                 code: IssueCode::DD_ENV_PROD_DEBUG,
                 severity: Severity::ERROR,
                 message: 'DEBUG=true while NODE_ENV=production',
-                module: 'env',
+                module: ModuleName::ENV,
                 file: $env->path,
                 line: $entry?->line,
                 key: 'DEBUG',
@@ -256,7 +257,7 @@ final readonly class EnvAnalyzer
                     code: IssueCode::DD_ENV_SECRET_IN_EXAMPLE,
                     severity: Severity::ERROR,
                     message: $entry->key.' appears to contain a real secret in '.$envFile->path,
-                    module: 'env',
+                    module: ModuleName::ENV,
                     file: $envFile->path,
                     line: $entry->line,
                     key: $entry->key,
@@ -280,7 +281,7 @@ final readonly class EnvAnalyzer
                     code: IssueCode::DD_ENV_REQUIRED_MISSING,
                     severity: Severity::ERROR,
                     message: $key.' is required',
-                    module: 'env',
+                    module: ModuleName::ENV,
                     key: $key,
                 ));
             }
@@ -292,7 +293,7 @@ final readonly class EnvAnalyzer
                             code: IssueCode::DD_ENV_REQUIRED_WHEN_MISSING,
                             severity: Severity::ERROR,
                             message: $key.' is required when '.$otherKey.' is '.$this->stringValue($expected),
-                            module: 'env',
+                            module: ModuleName::ENV,
                             key: $key,
                         ));
                     }
@@ -306,7 +307,7 @@ final readonly class EnvAnalyzer
                             code: IssueCode::DD_ENV_FORBIDDEN_WHEN_PRESENT,
                             severity: Severity::ERROR,
                             message: $key.' is forbidden when '.$otherKey.' is '.$this->stringValue($expected),
-                            module: 'env',
+                            module: ModuleName::ENV,
                             file: $entry->file,
                             line: $entry->line,
                             key: $key,
@@ -324,7 +325,7 @@ final readonly class EnvAnalyzer
                     code: IssueCode::DD_ENV_INVALID_ALLOWED_VALUE,
                     severity: Severity::ERROR,
                     message: $key.' has a value that is not allowed',
-                    module: 'env',
+                    module: ModuleName::ENV,
                     file: $entry->file,
                     line: $entry->line,
                     key: $key,
@@ -336,7 +337,7 @@ final readonly class EnvAnalyzer
                     code: IssueCode::DD_ENV_INVALID_TYPE,
                     severity: Severity::ERROR,
                     message: $key.' must be '.$rule['type'],
-                    module: 'env',
+                    module: ModuleName::ENV,
                     file: $entry->file,
                     line: $entry->line,
                     key: $key,

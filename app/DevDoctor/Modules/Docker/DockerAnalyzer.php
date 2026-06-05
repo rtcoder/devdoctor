@@ -9,6 +9,7 @@ use DevDoctor\Core\CommandAvailabilityInterface;
 use DevDoctor\Core\Issue;
 use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\Severity;
 use DevDoctor\Modules\Ports\PortProviderInterface;
@@ -44,7 +45,7 @@ final readonly class DockerAnalyzer
                 code: IssueCode::DD_DOCKER_NO_COMPOSE_PROJECT,
                 severity: Severity::INFO,
                 message: 'No Docker Compose file detected.',
-                module: 'docker',
+                module: ModuleName::DOCKER,
             ));
 
             return $issues;
@@ -74,7 +75,7 @@ final readonly class DockerAnalyzer
                 code: IssueCode::DD_DOCKER_READY,
                 severity: Severity::INFO,
                 message: 'Docker diagnostics found no issues.',
-                module: 'docker',
+                module: ModuleName::DOCKER,
             ));
         }
 
@@ -110,7 +111,7 @@ final readonly class DockerAnalyzer
                 code: IssueCode::DD_DOCKER_BINARY_MISSING,
                 severity: Severity::WARNING,
                 message: 'Docker binary was not found.',
-                module: 'docker',
+                module: ModuleName::DOCKER,
             ));
 
             return false;
@@ -130,7 +131,7 @@ final readonly class DockerAnalyzer
             code: IssueCode::DD_DOCKER_DAEMON_UNAVAILABLE,
             severity: Severity::WARNING,
             message: 'Docker daemon is unavailable.',
-            module: 'docker',
+            module: ModuleName::DOCKER,
         ));
 
         return false;
@@ -146,7 +147,7 @@ final readonly class DockerAnalyzer
                 code: IssueCode::DD_DOCKER_COMPOSE_FILE_MISSING,
                 severity: Severity::ERROR,
                 message: 'Compose file does not exist.',
-                module: 'docker',
+                module: ModuleName::DOCKER,
                 file: basename($composeFile),
             ));
 
@@ -160,7 +161,7 @@ final readonly class DockerAnalyzer
                 code: IssueCode::DD_DOCKER_COMPOSE_INVALID,
                 severity: Severity::ERROR,
                 message: $exception->getMessage(),
-                module: 'docker',
+                module: ModuleName::DOCKER,
                 file: basename($composeFile),
             ));
 
@@ -172,7 +173,7 @@ final readonly class DockerAnalyzer
                 code: IssueCode::DD_DOCKER_COMPOSE_INVALID,
                 severity: Severity::ERROR,
                 message: 'Compose file must contain a YAML mapping.',
-                module: 'docker',
+                module: ModuleName::DOCKER,
                 file: basename($composeFile),
             ));
 
@@ -194,7 +195,7 @@ final readonly class DockerAnalyzer
             code: IssueCode::DD_DOCKER_COMPOSE_CONFIG_INVALID,
             severity: Severity::ERROR,
             message: trim($result->stderr) !== '' ? trim($result->stderr) : 'docker compose config failed.',
-            module: 'docker',
+            module: ModuleName::DOCKER,
             file: basename($composeFile),
         ));
     }
@@ -212,7 +213,7 @@ final readonly class DockerAnalyzer
                 code: IssueCode::DD_DOCKER_ENV_REFERENCE_MISSING,
                 severity: Severity::WARNING,
                 message: 'Compose references missing environment variable '.$name,
-                module: 'docker',
+                module: ModuleName::DOCKER,
                 file: basename($composeFile),
                 key: $name,
             ));
@@ -236,7 +237,7 @@ final readonly class DockerAnalyzer
                     code: IssueCode::DD_DOCKER_HOST_PORT_CONFLICT,
                     severity: Severity::WARNING,
                     message: 'Compose host port '.$port.' is already in use.',
-                    module: 'docker',
+                    module: ModuleName::DOCKER,
                     context: [
                         'port' => $port,
                         'pid' => $usage->process->pid,
@@ -268,7 +269,7 @@ final readonly class DockerAnalyzer
                 code: IssueCode::DD_DOCKER_CONTAINER_UNHEALTHY,
                 severity: Severity::WARNING,
                 message: 'Compose container is unhealthy or restarting.',
-                module: 'docker',
+                module: ModuleName::DOCKER,
                 key: (string) ($container['Service'] ?? $container['Name'] ?? 'container'),
                 context: array_filter([
                     'state' => $state,

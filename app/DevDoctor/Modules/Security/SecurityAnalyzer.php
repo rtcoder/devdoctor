@@ -7,6 +7,7 @@ namespace DevDoctor\Modules\Security;
 use DevDoctor\Core\Issue;
 use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\Severity;
 use DevDoctor\Modules\Env\EnvParser;
@@ -42,7 +43,7 @@ final readonly class SecurityAnalyzer
                 code: IssueCode::DD_SECURITY_READY,
                 severity: Severity::INFO,
                 message: 'Security diagnostics found no actionable issues.',
-                module: 'security',
+                module: ModuleName::SECURITY,
             ));
         }
 
@@ -67,7 +68,7 @@ final readonly class SecurityAnalyzer
             code: IssueCode::DD_SECURITY_ENV_NOT_IGNORED,
             severity: Severity::WARNING,
             message: '.gitignore does not explicitly ignore .env files',
-            module: 'security',
+            module: ModuleName::SECURITY,
             file: '.gitignore',
         ));
     }
@@ -90,7 +91,7 @@ final readonly class SecurityAnalyzer
                     code: IssueCode::DD_SECURITY_SECRET_IN_EXAMPLE,
                     severity: Severity::ERROR,
                     message: 'Likely secret value appears in '.$file,
-                    module: 'security',
+                    module: ModuleName::SECURITY,
                     file: $file,
                     line: $entry->line,
                     key: $entry->key,
@@ -120,7 +121,7 @@ final readonly class SecurityAnalyzer
                     code: IssueCode::DD_SECURITY_RISKY_COMPOSER_SCRIPT,
                     severity: Severity::WARNING,
                     message: 'Composer script '.$event.' contains risky shell execution',
-                    module: 'security',
+                    module: ModuleName::SECURITY,
                     file: 'composer.json',
                     key: 'scripts.'.$event,
                 ));
@@ -146,7 +147,7 @@ final readonly class SecurityAnalyzer
                 code: IssueCode::DD_SECURITY_RISKY_PACKAGE_SCRIPT,
                 severity: Severity::WARNING,
                 message: 'package.json script '.$name.' contains risky shell execution',
-                module: 'security',
+                module: ModuleName::SECURITY,
                 file: 'package.json',
                 key: 'scripts.'.$name,
             ));
@@ -169,7 +170,7 @@ final readonly class SecurityAnalyzer
                     code: IssueCode::DD_SECURITY_DOCKER_PRIVILEGED,
                     severity: Severity::WARNING,
                     message: 'Compose file enables privileged mode',
-                    module: 'security',
+                    module: ModuleName::SECURITY,
                     file: $file,
                     key: 'privileged',
                 ));
@@ -180,7 +181,7 @@ final readonly class SecurityAnalyzer
                     code: IssueCode::DD_SECURITY_DOCKER_SOCKET_MOUNT,
                     severity: Severity::WARNING,
                     message: 'Compose file mounts the Docker socket',
-                    module: 'security',
+                    module: ModuleName::SECURITY,
                     file: $file,
                     key: '/var/run/docker.sock',
                 ));
@@ -216,7 +217,7 @@ final readonly class SecurityAnalyzer
                     code: IssueCode::DD_SECURITY_SECRET_PATTERN,
                     severity: Severity::WARNING,
                     message: 'File contains a likely hard-coded secret pattern',
-                    module: 'security',
+                    module: ModuleName::SECURITY,
                     file: $relative,
                 ));
             }

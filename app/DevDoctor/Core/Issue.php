@@ -14,10 +14,10 @@ final readonly class Issue
      * @param  array<string, mixed>  $context
      */
     public function __construct(
-        IssueCode|string $code,
+        public IssueCode $code,
         public Severity $severity,
         public string $message,
-        ModuleName|string|null $module = null,
+        public ?ModuleName $module = null,
         public ?string $file = null,
         public ?int $line = null,
         public ?string $key = null,
@@ -26,17 +26,10 @@ final readonly class Issue
         ?FixSuggestion $fix = null,
         public bool $suppressed = false,
     ) {
-        $this->code = $code instanceof IssueCode ? $code : IssueCode::from($code);
-        $this->module = $module instanceof ModuleName || $module === null ? $module : ModuleName::from($module);
-
         $suggestion = IssueSuggestionCatalog::for($this->code, $context);
         $this->hint = $hint ?? $suggestion['hint'];
         $this->fix = $fix ?? $suggestion['fix'];
     }
-
-    public IssueCode $code;
-
-    public ?ModuleName $module;
 
     /**
      * @return array<string, mixed>

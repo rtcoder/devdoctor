@@ -9,6 +9,7 @@ use DevDoctor\Core\CommandAvailabilityInterface;
 use DevDoctor\Core\Issue;
 use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\Severity;
 
@@ -29,7 +30,7 @@ final readonly class GitAnalyzer
                 code: IssueCode::DD_GIT_BINARY_MISSING,
                 severity: Severity::WARNING,
                 message: 'Git binary was not found.',
-                module: 'git',
+                module: ModuleName::GIT,
             ));
 
             return $issues;
@@ -40,7 +41,7 @@ final readonly class GitAnalyzer
                 code: IssueCode::DD_GIT_NOT_REPOSITORY,
                 severity: Severity::INFO,
                 message: 'Path is not inside a Git repository',
-                module: 'git',
+                module: ModuleName::GIT,
             ));
 
             return $issues;
@@ -64,7 +65,7 @@ final readonly class GitAnalyzer
                 code: IssueCode::DD_GIT_READY,
                 severity: Severity::INFO,
                 message: 'Git diagnostics found no issues.',
-                module: 'git',
+                module: ModuleName::GIT,
             ));
         }
 
@@ -90,7 +91,7 @@ final readonly class GitAnalyzer
                 code: IssueCode::DD_GIT_CONFLICTS,
                 severity: Severity::ERROR,
                 message: 'Repository has unresolved merge conflicts',
-                module: 'git',
+                module: ModuleName::GIT,
             ));
         }
 
@@ -98,7 +99,7 @@ final readonly class GitAnalyzer
             code: IssueCode::DD_GIT_DIRTY_WORKTREE,
             severity: $options->requireClean || $options->strict ? Severity::ERROR : Severity::WARNING,
             message: 'Repository has uncommitted changes',
-            module: 'git',
+            module: ModuleName::GIT,
             context: ['changed_files' => count($this->statusLines($status))],
         ));
     }
@@ -115,7 +116,7 @@ final readonly class GitAnalyzer
             code: IssueCode::DD_GIT_DETACHED_HEAD,
             severity: Severity::WARNING,
             message: 'Repository is currently on a detached HEAD',
-            module: 'git',
+            module: ModuleName::GIT,
         ));
     }
 
@@ -128,7 +129,7 @@ final readonly class GitAnalyzer
                 code: IssueCode::DD_GIT_NO_UPSTREAM,
                 severity: $options->requireUpstream || $options->strict ? Severity::ERROR : Severity::WARNING,
                 message: 'Current branch has no upstream configured',
-                module: 'git',
+                module: ModuleName::GIT,
             ));
 
             return;
@@ -152,7 +153,7 @@ final readonly class GitAnalyzer
             code: IssueCode::DD_GIT_AHEAD_BEHIND,
             severity: Severity::WARNING,
             message: 'Current branch differs from upstream',
-            module: 'git',
+            module: ModuleName::GIT,
             context: ['ahead' => $ahead, 'behind' => $behind],
         ));
     }
@@ -167,7 +168,7 @@ final readonly class GitAnalyzer
             code: IssueCode::DD_GIT_ENV_NOT_IGNORED,
             severity: Severity::WARNING,
             message: '.env is not ignored by Git',
-            module: 'git',
+            module: ModuleName::GIT,
             file: '.env',
         ));
     }
@@ -183,7 +184,7 @@ final readonly class GitAnalyzer
                 code: IssueCode::DD_GIT_TRACKED_SENSITIVE_FILE,
                 severity: Severity::ERROR,
                 message: 'Sensitive file is tracked by Git',
-                module: 'git',
+                module: ModuleName::GIT,
                 file: $file,
             ));
         }
@@ -197,7 +198,7 @@ final readonly class GitAnalyzer
                 code: IssueCode::DD_GIT_UNTRACKED_SENSITIVE_FILE,
                 severity: Severity::WARNING,
                 message: 'Sensitive file is present but untracked',
-                module: 'git',
+                module: ModuleName::GIT,
                 file: $file,
             ));
         }
@@ -218,7 +219,7 @@ final readonly class GitAnalyzer
                 code: IssueCode::DD_GIT_LARGE_UNTRACKED_FILE,
                 severity: Severity::WARNING,
                 message: 'Large untracked file detected',
-                module: 'git',
+                module: ModuleName::GIT,
                 file: $file,
                 context: [
                     'bytes' => filesize($absolute),

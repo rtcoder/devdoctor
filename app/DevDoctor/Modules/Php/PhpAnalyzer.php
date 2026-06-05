@@ -9,6 +9,7 @@ use DevDoctor\Core\CommandAvailabilityInterface;
 use DevDoctor\Core\Issue;
 use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\Severity;
 use JsonException;
@@ -30,7 +31,7 @@ final readonly class PhpAnalyzer
                 code: IssueCode::DD_PHP_BINARY_MISSING,
                 severity: Severity::ERROR,
                 message: 'PHP binary was not found in PATH',
-                module: 'php',
+                module: ModuleName::PHP,
             ));
         }
 
@@ -41,7 +42,7 @@ final readonly class PhpAnalyzer
                 code: IssueCode::DD_PHP_COMPOSER_JSON_INVALID,
                 severity: Severity::ERROR,
                 message: 'composer.json could not be parsed for PHP diagnostics',
-                module: 'php',
+                module: ModuleName::PHP,
                 file: 'composer.json',
             ));
         }
@@ -57,7 +58,7 @@ final readonly class PhpAnalyzer
                 code: IssueCode::DD_PHP_READY,
                 severity: Severity::INFO,
                 message: 'PHP diagnostics found no actionable issues.',
-                module: 'php',
+                module: ModuleName::PHP,
             ));
         }
 
@@ -103,7 +104,7 @@ final readonly class PhpAnalyzer
             code: IssueCode::DD_PHP_VERSION_MISMATCH,
             severity: Severity::ERROR,
             message: 'Current PHP '.$this->runtime->version().' does not satisfy composer requirement '.$constraint,
-            module: 'php',
+            module: ModuleName::PHP,
             file: 'composer.json',
             key: 'php',
         ));
@@ -131,7 +132,7 @@ final readonly class PhpAnalyzer
                 code: IssueCode::DD_PHP_EXTENSION_MISSING,
                 severity: Severity::ERROR,
                 message: 'Required PHP extension '.$package.' is not loaded',
-                module: 'php',
+                module: ModuleName::PHP,
                 file: 'composer.json',
                 key: $package,
                 context: ['constraint' => $constraint],
@@ -157,7 +158,7 @@ final readonly class PhpAnalyzer
             code: IssueCode::DD_PHP_MEMORY_LIMIT_LOW,
             severity: $options->strict ? Severity::ERROR : Severity::WARNING,
             message: 'PHP memory_limit '.$value.' is below '.$options->minimumMemoryMb.'M',
-            module: 'php',
+            module: ModuleName::PHP,
             key: 'memory_limit',
             context: ['minimum_mb' => $options->minimumMemoryMb],
         ));
@@ -173,7 +174,7 @@ final readonly class PhpAnalyzer
             code: IssueCode::DD_PHP_INI_MISSING,
             severity: Severity::INFO,
             message: 'No php.ini file is loaded by the current PHP runtime',
-            module: 'php',
+            module: ModuleName::PHP,
         ));
     }
 
@@ -187,7 +188,7 @@ final readonly class PhpAnalyzer
             code: IssueCode::DD_PHP_XDEBUG_ENABLED_IN_CI,
             severity: Severity::WARNING,
             message: 'Xdebug is enabled while running in CI mode',
-            module: 'php',
+            module: ModuleName::PHP,
             key: 'xdebug',
         ));
     }

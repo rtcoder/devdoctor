@@ -7,6 +7,7 @@ namespace DevDoctor\Modules\Node;
 use DevDoctor\Core\Issue;
 use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\Severity;
 use JsonException;
@@ -36,7 +37,7 @@ final readonly class NodeAnalyzer
                 code: IssueCode::DD_NODE_NOT_PROJECT,
                 severity: Severity::INFO,
                 message: 'No Node.js project detected',
-                module: 'node',
+                module: ModuleName::NODE,
             ));
 
             return $issues;
@@ -49,7 +50,7 @@ final readonly class NodeAnalyzer
                 code: IssueCode::DD_NODE_PACKAGE_JSON_INVALID,
                 severity: Severity::ERROR,
                 message: 'package.json could not be parsed',
-                module: 'node',
+                module: ModuleName::NODE,
                 file: 'package.json',
             ));
 
@@ -65,7 +66,7 @@ final readonly class NodeAnalyzer
                 code: IssueCode::DD_NODE_BINARY_MISSING,
                 severity: Severity::WARNING,
                 message: 'Node.js binary was not found in PATH',
-                module: 'node',
+                module: ModuleName::NODE,
             ));
         }
 
@@ -80,7 +81,7 @@ final readonly class NodeAnalyzer
                 code: IssueCode::DD_NODE_READY,
                 severity: Severity::INFO,
                 message: 'Node.js diagnostics found no actionable issues.',
-                module: 'node',
+                module: ModuleName::NODE,
             ));
         }
 
@@ -162,7 +163,7 @@ final readonly class NodeAnalyzer
                 code: IssueCode::DD_NODE_MULTIPLE_LOCKFILES,
                 severity: Severity::WARNING,
                 message: 'Multiple Node.js lockfiles are present: '.implode(', ', array_keys($lockfiles)),
-                module: 'node',
+                module: ModuleName::NODE,
                 file: array_key_first($lockfiles),
             ));
         }
@@ -172,7 +173,7 @@ final readonly class NodeAnalyzer
                 code: IssueCode::DD_NODE_LOCK_MISSING,
                 severity: Severity::WARNING,
                 message: 'package.json declares dependencies but no supported lockfile was found',
-                module: 'node',
+                module: ModuleName::NODE,
                 file: 'package.json',
             ));
         }
@@ -198,7 +199,7 @@ final readonly class NodeAnalyzer
             code: IssueCode::DD_NODE_PACKAGE_MANAGER_MISMATCH,
             severity: Severity::WARNING,
             message: 'packageManager declares '.$declared.' but lockfiles indicate '.implode(', ', array_unique(array_values($lockfiles))),
-            module: 'node',
+            module: ModuleName::NODE,
             file: 'package.json',
             key: 'packageManager',
         ));
@@ -228,7 +229,7 @@ final readonly class NodeAnalyzer
             code: IssueCode::DD_NODE_MODULES_MISSING,
             severity: $options->strict ? Severity::ERROR : Severity::WARNING,
             message: 'node_modules directory is missing',
-            module: 'node',
+            module: ModuleName::NODE,
             file: 'node_modules',
         ));
     }
@@ -245,7 +246,7 @@ final readonly class NodeAnalyzer
                 code: IssueCode::DD_NODE_VERSION_FILE_CONFLICT,
                 severity: Severity::WARNING,
                 message: 'Node.js version requirements disagree across project files',
-                module: 'node',
+                module: ModuleName::NODE,
                 file: array_key_first($requirements),
             ));
         }
@@ -266,7 +267,7 @@ final readonly class NodeAnalyzer
             code: IssueCode::DD_NODE_VERSION_MISMATCH,
             severity: Severity::ERROR,
             message: 'Current Node.js '.$version.' does not satisfy project requirement '.$constraint,
-            module: 'node',
+            module: ModuleName::NODE,
             file: array_key_exists('package.json', $requirements) ? 'package.json' : array_key_first($requirements),
             key: array_key_exists('package.json', $requirements) ? 'engines.node' : 'node',
         ));
@@ -320,7 +321,7 @@ final readonly class NodeAnalyzer
                 code: IssueCode::DD_NODE_SCRIPT_RISKY,
                 severity: Severity::WARNING,
                 message: 'package.json script '.$name.' contains risky shell execution',
-                module: 'node',
+                module: ModuleName::NODE,
                 file: 'package.json',
                 key: 'scripts.'.$name,
             ));
