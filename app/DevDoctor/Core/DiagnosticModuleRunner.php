@@ -10,6 +10,8 @@ use DevDoctor\Modules\Cache\CacheAnalyzer;
 use DevDoctor\Modules\Cache\CacheOptions;
 use DevDoctor\Modules\Composer\ComposerAnalyzer;
 use DevDoctor\Modules\Composer\ComposerOptions;
+use DevDoctor\Modules\Cpp\CppAnalyzer;
+use DevDoctor\Modules\Cpp\CppOptions;
 use DevDoctor\Modules\Database\DatabaseAnalyzer;
 use DevDoctor\Modules\Database\DatabaseOptions;
 use DevDoctor\Modules\Docker\DockerAnalyzer;
@@ -65,6 +67,7 @@ final class DiagnosticModuleRunner
             ModuleName::RUST,
             ModuleName::JAVA,
             ModuleName::DOTNET,
+            ModuleName::CPP,
             ModuleName::LARAVEL,
             ModuleName::COMPOSER,
             ModuleName::DATABASE,
@@ -122,6 +125,10 @@ final class DiagnosticModuleRunner
                 strict: $options->strict,
             ))),
             ModuleName::DOTNET->value => new ModuleResult(ModuleName::DOTNET, app(DotnetAnalyzer::class)->analyze(new DotnetOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
+            ModuleName::CPP->value => new ModuleResult(ModuleName::CPP, app(CppAnalyzer::class)->analyze(new CppOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),

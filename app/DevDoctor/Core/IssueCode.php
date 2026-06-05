@@ -113,6 +113,14 @@ enum IssueCode: string
     case DD_DOTNET_RISKY_NUGET_SOURCE = 'DD_DOTNET_RISKY_NUGET_SOURCE';
     case DD_DOTNET_SDK_NOT_PINNED = 'DD_DOTNET_SDK_NOT_PINNED';
     case DD_DOTNET_TARGET_FRAMEWORK_MISMATCH = 'DD_DOTNET_TARGET_FRAMEWORK_MISMATCH';
+    case DD_CPP_COMPILE_COMMANDS_MISSING = 'DD_CPP_COMPILE_COMMANDS_MISSING';
+    case DD_CPP_GENERATOR_ASSUMPTION = 'DD_CPP_GENERATOR_ASSUMPTION';
+    case DD_CPP_IN_SOURCE_BUILD = 'DD_CPP_IN_SOURCE_BUILD';
+    case DD_CPP_MIXED_DEPENDENCY_MANAGERS = 'DD_CPP_MIXED_DEPENDENCY_MANAGERS';
+    case DD_CPP_NOT_PROJECT = 'DD_CPP_NOT_PROJECT';
+    case DD_CPP_READY = 'DD_CPP_READY';
+    case DD_CPP_RISKY_COMPILER_FLAGS = 'DD_CPP_RISKY_COMPILER_FLAGS';
+    case DD_CPP_SHELL_ASSUMPTION = 'DD_CPP_SHELL_ASSUMPTION';
     case DD_SECURITY_DOCKER_PRIVILEGED = 'DD_SECURITY_DOCKER_PRIVILEGED';
     case DD_SECURITY_DOCKER_SOCKET_MOUNT = 'DD_SECURITY_DOCKER_SOCKET_MOUNT';
     case DD_SECURITY_ENV_NOT_IGNORED = 'DD_SECURITY_ENV_NOT_IGNORED';
@@ -278,6 +286,12 @@ enum IssueCode: string
             self::DD_DOTNET_RISKY_NUGET_SOURCE => 'Use HTTPS package sources or document the trusted internal feed explicitly.',
             self::DD_DOTNET_SDK_NOT_PINNED => 'Add global.json when the repository expects a specific .NET SDK version.',
             self::DD_DOTNET_TARGET_FRAMEWORK_MISMATCH => 'Review target frameworks and align them unless the split is intentional.',
+            self::DD_CPP_COMPILE_COMMANDS_MISSING => 'Enable CMAKE_EXPORT_COMPILE_COMMANDS when editor tooling or static analysis needs it.',
+            self::DD_CPP_GENERATOR_ASSUMPTION => 'Avoid hard-coding CMake generators in project files; choose generators in presets or CI.',
+            self::DD_CPP_IN_SOURCE_BUILD => 'Move generated CMake build artifacts out of the source tree.',
+            self::DD_CPP_MIXED_DEPENDENCY_MANAGERS => 'Choose one C/C++ dependency manager policy or document the split explicitly.',
+            self::DD_CPP_RISKY_COMPILER_FLAGS => 'Review compiler flags that can hide diagnostics or weaken build hardening.',
+            self::DD_CPP_SHELL_ASSUMPTION => 'Replace Unix-only shell assumptions or guard them for cross-platform builds.',
             self::DD_SECURITY_DOCKER_PRIVILEGED => 'Avoid privileged containers unless the service explicitly requires host-level access.',
             self::DD_SECURITY_DOCKER_SOCKET_MOUNT => 'Avoid mounting the Docker socket into containers unless this is an intentional trusted control plane.',
             self::DD_SECURITY_ENV_NOT_IGNORED => 'Add .env patterns to .gitignore to reduce accidental secret commits.',

@@ -48,6 +48,10 @@ final readonly class EcosystemModuleSelector
             $modules[] = ModuleName::DOTNET->value;
         }
 
+        if ($this->hasAny($presets, [ProjectPreset::CPP, ProjectPreset::CMAKE])) {
+            $modules[] = ModuleName::CPP->value;
+        }
+
         return array_values(array_unique($modules));
     }
 
