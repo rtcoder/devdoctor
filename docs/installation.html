@@ -9,7 +9,7 @@
 <body>
 <header>
     <h1>Installation</h1>
-    <p class="lead">DevDoctor requires PHP 8.5 or newer.</p>
+    <p class="lead">DevDoctor requires PHP 8.5 or newer when installed from source, Composer, or PHAR. Standalone release binaries bundle a PHP runtime.</p>
     <nav><a href="index.html">Home</a><a href="commands.html">Commands</a><a href="release-verification.html">Release Verification</a></nav>
 </header>
 <main>
@@ -19,8 +19,18 @@ php devdoctor list
 php devdoctor ci</code></pre>
 
     <h2>PHAR</h2>
-    <pre><code>php devdoctor app:build devdoctor --build-version=1.0.0 --no-interaction
-php builds/devdoctor --version</code></pre>
+    <pre><code>php devdoctor app:build devdoctor.phar --build-version=1.0.0 --no-interaction
+php builds/devdoctor.phar --version</code></pre>
+
+    <h2>Standalone Release Binary</h2>
+    <p>Tagged releases publish PHPacker binaries for Linux, macOS, and Windows:</p>
+    <pre><code>devdoctor-linux-x64
+devdoctor-linux-arm64
+devdoctor-macos-x64
+devdoctor-macos-arm64
+devdoctor-windows-x64.exe</code></pre>
+    <pre><code>chmod +x devdoctor-linux-x64
+./devdoctor-linux-x64 --version</code></pre>
 
     <h2>Composer</h2>
     <pre><code>composer global require rtcoder/devdoctor

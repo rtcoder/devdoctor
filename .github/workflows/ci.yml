@@ -65,7 +65,14 @@ jobs:
         shell: bash
         run: |
           version="$(php -r '$data=json_decode(file_get_contents("composer.json"), true); echo $data["extra"]["devdoctor"]["version"];')"
-          php devdoctor app:build devdoctor --build-version="${version}" --no-interaction
+          php devdoctor app:build devdoctor.phar --build-version="${version}" --no-interaction
 
-      - name: Test executable
-        run: php builds/devdoctor --version
+      - name: Test PHAR
+        run: php builds/devdoctor.phar --version
+
+      - name: Build standalone Linux binary
+        shell: bash
+        run: ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
+
+      - name: Test standalone Linux binary
+        run: ./builds/standalone/linux/linux-x64 --version

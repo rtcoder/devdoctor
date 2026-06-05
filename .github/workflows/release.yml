@@ -48,20 +48,39 @@ jobs:
         shell: bash
         run: |
           version="${GITHUB_REF_NAME#v}"
-          php devdoctor app:build devdoctor --build-version="${version}" --no-interaction
-          mv builds/devdoctor devdoctor.phar
-          php devdoctor.phar --version
-          sha256sum devdoctor.phar > devdoctor.phar.sha256
+          php devdoctor app:build devdoctor.phar --build-version="${version}" --no-interaction
+          mkdir -p release
+          mv builds/devdoctor.phar release/devdoctor.phar
+          php release/devdoctor.phar --version
+          (cd release && sha256sum devdoctor.phar > devdoctor.phar.sha256)
+
+      - name: Build standalone binaries
+        shell: bash
+        run: |
+          ./vendor/bin/phpacker build --src=./release/devdoctor.phar --dest=./builds/standalone --php=8.5 all
+
+          cp builds/standalone/linux/linux-x64 release/devdoctor-linux-x64
+          cp builds/standalone/linux/linux-arm release/devdoctor-linux-arm64
+          cp builds/standalone/mac/mac-x64 release/devdoctor-macos-x64
+          cp builds/standalone/mac/mac-arm release/devdoctor-macos-arm64
+          cp builds/standalone/windows/windows-x64.exe release/devdoctor-windows-x64.exe
+
+          chmod +x release/devdoctor-linux-x64 release/devdoctor-linux-arm64 release/devdoctor-macos-x64 release/devdoctor-macos-arm64
+          release/devdoctor-linux-x64 --version
+          (cd release && sha256sum devdoctor.phar devdoctor-linux-x64 devdoctor-linux-arm64 devdoctor-macos-x64 devdoctor-macos-arm64 devdoctor-windows-x64.exe > devdoctor.sha256)
 
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3
 
-      - name: Sign PHAR
+      - name: Sign release executables
+        shell: bash
         run: |
-          cosign sign-blob --yes \
-            --output-signature devdoctor.phar.sig \
-            --output-certificate devdoctor.phar.pem \
-            devdoctor.phar
+          for asset in release/devdoctor.phar release/devdoctor-linux-x64 release/devdoctor-linux-arm64 release/devdoctor-macos-x64 release/devdoctor-macos-arm64 release/devdoctor-windows-x64.exe; do
+            cosign sign-blob --yes \
+              --output-signature "${asset}.sig" \
+              --output-certificate "${asset}.pem" \
+              "${asset}"
+          done
 
       - name: Publish GitHub Release
         env:
@@ -69,15 +88,12 @@ jobs:
         run: |
           gh release create "${GITHUB_REF_NAME}" \
             --generate-notes \
-            devdoctor.phar \
-            devdoctor.phar.sha256 \
-            devdoctor.phar.sig \
-            devdoctor.phar.pem
+            release/*
 
       - name: Update Homebrew tap
         if: env.HOMEBREW_TAP_TOKEN != ''
         shell: bash
         run: |
           version="${GITHUB_REF_NAME#v}"
-          sha256="$(cut -d ' ' -f 1 devdoctor.phar.sha256)"
+          sha256="$(cut -d ' ' -f 1 release/devdoctor.phar.sha256)"
           bash .github/scripts/update-homebrew-tap.sh "${version}" "${sha256}"

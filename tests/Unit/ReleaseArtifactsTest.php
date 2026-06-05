@@ -70,13 +70,21 @@ it('ships release workflow and composite action metadata', function () {
     $action = Yaml::parseFile($root.'/action.yml');
     $release = Yaml::parseFile($root.'/.github/workflows/release.yml');
     $pages = Yaml::parseFile($root.'/.github/workflows/pages.yml');
+    $releaseWorkflow = (string) file_get_contents($root.'/.github/workflows/release.yml');
 
     expect($action['runs']['using'])->toBe('composite')
         ->and($action['inputs'])->toHaveKey('version')
         ->and($release['permissions']['contents'])->toBe('write')
         ->and($release['permissions']['id-token'])->toBe('write')
         ->and($pages['permissions']['pages'])->toBe('write')
-        ->and(file_get_contents($root.'/.github/scripts/update-homebrew-tap.sh'))->toContain('rtcoder/homebrew-tap');
+        ->and(file_get_contents($root.'/.github/scripts/update-homebrew-tap.sh'))->toContain('rtcoder/homebrew-tap')
+        ->and($releaseWorkflow)->toContain('./vendor/bin/phpacker build')
+        ->and($releaseWorkflow)->toContain('devdoctor-linux-x64')
+        ->and($releaseWorkflow)->toContain('devdoctor-linux-arm64')
+        ->and($releaseWorkflow)->toContain('devdoctor-macos-x64')
+        ->and($releaseWorkflow)->toContain('devdoctor-macos-arm64')
+        ->and($releaseWorkflow)->toContain('devdoctor-windows-x64.exe')
+        ->and($releaseWorkflow)->toContain('release/*');
 });
 
 it('ships static documentation and pinned CI examples', function () {
@@ -102,7 +110,10 @@ it('ships static documentation and pinned CI examples', function () {
 
     expect(file_get_contents($root.'/docs/examples/github-actions.yml'))->toContain('v1.0.0')
         ->and(file_get_contents($root.'/docs/examples/gitlab-ci.yml'))->toContain('v1.0.0')
-        ->and(file_get_contents($root.'/docs/examples/bitbucket-pipelines.yml'))->toContain('v1.0.0');
+        ->and(file_get_contents($root.'/docs/examples/bitbucket-pipelines.yml'))->toContain('v1.0.0')
+        ->and(file_get_contents($root.'/README.md'))->toContain('devdoctor-linux-x64')
+        ->and(file_get_contents($root.'/docs/installation.html'))->toContain('Standalone Release Binary')
+        ->and(file_get_contents($root.'/docs/release-verification.html'))->toContain('devdoctor.sha256');
 });
 
 it('catalogs every issue code used by the application', function () {

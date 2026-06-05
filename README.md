@@ -21,12 +21,14 @@ DevDoctor currently runs from the project checkout:
 php devdoctor <command>
 ```
 
-Release builds are standalone PHAR executables:
+Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor --build-version=1.0.0 --no-interaction
-php builds/devdoctor --version
+php devdoctor app:build devdoctor.phar --build-version=1.0.0 --no-interaction
+php builds/devdoctor.phar --version
 ```
+
+Tagged releases publish both the PHAR and PHPacker standalone binaries for Linux, macOS, and Windows. The standalone binaries bundle a PHP runtime, so users do not need PHP installed just to run DevDoctor.
 
 Install as a Composer package:
 
@@ -204,7 +206,7 @@ php devdoctor ci --no-fail-on-warnings
 
 Unknown modules return exit code `3`. Selected modules are always included in JSON output.
 
-The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5. It also builds and smoke-tests the PHAR executable.
+The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5. It also builds and smoke-tests the PHAR and a PHPacker standalone Linux binary.
 
 ### GitHub Action
 
@@ -315,10 +317,28 @@ DevDoctor is read-only by default:
 
 ## Release Verification
 
-Tagged releases publish `devdoctor.phar`, its SHA-256 checksum, a Cosign signature, and a Sigstore certificate. Verify the checksum before running a downloaded PHAR:
+Tagged releases publish `devdoctor.phar`, PHPacker standalone binaries, SHA-256 checksums, Cosign signatures, and Sigstore certificates.
+
+Standalone release assets:
+
+```text
+devdoctor-linux-x64
+devdoctor-linux-arm64
+devdoctor-macos-x64
+devdoctor-macos-arm64
+devdoctor-windows-x64.exe
+```
+
+Verify the PHAR checksum before running a downloaded PHAR:
 
 ```bash
 sha256sum --check devdoctor.phar.sha256
+```
+
+Verify every executable release asset with the combined checksum file:
+
+```bash
+sha256sum --check devdoctor.sha256
 ```
 
 Verify the keyless signature with Cosign:
@@ -349,8 +369,10 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor --build-version=1.0.0 --no-interaction
-php builds/devdoctor --version
+php devdoctor app:build devdoctor.phar --build-version=1.0.0 --no-interaction
+php builds/devdoctor.phar --version
+./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
+./builds/standalone/linux/linux-x64 --version
 ```
 
 ## Roadmap
