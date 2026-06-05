@@ -14,7 +14,7 @@ final class TableRenderer
     /**
      * @param  list<ModuleResult>  $results
      */
-    public function render(array $results): string
+    public function render(array $results, bool $summaryOnly = false): string
     {
         $redactor = new Redactor;
         $lines = ['DevDoctor', ''];
@@ -31,6 +31,10 @@ final class TableRenderer
                 $summary['info'],
                 $summary['suppressed'],
             );
+        }
+
+        if ($summaryOnly) {
+            return implode(PHP_EOL, $lines).PHP_EOL;
         }
 
         foreach ([[Severity::ERROR, 'Errors'], [Severity::WARNING, 'Warnings'], [Severity::INFO, 'Info']] as [$severity, $heading]) {

@@ -276,6 +276,28 @@ it('rejects invalid output formats consistently', function () {
         ->expectsOutputToContain('Invalid --format value');
 });
 
+it('supports diagnostic output filtering without changing exit codes', function () {
+    $path = sys_get_temp_dir().'/devdoctor-output-options-'.bin2hex(random_bytes(4));
+    mkdir($path);
+
+    $this->artisan('env', ['--path' => $path, '--format' => 'json', '--only' => 'info'])
+        ->assertExitCode(2)
+        ->doesntExpectOutputToContain('DD_ENV_FILE_MISSING');
+});
+
+it('supports summary only and no hints output options', function () {
+    $path = sys_get_temp_dir().'/devdoctor-output-summary-'.bin2hex(random_bytes(4));
+    mkdir($path);
+
+    $this->artisan('env', ['--path' => $path, '--format' => 'json', '--summary-only' => true])
+        ->assertExitCode(2)
+        ->doesntExpectOutputToContain('"issues"');
+
+    $this->artisan('env', ['--path' => $path, '--format' => 'json', '--no-hints' => true])
+        ->assertExitCode(2)
+        ->doesntExpectOutputToContain('"hint"');
+});
+
 it('renders ci diagnostics as sarif', function () {
     $path = sys_get_temp_dir().'/devdoctor-ci-sarif-'.bin2hex(random_bytes(4));
     mkdir($path);

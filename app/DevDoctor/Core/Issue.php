@@ -25,8 +25,9 @@ final readonly class Issue
         ?string $hint = null,
         ?FixSuggestion $fix = null,
         public bool $suppressed = false,
+        bool $skipCatalog = false,
     ) {
-        $suggestion = IssueSuggestionCatalog::for($this->code, $context);
+        $suggestion = $skipCatalog ? new HintAndFixIssue : IssueSuggestionCatalog::for($this->code, $context);
         $this->hint = $hint ?? $suggestion->hint;
         $this->fix = $fix ?? $suggestion->fix;
     }
@@ -67,6 +68,24 @@ final readonly class Issue
             hint: $this->hint,
             fix: $this->fix,
             suppressed: true,
+        );
+    }
+
+    public function withoutHints(): self
+    {
+        return new self(
+            code: $this->code,
+            severity: $this->severity,
+            message: $this->message,
+            module: $this->module,
+            file: $this->file,
+            line: $this->line,
+            key: $this->key,
+            context: $this->context,
+            hint: null,
+            fix: null,
+            suppressed: $this->suppressed,
+            skipCatalog: true,
         );
     }
 }

@@ -18,7 +18,10 @@ final class PresetsCommand extends Command
         {--path=. : Project path to inspect}
         {--format=table : Output format: table, json, or sarif}
         {--ci : Use CI-safe behavior}
-        {--strict : Treat warnings as errors where supported}';
+        {--strict : Treat warnings as errors where supported}
+        {--only= : Comma-separated severities to render: error, warning, info}
+        {--summary-only : Render module summaries without issue details}
+        {--no-hints : Hide hints and suggested fixes from output}';
 
     protected $description = 'Detect supported project framework and tooling presets.';
 

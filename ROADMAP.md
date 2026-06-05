@@ -211,3 +211,4 @@ After the first complete version:
 - `v1.7.0`: Cache diagnostics for framework/tool caches, size thresholds, permissions, and Laravel artifacts. Complete.
 - `v1.8.0`: Queue configuration diagnostics for common drivers and production sync risks. Complete.
 - `v1.9.0`: HTTP URL diagnostics for env and explicit targets without network requests. Complete.
+- `v1.10.0`: Global output shaping options for severity filters, summaries, and hidden hints. Complete.

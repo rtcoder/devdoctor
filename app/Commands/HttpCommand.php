@@ -20,6 +20,9 @@ final class HttpCommand extends Command
         {--format=table : Output format: table, json, or sarif}
         {--ci : Use CI-safe behavior}
         {--strict : Treat warnings as errors where supported}
+        {--only= : Comma-separated severities to render: error, warning, info}
+        {--summary-only : Render module summaries without issue details}
+        {--no-hints : Hide hints and suggested fixes from output}
         {--url=* : Explicit URL target to validate}';
 
     protected $description = 'Check HTTP URL configuration.';

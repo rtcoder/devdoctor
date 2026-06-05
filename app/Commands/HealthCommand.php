@@ -25,6 +25,9 @@ final class HealthCommand extends Command
         {--format=table : Output format: table, json, or sarif}
         {--ci : Use CI-safe behavior}
         {--strict : Treat warnings as errors where supported}
+        {--only= : Comma-separated severities to render: error, warning, info}
+        {--summary-only : Render module summaries without issue details}
+        {--no-hints : Hide hints and suggested fixes from output}
         {--modules= : Comma-separated modules to run}
         {--exclude= : Comma-separated modules to exclude}
         {--config=devdoctor.yml : DevDoctor config file name}

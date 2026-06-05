@@ -20,6 +20,9 @@ final class DatabaseCommand extends Command
         {--format=table : Output format: table, json, or sarif}
         {--ci : Use CI-safe behavior}
         {--strict : Treat warnings as errors where supported}
+        {--only= : Comma-separated severities to render: error, warning, info}
+        {--summary-only : Render module summaries without issue details}
+        {--no-hints : Hide hints and suggested fixes from output}
         {--connect : Attempt a read-only PDO connection check}';
 
     protected $description = 'Check database environment configuration.';

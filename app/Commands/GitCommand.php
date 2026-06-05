@@ -20,6 +20,9 @@ final class GitCommand extends Command
         {--format=table : Output format: table, json, or sarif}
         {--ci : Use CI-safe behavior}
         {--strict : Treat warnings as errors where supported}
+        {--only= : Comma-separated severities to render: error, warning, info}
+        {--summary-only : Render module summaries without issue details}
+        {--no-hints : Hide hints and suggested fixes from output}
         {--require-clean : Return an error when the worktree is dirty}
         {--require-upstream : Return an error when the current branch has no upstream}
         {--scan-sensitive : Scan tracked and untracked sensitive files}

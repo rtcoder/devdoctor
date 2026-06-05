@@ -23,7 +23,10 @@ final class PortsCommand extends Command
         {--include-docker : Attempt to correlate Docker port usage when available}
         {--format=table : Output format: table, json, or sarif}
         {--ci : Use CI-safe behavior}
-        {--strict : Treat warnings as errors where supported}';
+        {--strict : Treat warnings as errors where supported}
+        {--only= : Comma-separated severities to render: error, warning, info}
+        {--summary-only : Render module summaries without issue details}
+        {--no-hints : Hide hints and suggested fixes from output}';
 
     protected $description = 'Check local development port conflicts.';
 

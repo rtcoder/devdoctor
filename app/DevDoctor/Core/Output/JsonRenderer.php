@@ -12,7 +12,7 @@ final class JsonRenderer
     /**
      * @param  list<ModuleResult>  $results
      */
-    public function render(array $results): string
+    public function render(array $results, bool $summaryOnly = false): string
     {
         $errors = $warnings = $info = $suppressed = 0;
 
@@ -40,7 +40,9 @@ final class JsonRenderer
                 'suppressed' => $suppressed,
             ],
             'modules' => array_map(
-                static fn (ModuleResult $result): array => $result->toArray(),
+                static fn (ModuleResult $result): array => $summaryOnly
+                    ? array_diff_key($result->toArray(), ['issues' => true])
+                    : $result->toArray(),
                 $results,
             ),
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES).PHP_EOL;

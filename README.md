@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.9.0`
+Current version: `1.10.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.9.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.10.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -72,6 +72,14 @@ All public commands support the shared options:
 --path=. --format=table --ci --strict
 ```
 
+Diagnostic commands also support output shaping without changing the underlying exit code:
+
+```bash
+--only=error,warning
+--summary-only
+--no-hints
+```
+
 Supported diagnostic output formats are `table`, `json`, and `sarif`.
 
 Laravel Zero already defines a global `--env` option, so DevDoctor exposes the env-file selector as `--env-file`:
@@ -85,6 +93,8 @@ php devdoctor env --env-file=.env.local --example=.env.example
 ```bash
 php devdoctor env
 php devdoctor env --format=json --strict
+php devdoctor env --only=error,warning --no-hints
+php devdoctor health --summary-only
 php devdoctor cache
 php devdoctor cache --max-size=1024
 php devdoctor http
@@ -267,9 +277,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.9.0
+- uses: rtcoder/devdoctor@v1.10.0
   with:
-    version: v1.9.0
+    version: v1.10.0
     format: sarif
 ```
 
@@ -423,7 +433,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.9.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.10.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version

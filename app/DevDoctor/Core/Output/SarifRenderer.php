@@ -15,12 +15,14 @@ final class SarifRenderer
     /**
      * @param  list<ModuleResult>  $results
      */
-    public function render(array $results): string
+    public function render(array $results, bool $summaryOnly = false): string
     {
         $issues = [];
 
-        foreach ($results as $result) {
-            $issues = array_merge($issues, $result->issues->all());
+        if (! $summaryOnly) {
+            foreach ($results as $result) {
+                $issues = array_merge($issues, $result->issues->all());
+            }
         }
 
         $rules = [];

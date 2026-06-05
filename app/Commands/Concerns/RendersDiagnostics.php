@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace DevDoctor\Commands\Concerns;
 
 use DevDoctor\Core\ExitCode;
+use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCollection;
 use DevDoctor\Core\ModuleResult;
 use DevDoctor\Core\Output\JsonRenderer;
 use DevDoctor\Core\Output\OutputFormat;
 use DevDoctor\Core\Output\SarifRenderer;
 use DevDoctor\Core\Output\TableRenderer;
+use DevDoctor\Core\Severity;
 
 trait RendersDiagnostics
 {
@@ -18,6 +21,8 @@ trait RendersDiagnostics
      */
     protected function renderDiagnostics(array $results, ?ExitCode $overrideExitCode = null): int
     {
+        $renderResults = $this->applyOutputOptions($results);
+        $summaryOnly = (bool) ($this->option('summary-only') ?? false);
         $format = OutputFormat::tryFrom((string) $this->option('format'));
 
         if ($format === null) {
@@ -27,9 +32,9 @@ trait RendersDiagnostics
         }
 
         $output = match ($format) {
-            OutputFormat::JSON => app(JsonRenderer::class)->render($results),
-            OutputFormat::SARIF => app(SarifRenderer::class)->render($results),
-            OutputFormat::TABLE => app(TableRenderer::class)->render($results),
+            OutputFormat::JSON => app(JsonRenderer::class)->render($renderResults, $summaryOnly),
+            OutputFormat::SARIF => app(SarifRenderer::class)->render($renderResults, $summaryOnly),
+            OutputFormat::TABLE => app(TableRenderer::class)->render($renderResults, $summaryOnly),
         };
 
         $this->output->write($output);
@@ -45,5 +50,55 @@ trait RendersDiagnostics
         }
 
         return ($overrideExitCode ?? $exitCode)->value;
+    }
+
+    /**
+     * @param  list<ModuleResult>  $results
+     * @return list<ModuleResult>
+     */
+    private function applyOutputOptions(array $results): array
+    {
+        $only = $this->onlySeverities((string) ($this->option('only') ?? ''));
+        $noHints = (bool) ($this->option('no-hints') ?? false);
+
+        if ($only === [] && ! $noHints) {
+            return $results;
+        }
+
+        return array_map(function (ModuleResult $result) use ($only, $noHints): ModuleResult {
+            $issues = array_filter(
+                $result->issues->all(),
+                static fn (Issue $issue): bool => $only === [] || in_array($issue->severity, $only, true),
+            );
+
+            if ($noHints) {
+                $issues = array_map(static fn (Issue $issue): Issue => $issue->withoutHints(), $issues);
+            }
+
+            return new ModuleResult($result->name, new IssueCollection($issues));
+        }, $results);
+    }
+
+    /**
+     * @return list<Severity>
+     */
+    private function onlySeverities(string $value): array
+    {
+        $items = array_filter(array_map(
+            static fn (string $item): string => strtolower(trim($item)),
+            explode(',', $value),
+        ));
+
+        $severities = [];
+
+        foreach ($items as $item) {
+            $severity = Severity::tryFrom($item);
+
+            if ($severity !== null) {
+                $severities[] = $severity;
+            }
+        }
+
+        return array_values(array_unique($severities, SORT_REGULAR));
     }
 }
