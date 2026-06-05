@@ -32,6 +32,10 @@ final readonly class EcosystemModuleSelector
             $modules[] = ModuleName::PYTHON->value;
         }
 
+        if ($this->hasAny($presets, [ProjectPreset::RUBY, ProjectPreset::RAILS])) {
+            $modules[] = ModuleName::RUBY->value;
+        }
+
         if ($this->hasAny($presets, [ProjectPreset::GO])) {
             $modules[] = ModuleName::GO->value;
         }

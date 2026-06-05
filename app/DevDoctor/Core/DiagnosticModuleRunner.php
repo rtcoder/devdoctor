@@ -43,6 +43,8 @@ use DevDoctor\Modules\Python\PythonAnalyzer;
 use DevDoctor\Modules\Python\PythonOptions;
 use DevDoctor\Modules\Queue\QueueAnalyzer;
 use DevDoctor\Modules\Queue\QueueOptions;
+use DevDoctor\Modules\Ruby\RubyAnalyzer;
+use DevDoctor\Modules\Ruby\RubyOptions;
 use DevDoctor\Modules\Rust\RustAnalyzer;
 use DevDoctor\Modules\Rust\RustOptions;
 use DevDoctor\Modules\Security\SecurityAnalyzer;
@@ -67,6 +69,7 @@ final class DiagnosticModuleRunner
             ModuleName::NODE,
             ModuleName::FRONTEND,
             ModuleName::PYTHON,
+            ModuleName::RUBY,
             ModuleName::GO,
             ModuleName::RUST,
             ModuleName::JAVA,
@@ -115,6 +118,10 @@ final class DiagnosticModuleRunner
                 strict: $options->strict,
             ))),
             ModuleName::PYTHON->value => new ModuleResult(ModuleName::PYTHON, app(PythonAnalyzer::class)->analyze(new PythonOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
+            ModuleName::RUBY->value => new ModuleResult(ModuleName::RUBY, app(RubyAnalyzer::class)->analyze(new RubyOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),

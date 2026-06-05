@@ -27,6 +27,7 @@ enum ModuleName: string
     case DOTNET = 'dotnet';
     case PYTHON = 'python';
     case QUEUE = 'queue';
+    case RUBY = 'ruby';
     case RUST = 'rust';
     case SECURITY = 'security';
     case SYMFONY = 'symfony';

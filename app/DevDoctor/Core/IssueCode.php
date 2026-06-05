@@ -90,6 +90,13 @@ enum IssueCode: string
     case DD_PYTHON_SUSPICIOUS_SOURCE = 'DD_PYTHON_SUSPICIOUS_SOURCE';
     case DD_PYTHON_VERSION_CONFLICT = 'DD_PYTHON_VERSION_CONFLICT';
     case DD_PYTHON_VENV_MISSING = 'DD_PYTHON_VENV_MISSING';
+    case DD_RUBY_DATABASE_SECRET = 'DD_RUBY_DATABASE_SECRET';
+    case DD_RUBY_LOCK_MISSING = 'DD_RUBY_LOCK_MISSING';
+    case DD_RUBY_NOT_PROJECT = 'DD_RUBY_NOT_PROJECT';
+    case DD_RUBY_RAILS_MASTER_KEY_MISSING = 'DD_RUBY_RAILS_MASTER_KEY_MISSING';
+    case DD_RUBY_READY = 'DD_RUBY_READY';
+    case DD_RUBY_RISKY_GEM_SOURCE = 'DD_RUBY_RISKY_GEM_SOURCE';
+    case DD_RUBY_VERSION_CONFLICT = 'DD_RUBY_VERSION_CONFLICT';
     case DD_GO_MODULE_PATH_INVALID = 'DD_GO_MODULE_PATH_INVALID';
     case DD_GO_NOT_PROJECT = 'DD_GO_NOT_PROJECT';
     case DD_GO_READY = 'DD_GO_READY';
@@ -287,6 +294,11 @@ enum IssueCode: string
             self::DD_PYTHON_SUSPICIOUS_SOURCE => 'Review custom package indexes, URL dependencies, and VCS dependencies before installing.',
             self::DD_PYTHON_VERSION_CONFLICT => 'Align Python version constraints across project files.',
             self::DD_PYTHON_VENV_MISSING => 'Create a local virtual environment or document the Conda environment used by the project.',
+            self::DD_RUBY_DATABASE_SECRET => 'Move database credentials to environment variables or encrypted credentials.',
+            self::DD_RUBY_LOCK_MISSING => 'Generate and commit Gemfile.lock for applications.',
+            self::DD_RUBY_RAILS_MASTER_KEY_MISSING => 'Provide RAILS_MASTER_KEY through the environment or document credential handling.',
+            self::DD_RUBY_RISKY_GEM_SOURCE => 'Review HTTP, Git, and path gem sources before installing dependencies.',
+            self::DD_RUBY_VERSION_CONFLICT => 'Align Ruby version declarations across Gemfile and version files.',
             self::DD_GO_MODULE_PATH_INVALID => 'Use the canonical Go module path declared by the repository or package namespace.',
             self::DD_GO_REPLACE_DIRECTIVE => 'Review local replace directives before committing them because they may only work on one machine.',
             self::DD_GO_SUM_MISSING => 'Regenerate go.sum intentionally after reviewing go.mod dependency changes.',

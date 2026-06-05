@@ -72,6 +72,7 @@ final readonly class PresetDetector
         }
 
         array_push($matches, ...$this->pythonMatches($files));
+        array_push($matches, ...$this->rubyMatches($files));
         array_push($matches, ...$this->goMatches($files));
         array_push($matches, ...$this->rustMatches($files));
         array_push($matches, ...$this->javaMatches($files));
@@ -128,6 +129,25 @@ final readonly class PresetDetector
         }
 
         return false;
+    }
+
+    /**
+     * @return list<PresetMatch>
+     */
+    private function rubyMatches(ProjectFiles $files): array
+    {
+        $matches = [];
+        $rubyEvidence = $files->firstExisting(['Gemfile', 'gems.rb', '.ruby-version', 'config/application.rb']);
+
+        if ($rubyEvidence !== null) {
+            $matches[] = new PresetMatch(ProjectPreset::RUBY, $rubyEvidence);
+        }
+
+        if ($files->contains('Gemfile', 'rails') || $files->exists('config/application.rb') || $files->exists('bin/rails')) {
+            $matches[] = new PresetMatch(ProjectPreset::RAILS, $files->exists('config/application.rb') ? 'config/application.rb' : 'Gemfile');
+        }
+
+        return $matches;
     }
 
     /**

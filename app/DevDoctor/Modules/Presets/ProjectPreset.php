@@ -34,6 +34,10 @@ enum ProjectPreset: string
 
     case CONDA = 'conda';
 
+    case RUBY = 'ruby';
+
+    case RAILS = 'rails';
+
     case GO = 'go';
 
     case RUST = 'rust';
@@ -75,6 +79,8 @@ enum ProjectPreset: string
             self::PIPENV => 'Pipenv',
             self::UV => 'uv',
             self::CONDA => 'Conda',
+            self::RUBY => 'Ruby',
+            self::RAILS => 'Rails',
             self::GO => 'Go',
             self::RUST => 'Rust',
             self::JAVA => 'Java/JVM',

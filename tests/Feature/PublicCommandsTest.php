@@ -114,6 +114,15 @@ it('runs python diagnostics with json output', function () {
         ->expectsOutputToContain('DD_PYTHON_NOT_PROJECT');
 });
 
+it('runs ruby diagnostics with json output', function () {
+    $path = sys_get_temp_dir().'/devdoctor-ruby-command-'.bin2hex(random_bytes(4));
+    mkdir($path);
+
+    $this->artisan('ruby', ['--path' => $path, '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('DD_RUBY_NOT_PROJECT');
+});
+
 it('runs go diagnostics with json output', function () {
     $path = sys_get_temp_dir().'/devdoctor-go-command-'.bin2hex(random_bytes(4));
     mkdir($path);
@@ -385,12 +394,16 @@ it('runs default ci modules without ports', function () {
     mkdir($path.'/var/log', recursive: true);
     mkdir($path.'/config', recursive: true);
     file_put_contents($path.'/config/bundles.php', "<?php\nreturn [];\n");
+    file_put_contents($path.'/Gemfile', "source 'https://rubygems.org'\nruby '3.4.0'\ngem 'rails'\n");
+    file_put_contents($path.'/Gemfile.lock', "GEM\n");
+    file_put_contents($path.'/.ruby-version', "3.4.0\n");
+    file_put_contents($path.'/config/master.key', "key\n");
 
     $exitCode = Artisan::call('ci', ['--path' => $path, '--format' => 'json']);
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect($exitCode)->toBe(1)
-        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'go', 'rust', 'java', 'dotnet', 'cpp', 'web', 'symfony']);
+        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'ruby', 'go', 'rust', 'java', 'dotnet', 'cpp', 'web', 'symfony']);
 });
 
 it('supports ci module selection exclude and unknown module handling', function () {

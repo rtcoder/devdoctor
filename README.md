@@ -2,9 +2,9 @@
 
 Developer diagnostics for humans.
 
-DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, Node/frontend, Python, Go, Rust, Java/JVM, .NET, C/C++, generic web, and CI problems before they turn into manual debugging sessions.
+DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, Node/frontend, Python, Ruby/Rails, Go, Rust, Java/JVM, .NET, C/C++, generic web, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.22.0`
+Current version: `1.23.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.22.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.23.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -59,6 +59,7 @@ php        Check PHP runtime and platform health
 node       Check Node.js project and package manager health
 frontend   Check frontend project presets and build readiness
 python     Check Python manifests and dependency manager health
+ruby       Check Ruby and Rails manifests, lockfiles, versions, credentials, and dependency sources
 go         Check Go module and workspace health
 rust       Check Rust Cargo manifest and workspace health
 java       Check Java/JVM Maven, Gradle, Ant, and Spring health
@@ -117,6 +118,7 @@ php devdoctor php --ci --minimum-memory=256
 php devdoctor node
 php devdoctor frontend
 php devdoctor python
+php devdoctor ruby
 php devdoctor go
 php devdoctor rust
 php devdoctor java
@@ -158,6 +160,7 @@ DevDoctor targets Linux, macOS, and Windows:
 | Node.js project diagnostics | Supported | Supported | Supported |
 | Frontend project diagnostics | Supported | Supported | Supported |
 | Python project diagnostics | Supported | Supported | Supported |
+| Ruby/Rails diagnostics | Supported | Supported | Supported |
 | Go module diagnostics | Supported | Supported | Supported |
 | Rust Cargo diagnostics | Supported | Supported | Supported |
 | Java/JVM diagnostics | Supported | Supported | Supported |
@@ -186,6 +189,7 @@ Platform-specific commands are only suggested. DevDoctor never terminates a proc
 - Node.js diagnostics inspect `package.json`, npm/Yarn/pnpm/Bun lockfiles, stale lockfiles, `node_modules`, `engines.node`, `.nvmrc`, `.node-version`, and risky package scripts.
 - Frontend diagnostics inspect Vite, Next.js, Nuxt, Astro, React, Vue, Svelte, Angular, and generic static frontend evidence without running builds.
 - Python diagnostics inspect `pyproject.toml`, `requirements*.txt`, `Pipfile`, `poetry.lock`, `uv.lock`, and Conda files without installing packages.
+- Ruby diagnostics inspect `Gemfile`, `Gemfile.lock`, `.ruby-version`, Rails credentials, `config/database.yml`, and risky gem sources without running Bundler or Rails.
 - Go diagnostics inspect `go.mod`, `go.sum`, `go.work`, local `replace` directives, toolchain declarations, and vendor metadata without running `go mod tidy` or downloading modules.
 - Rust diagnostics inspect `Cargo.toml`, `Cargo.lock`, workspaces, `rust-toolchain.toml`, local path/git dependencies, and release profile settings without running Cargo.
 - Java diagnostics inspect Maven, Gradle, Ant, wrappers, Java version declarations, risky build scripts, and Spring production debug flags without running builds or dependency resolution.
@@ -197,7 +201,7 @@ Platform-specific commands are only suggested. DevDoctor never terminates a proc
 - Database diagnostics inspect `DB_CONNECTION`, required database keys, valid ports, SQLite file paths, and optional read-only PDO connectivity with `--connect`.
 - Queue diagnostics inspect `QUEUE_CONNECTION`, common async driver requirements, and production environments that still use the synchronous queue driver.
 - Security diagnostics inspect env example secrets, hard-coded secret patterns, risky Composer and package scripts, Docker privileged mode, Docker socket mounts, and `.env` ignore gaps.
-- Health aggregates local project diagnostics across `presets`, `env`, `cache`, `http`, `php`, `node`, `laravel`, `composer`, `db`, `queue`, `git`, `docker`, and `security`; it adds `frontend`, `python`, `go`, `rust`, `java`, `dotnet`, `cpp`, `web`, and `symfony` automatically when matching presets are detected. Add `--include-ports` to include common local port checks.
+- Health aggregates local project diagnostics across `presets`, `env`, `cache`, `http`, `php`, `node`, `laravel`, `composer`, `db`, `queue`, `git`, `docker`, and `security`; it adds `frontend`, `python`, `ruby`, `go`, `rust`, `java`, `dotnet`, `cpp`, `web`, and `symfony` automatically when matching presets are detected. Add `--include-ports` to include common local port checks.
 - Composer reports `DD_COMPOSER_LOCK_OUTDATED` when `composer.lock` is older than `composer.json`.
 - Process execution uses argument arrays and supports project paths containing spaces.
 
@@ -217,6 +221,7 @@ The `presets` command detects supported project stacks from files and declared d
 | Astro | `astro` dependency |
 | Python | `pyproject.toml`, `requirements*.txt`, `Pipfile`, `uv.lock`, or Conda files |
 | pip / Poetry / Pipenv / uv / Conda | their lockfiles or manifests |
+| Ruby / Rails | `Gemfile`, `.ruby-version`, `config/application.rb`, or `bin/rails` |
 | Go | `go.mod` or `go.work` |
 | Rust | `Cargo.toml`, `Cargo.lock`, or `rust-toolchain.toml` |
 | Java/JVM | Maven, Gradle, or Ant build files |
@@ -227,7 +232,7 @@ The `presets` command detects supported project stacks from files and declared d
 | Generic web | static entry files, web server config, or frontend evidence |
 | Docker Compose | A supported Compose file |
 
-`v1.22.0` ships `devdoctor symfony` with static diagnostics for Symfony environment hygiene, runtime directories, Symfony Flex recipe drift, and Composer script risks. This completes the first planned multi-stack wave from frontend through Symfony.
+`v1.23.0` ships `devdoctor ruby` with static diagnostics for Ruby and Rails manifests, lockfiles, Ruby version declarations, encrypted credential setup, database credential hygiene, and risky gem sources.
 
 Preset detection is informational and can be included in CI explicitly:
 
@@ -314,7 +319,7 @@ Unknown health modules return exit code `3`.
 
 ## CI
 
-The CI aggregator runs `env`, `php`, `node`, `laravel`, `composer`, `git`, and `docker` by default. It adds `frontend`, `python`, `go`, `rust`, `java`, `dotnet`, `cpp`, `web`, and `symfony` automatically when matching presets are detected. `ports` and `security` are excluded by default because they can depend on local machine state or intentionally present local files.
+The CI aggregator runs `env`, `php`, `node`, `laravel`, `composer`, `git`, and `docker` by default. It adds `frontend`, `python`, `ruby`, `go`, `rust`, `java`, `dotnet`, `cpp`, `web`, and `symfony` automatically when matching presets are detected. `ports` and `security` are excluded by default because they can depend on local machine state or intentionally present local files.
 
 ```bash
 php devdoctor ci --format=json
@@ -332,9 +337,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.22.0
+- uses: rtcoder/devdoctor@v1.23.0
   with:
-    version: v1.22.0
+    version: v1.23.0
     format: sarif
 ```
 
@@ -488,7 +493,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.22.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.23.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version
