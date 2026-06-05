@@ -15,7 +15,7 @@ env:
 jobs:
   release:
     name: Build and publish release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
 
