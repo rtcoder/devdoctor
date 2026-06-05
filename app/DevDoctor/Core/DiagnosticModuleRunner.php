@@ -31,6 +31,8 @@ use DevDoctor\Modules\Php\PhpOptions;
 use DevDoctor\Modules\Ports\PortsAnalyzer;
 use DevDoctor\Modules\Ports\PortsOptions;
 use DevDoctor\Modules\Presets\PresetsAnalyzer;
+use DevDoctor\Modules\Python\PythonAnalyzer;
+use DevDoctor\Modules\Python\PythonOptions;
 use DevDoctor\Modules\Queue\QueueAnalyzer;
 use DevDoctor\Modules\Queue\QueueOptions;
 use DevDoctor\Modules\Security\SecurityAnalyzer;
@@ -50,6 +52,7 @@ final class DiagnosticModuleRunner
             ModuleName::PHP,
             ModuleName::NODE,
             ModuleName::FRONTEND,
+            ModuleName::PYTHON,
             ModuleName::LARAVEL,
             ModuleName::COMPOSER,
             ModuleName::DATABASE,
@@ -87,6 +90,10 @@ final class DiagnosticModuleRunner
                 strict: $options->strict,
             ))),
             ModuleName::FRONTEND->value => new ModuleResult(ModuleName::FRONTEND, app(FrontendAnalyzer::class)->analyze(new FrontendOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
+            ModuleName::PYTHON->value => new ModuleResult(ModuleName::PYTHON, app(PythonAnalyzer::class)->analyze(new PythonOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),

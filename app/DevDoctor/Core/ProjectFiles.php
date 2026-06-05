@@ -63,11 +63,16 @@ final readonly class ProjectFiles
 
     public function contains(string $file, string $needle): bool
     {
+        return str_contains($this->contents($file), $needle);
+    }
+
+    public function contents(string $file): string
+    {
         if (! $this->exists($file)) {
-            return false;
+            return '';
         }
 
-        return str_contains((string) file_get_contents($this->paths->absolute($file)), $needle);
+        return (string) file_get_contents($this->paths->absolute($file));
     }
 
     /**
