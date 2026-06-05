@@ -47,6 +47,8 @@ use DevDoctor\Modules\Rust\RustAnalyzer;
 use DevDoctor\Modules\Rust\RustOptions;
 use DevDoctor\Modules\Security\SecurityAnalyzer;
 use DevDoctor\Modules\Security\SecurityOptions;
+use DevDoctor\Modules\Web\WebAnalyzer;
+use DevDoctor\Modules\Web\WebOptions;
 
 final class DiagnosticModuleRunner
 {
@@ -68,6 +70,7 @@ final class DiagnosticModuleRunner
             ModuleName::JAVA,
             ModuleName::DOTNET,
             ModuleName::CPP,
+            ModuleName::WEB,
             ModuleName::LARAVEL,
             ModuleName::COMPOSER,
             ModuleName::DATABASE,
@@ -129,6 +132,10 @@ final class DiagnosticModuleRunner
                 strict: $options->strict,
             ))),
             ModuleName::CPP->value => new ModuleResult(ModuleName::CPP, app(CppAnalyzer::class)->analyze(new CppOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
+            ModuleName::WEB->value => new ModuleResult(ModuleName::WEB, app(WebAnalyzer::class)->analyze(new WebOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),

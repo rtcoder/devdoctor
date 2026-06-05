@@ -159,6 +159,15 @@ it('runs cpp diagnostics with json output', function () {
         ->expectsOutputToContain('DD_CPP_NOT_PROJECT');
 });
 
+it('runs web diagnostics with json output', function () {
+    $path = sys_get_temp_dir().'/devdoctor-web-command-'.bin2hex(random_bytes(4));
+    mkdir($path);
+
+    $this->artisan('web', ['--path' => $path, '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('DD_WEB_NOT_PROJECT');
+});
+
 it('runs laravel diagnostics with json output', function () {
     $path = sys_get_temp_dir().'/devdoctor-laravel-command-'.bin2hex(random_bytes(4));
     mkdir($path);
@@ -312,7 +321,7 @@ it('runs default ci modules without ports', function () {
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect($exitCode)->toBe(1)
-        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend']);
+        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'web']);
 
     file_put_contents($path.'/requirements.txt', "pytest\n");
 
@@ -320,7 +329,7 @@ it('runs default ci modules without ports', function () {
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect($exitCode)->toBe(1)
-        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python']);
+        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'web']);
 
     file_put_contents($path.'/go.mod', "module github.com/example/app\n\ngo 1.25\n");
 
@@ -328,7 +337,7 @@ it('runs default ci modules without ports', function () {
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect($exitCode)->toBe(1)
-        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'go']);
+        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'go', 'web']);
 
     file_put_contents($path.'/Cargo.toml', "[package]\nname = \"demo\"\nversion = \"0.1.0\"\nedition = \"2024\"\n");
 
@@ -336,7 +345,7 @@ it('runs default ci modules without ports', function () {
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect($exitCode)->toBe(1)
-        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'go', 'rust']);
+        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'go', 'rust', 'web']);
 
     file_put_contents($path.'/pom.xml', "<project><properties><java.version>21</java.version></properties></project>\n");
     file_put_contents($path.'/mvnw', "#!/bin/sh\n");
@@ -345,7 +354,7 @@ it('runs default ci modules without ports', function () {
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect($exitCode)->toBe(1)
-        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'go', 'rust', 'java']);
+        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'go', 'rust', 'java', 'web']);
 
     file_put_contents($path.'/global.json', "{\"sdk\":{\"version\":\"9.0.100\"}}\n");
     file_put_contents($path.'/App.csproj', "<Project><PropertyGroup><TargetFramework>net9.0</TargetFramework></PropertyGroup></Project>\n");
@@ -354,16 +363,19 @@ it('runs default ci modules without ports', function () {
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect($exitCode)->toBe(1)
-        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'go', 'rust', 'java', 'dotnet']);
+        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'go', 'rust', 'java', 'dotnet', 'web']);
 
     file_put_contents($path.'/CMakeLists.txt', "project(demo)\n");
     file_put_contents($path.'/compile_commands.json', "[]\n");
+    file_put_contents($path.'/index.html', '<link rel="stylesheet" href="assets/app.css">');
+    mkdir($path.'/assets', recursive: true);
+    file_put_contents($path.'/assets/app.css', "body { color: black; }\n");
 
     $exitCode = Artisan::call('ci', ['--path' => $path, '--format' => 'json']);
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect($exitCode)->toBe(1)
-        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'go', 'rust', 'java', 'dotnet', 'cpp']);
+        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'go', 'rust', 'java', 'dotnet', 'cpp', 'web']);
 });
 
 it('supports ci module selection exclude and unknown module handling', function () {

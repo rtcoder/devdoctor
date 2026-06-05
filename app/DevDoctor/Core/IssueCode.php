@@ -121,6 +121,13 @@ enum IssueCode: string
     case DD_CPP_READY = 'DD_CPP_READY';
     case DD_CPP_RISKY_COMPILER_FLAGS = 'DD_CPP_RISKY_COMPILER_FLAGS';
     case DD_CPP_SHELL_ASSUMPTION = 'DD_CPP_SHELL_ASSUMPTION';
+    case DD_WEB_ASSET_REFERENCE_MISSING = 'DD_WEB_ASSET_REFERENCE_MISSING';
+    case DD_WEB_BUILD_OUTPUT_MISSING = 'DD_WEB_BUILD_OUTPUT_MISSING';
+    case DD_WEB_INSECURE_DEFAULT_CONFIG = 'DD_WEB_INSECURE_DEFAULT_CONFIG';
+    case DD_WEB_NOT_PROJECT = 'DD_WEB_NOT_PROJECT';
+    case DD_WEB_PORT_CONFIG_CONFLICT = 'DD_WEB_PORT_CONFIG_CONFLICT';
+    case DD_WEB_PUBLIC_SECRET = 'DD_WEB_PUBLIC_SECRET';
+    case DD_WEB_READY = 'DD_WEB_READY';
     case DD_SECURITY_DOCKER_PRIVILEGED = 'DD_SECURITY_DOCKER_PRIVILEGED';
     case DD_SECURITY_DOCKER_SOCKET_MOUNT = 'DD_SECURITY_DOCKER_SOCKET_MOUNT';
     case DD_SECURITY_ENV_NOT_IGNORED = 'DD_SECURITY_ENV_NOT_IGNORED';
@@ -292,6 +299,11 @@ enum IssueCode: string
             self::DD_CPP_MIXED_DEPENDENCY_MANAGERS => 'Choose one C/C++ dependency manager policy or document the split explicitly.',
             self::DD_CPP_RISKY_COMPILER_FLAGS => 'Review compiler flags that can hide diagnostics or weaken build hardening.',
             self::DD_CPP_SHELL_ASSUMPTION => 'Replace Unix-only shell assumptions or guard them for cross-platform builds.',
+            self::DD_WEB_ASSET_REFERENCE_MISSING => 'Fix the asset path or add the referenced file before serving the page.',
+            self::DD_WEB_BUILD_OUTPUT_MISSING => 'Run the documented build step or point DevDoctor at the generated output directory.',
+            self::DD_WEB_INSECURE_DEFAULT_CONFIG => 'Review whether this web server setting is safe for the intended environment.',
+            self::DD_WEB_PORT_CONFIG_CONFLICT => 'Align the port used by environment config and frontend scripts.',
+            self::DD_WEB_PUBLIC_SECRET => 'Move secrets out of public web files and rotate exposed credentials if they were real.',
             self::DD_SECURITY_DOCKER_PRIVILEGED => 'Avoid privileged containers unless the service explicitly requires host-level access.',
             self::DD_SECURITY_DOCKER_SOCKET_MOUNT => 'Avoid mounting the Docker socket into containers unless this is an intentional trusted control plane.',
             self::DD_SECURITY_ENV_NOT_IGNORED => 'Add .env patterns to .gitignore to reduce accidental secret commits.',

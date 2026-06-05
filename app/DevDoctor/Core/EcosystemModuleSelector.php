@@ -52,6 +52,10 @@ final readonly class EcosystemModuleSelector
             $modules[] = ModuleName::CPP->value;
         }
 
+        if ($this->hasAny($presets, [ProjectPreset::WEB])) {
+            $modules[] = ModuleName::WEB->value;
+        }
+
         return array_values(array_unique($modules));
     }
 
