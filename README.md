@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.10.0`
+Current version: `1.11.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.10.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.11.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -52,6 +52,7 @@ cache     Check framework and tool cache health
 http      Check HTTP URL configuration
 ports      Check local development port conflicts
 composer   Check Composer project health
+deps       Check Composer and Node dependency health
 db         Check database environment configuration
 queue      Check queue environment configuration
 php        Check PHP runtime and platform health
@@ -107,6 +108,7 @@ php devdoctor node
 php devdoctor laravel
 php devdoctor security
 php devdoctor composer
+php devdoctor deps
 php devdoctor db
 php devdoctor db --connect
 php devdoctor queue
@@ -277,9 +279,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.10.0
+- uses: rtcoder/devdoctor@v1.11.0
   with:
-    version: v1.10.0
+    version: v1.11.0
     format: sarif
 ```
 
@@ -433,7 +435,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.10.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.11.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version
