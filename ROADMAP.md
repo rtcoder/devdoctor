@@ -219,7 +219,7 @@ After the first complete version:
 - `v1.15.0`: Python diagnostics for pip, Poetry, Pipenv, uv, and Conda manifests. Complete.
 - `v1.16.0`: Go module diagnostics for `go.mod`, `go.sum`, `go.work`, local `replace` directives, toolchain declarations, and vendor metadata. Complete.
 - `v1.17.0`: Rust Cargo diagnostics for manifests, lockfiles, workspaces, toolchains, dependency sources, and release profile settings. Complete.
-- `v1.18.0`: Java/JVM diagnostics for Maven, Gradle, Ant, and Spring Boot projects.
+- `v1.18.0`: Java/JVM diagnostics for Maven, Gradle, Ant, wrappers, Java version declarations, risky build scripts, and Spring production debug flags. Complete.
 - `v1.19.0`: .NET diagnostics for solutions, projects, SDK pinning, NuGet config, and lockfiles.
 - `v1.20.0`: C/C++ diagnostics for CMake, Make, Meson, Autotools, vcpkg, and Conan projects.
 - `v1.21.0`: Generic web diagnostics for static apps, assets, web config, ports, and security posture.

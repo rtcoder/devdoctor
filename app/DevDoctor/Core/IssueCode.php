@@ -99,6 +99,13 @@ enum IssueCode: string
     case DD_RUST_RELEASE_PROFILE_DEBUG = 'DD_RUST_RELEASE_PROFILE_DEBUG';
     case DD_RUST_TOOLCHAIN_DECLARED = 'DD_RUST_TOOLCHAIN_DECLARED';
     case DD_RUST_WORKSPACE_MEMBER_MISSING = 'DD_RUST_WORKSPACE_MEMBER_MISSING';
+    case DD_JAVA_MIXED_BUILD_SYSTEMS = 'DD_JAVA_MIXED_BUILD_SYSTEMS';
+    case DD_JAVA_NOT_PROJECT = 'DD_JAVA_NOT_PROJECT';
+    case DD_JAVA_READY = 'DD_JAVA_READY';
+    case DD_JAVA_RISKY_BUILD_SCRIPT = 'DD_JAVA_RISKY_BUILD_SCRIPT';
+    case DD_JAVA_SPRING_PROD_DEBUG = 'DD_JAVA_SPRING_PROD_DEBUG';
+    case DD_JAVA_VERSION_MISMATCH = 'DD_JAVA_VERSION_MISMATCH';
+    case DD_JAVA_WRAPPER_MISSING = 'DD_JAVA_WRAPPER_MISSING';
     case DD_SECURITY_DOCKER_PRIVILEGED = 'DD_SECURITY_DOCKER_PRIVILEGED';
     case DD_SECURITY_DOCKER_SOCKET_MOUNT = 'DD_SECURITY_DOCKER_SOCKET_MOUNT';
     case DD_SECURITY_ENV_NOT_IGNORED = 'DD_SECURITY_ENV_NOT_IGNORED';
@@ -254,6 +261,11 @@ enum IssueCode: string
             self::DD_RUST_PATH_DEPENDENCY => 'Review local path dependencies because they may not work outside this checkout.',
             self::DD_RUST_RELEASE_PROFILE_DEBUG => 'Review release profile settings before publishing optimized builds.',
             self::DD_RUST_WORKSPACE_MEMBER_MISSING => 'Fix the workspace member path or add the missing Cargo.toml.',
+            self::DD_JAVA_MIXED_BUILD_SYSTEMS => 'Choose the intended JVM build system and remove stale build files.',
+            self::DD_JAVA_RISKY_BUILD_SCRIPT => 'Review shell execution in build files before running builds or dependency tasks.',
+            self::DD_JAVA_SPRING_PROD_DEBUG => 'Disable debug logging for production Spring profiles.',
+            self::DD_JAVA_VERSION_MISMATCH => 'Align Java version declarations across Maven, Gradle, and toolchain configuration.',
+            self::DD_JAVA_WRAPPER_MISSING => 'Commit the Maven or Gradle wrapper so builds use a predictable tool version.',
             self::DD_SECURITY_DOCKER_PRIVILEGED => 'Avoid privileged containers unless the service explicitly requires host-level access.',
             self::DD_SECURITY_DOCKER_SOCKET_MOUNT => 'Avoid mounting the Docker socket into containers unless this is an intentional trusted control plane.',
             self::DD_SECURITY_ENV_NOT_IGNORED => 'Add .env patterns to .gitignore to reduce accidental secret commits.',

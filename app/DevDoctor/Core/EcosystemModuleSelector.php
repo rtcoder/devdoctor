@@ -40,6 +40,10 @@ final readonly class EcosystemModuleSelector
             $modules[] = ModuleName::RUST->value;
         }
 
+        if ($this->hasAny($presets, [ProjectPreset::JAVA, ProjectPreset::MAVEN, ProjectPreset::GRADLE, ProjectPreset::ANT, ProjectPreset::SPRING])) {
+            $modules[] = ModuleName::JAVA->value;
+        }
+
         return array_values(array_unique($modules));
     }
 

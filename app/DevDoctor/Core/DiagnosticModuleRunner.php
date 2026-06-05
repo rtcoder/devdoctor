@@ -24,6 +24,8 @@ use DevDoctor\Modules\Go\GoAnalyzer;
 use DevDoctor\Modules\Go\GoOptions;
 use DevDoctor\Modules\Http\HttpAnalyzer;
 use DevDoctor\Modules\Http\HttpOptions;
+use DevDoctor\Modules\Java\JavaAnalyzer;
+use DevDoctor\Modules\Java\JavaOptions;
 use DevDoctor\Modules\Laravel\LaravelAnalyzer;
 use DevDoctor\Modules\Laravel\LaravelOptions;
 use DevDoctor\Modules\Node\NodeAnalyzer;
@@ -59,6 +61,7 @@ final class DiagnosticModuleRunner
             ModuleName::PYTHON,
             ModuleName::GO,
             ModuleName::RUST,
+            ModuleName::JAVA,
             ModuleName::LARAVEL,
             ModuleName::COMPOSER,
             ModuleName::DATABASE,
@@ -108,6 +111,10 @@ final class DiagnosticModuleRunner
                 strict: $options->strict,
             ))),
             ModuleName::RUST->value => new ModuleResult(ModuleName::RUST, app(RustAnalyzer::class)->analyze(new RustOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
+            ModuleName::JAVA->value => new ModuleResult(ModuleName::JAVA, app(JavaAnalyzer::class)->analyze(new JavaOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),
