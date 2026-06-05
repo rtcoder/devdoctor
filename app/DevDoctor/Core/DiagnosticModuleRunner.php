@@ -16,6 +16,8 @@ use DevDoctor\Modules\Docker\DockerAnalyzer;
 use DevDoctor\Modules\Docker\DockerOptions;
 use DevDoctor\Modules\Env\EnvAnalysisOptions;
 use DevDoctor\Modules\Env\EnvAnalyzer;
+use DevDoctor\Modules\Frontend\FrontendAnalyzer;
+use DevDoctor\Modules\Frontend\FrontendOptions;
 use DevDoctor\Modules\Git\GitAnalyzer;
 use DevDoctor\Modules\Git\GitOptions;
 use DevDoctor\Modules\Http\HttpAnalyzer;
@@ -47,6 +49,7 @@ final class DiagnosticModuleRunner
             ModuleName::HTTP,
             ModuleName::PHP,
             ModuleName::NODE,
+            ModuleName::FRONTEND,
             ModuleName::LARAVEL,
             ModuleName::COMPOSER,
             ModuleName::DATABASE,
@@ -80,6 +83,10 @@ final class DiagnosticModuleRunner
                 strict: $options->strict,
             ))),
             ModuleName::NODE->value => new ModuleResult(ModuleName::NODE, app(NodeAnalyzer::class)->analyze(new NodeOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
+            ModuleName::FRONTEND->value => new ModuleResult(ModuleName::FRONTEND, app(FrontendAnalyzer::class)->analyze(new FrontendOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),

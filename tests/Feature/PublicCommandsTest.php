@@ -96,6 +96,15 @@ it('runs node diagnostics with json output', function () {
         ->expectsOutputToContain('DD_NODE_NOT_PROJECT');
 });
 
+it('runs frontend diagnostics with json output', function () {
+    $path = sys_get_temp_dir().'/devdoctor-frontend-command-'.bin2hex(random_bytes(4));
+    mkdir($path);
+
+    $this->artisan('frontend', ['--path' => $path, '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('DD_FRONTEND_NOT_PROJECT');
+});
+
 it('runs laravel diagnostics with json output', function () {
     $path = sys_get_temp_dir().'/devdoctor-laravel-command-'.bin2hex(random_bytes(4));
     mkdir($path);
@@ -242,6 +251,14 @@ it('runs default ci modules without ports', function () {
 
     expect($exitCode)->toBe(0)
         ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker']);
+
+    file_put_contents($path.'/package.json', '{"dependencies":{"vite":"^7.0.0"},"scripts":{"build":"vite build"}}');
+
+    $exitCode = Artisan::call('ci', ['--path' => $path, '--format' => 'json']);
+    $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
+
+    expect($exitCode)->toBe(1)
+        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend']);
 });
 
 it('supports ci module selection exclude and unknown module handling', function () {

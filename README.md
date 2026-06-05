@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, Node/frontend, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.13.0`
+Current version: `1.14.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.13.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.14.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -57,6 +57,7 @@ db         Check database environment configuration
 queue      Check queue environment configuration
 php        Check PHP runtime and platform health
 node       Check Node.js project and package manager health
+frontend   Check frontend project presets and build readiness
 laravel    Check Laravel application health
 security   Check project security posture
 git        Check Git repository hygiene
@@ -106,6 +107,7 @@ php devdoctor ports --port=3000 --port=5173
 php devdoctor php
 php devdoctor php --ci --minimum-memory=256
 php devdoctor node
+php devdoctor frontend
 php devdoctor laravel
 php devdoctor security
 php devdoctor composer
@@ -138,6 +140,7 @@ DevDoctor targets Linux, macOS, and Windows:
 | HTTP URL diagnostics | Supported | Supported | Supported |
 | PHP runtime diagnostics | Supported | Supported | Supported |
 | Node.js project diagnostics | Supported | Supported | Supported |
+| Frontend project diagnostics | Supported | Supported | Supported |
 | Laravel application diagnostics | Supported | Supported | Supported |
 | Security posture diagnostics | Supported | Supported | Supported |
 | Database configuration diagnostics | Supported | Supported | Supported |
@@ -156,12 +159,13 @@ Platform-specific commands are only suggested. DevDoctor never terminates a proc
 - Cache diagnostics inspect known Laravel, Symfony, and Node cache directories, size thresholds, writability, and Laravel cache artifacts without deleting anything.
 - HTTP diagnostics validate configured `APP_URL`, `FRONTEND_URL`, `API_URL`, and explicit `--url` values without making network requests.
 - PHP diagnostics compare the active CLI runtime with `composer.json`, required `ext-*` packages, `memory_limit`, loaded `php.ini`, and Xdebug state in CI.
-- Node.js diagnostics inspect `package.json`, package manager lockfiles, `node_modules`, `engines.node`, `.nvmrc`, `.node-version`, and risky package scripts.
+- Node.js diagnostics inspect `package.json`, npm/Yarn/pnpm/Bun lockfiles, stale lockfiles, `node_modules`, `engines.node`, `.nvmrc`, `.node-version`, and risky package scripts.
+- Frontend diagnostics inspect Vite, Next.js, Nuxt, Astro, React, Vue, Svelte, Angular, and generic static frontend evidence without running builds.
 - Laravel diagnostics inspect `.env`, `APP_KEY`, production debug mode, `APP_URL`, runtime directories, and config cache state.
 - Database diagnostics inspect `DB_CONNECTION`, required database keys, valid ports, SQLite file paths, and optional read-only PDO connectivity with `--connect`.
 - Queue diagnostics inspect `QUEUE_CONNECTION`, common async driver requirements, and production environments that still use the synchronous queue driver.
 - Security diagnostics inspect env example secrets, hard-coded secret patterns, risky Composer and package scripts, Docker privileged mode, Docker socket mounts, and `.env` ignore gaps.
-- Health aggregates local project diagnostics across `presets`, `env`, `cache`, `http`, `php`, `node`, `laravel`, `composer`, `db`, `queue`, `git`, `docker`, and `security`; add `--include-ports` to include common local port checks.
+- Health aggregates local project diagnostics across `presets`, `env`, `cache`, `http`, `php`, `node`, `laravel`, `composer`, `db`, `queue`, `git`, `docker`, and `security`; it adds `frontend` automatically when frontend presets are detected. Add `--include-ports` to include common local port checks.
 - Composer reports `DD_COMPOSER_LOCK_OUTDATED` when `composer.lock` is older than `composer.json`.
 - Process execution uses argument arrays and supports project paths containing spaces.
 
@@ -191,7 +195,7 @@ The `presets` command detects supported project stacks from files and declared d
 | Generic web | static entry files, web server config, or frontend evidence |
 | Docker Compose | A supported Compose file |
 
-`v1.13.0` expands preset detection and shared manifest helpers for multi-stack projects. The new ecosystem commands (`frontend`, `python`, `go`, `rust`, `java`, `cpp`, `dotnet`, `symfony`, and `web`) are planned as separate releases so `ci --modules=<name>` only accepts them once their analyzers exist.
+`v1.14.0` ships `devdoctor frontend` and expands Node package manager diagnostics for npm, Yarn, pnpm, and Bun lockfiles. The remaining ecosystem commands (`python`, `go`, `rust`, `java`, `cpp`, `dotnet`, `symfony`, and `web`) are planned as separate releases so `ci --modules=<name>` only accepts them once their analyzers exist.
 
 Preset detection is informational and can be included in CI explicitly:
 
@@ -278,7 +282,7 @@ Unknown health modules return exit code `3`.
 
 ## CI
 
-The CI aggregator runs `env`, `php`, `node`, `laravel`, `composer`, `git`, and `docker` by default. `ports` and `security` are excluded by default because they can depend on local machine state or intentionally present local files.
+The CI aggregator runs `env`, `php`, `node`, `laravel`, `composer`, `git`, and `docker` by default. It adds `frontend` automatically when frontend presets are detected. `ports` and `security` are excluded by default because they can depend on local machine state or intentionally present local files.
 
 ```bash
 php devdoctor ci --format=json
@@ -296,9 +300,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.13.0
+- uses: rtcoder/devdoctor@v1.14.0
   with:
-    version: v1.13.0
+    version: v1.14.0
     format: sarif
 ```
 
@@ -452,7 +456,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.13.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.14.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version

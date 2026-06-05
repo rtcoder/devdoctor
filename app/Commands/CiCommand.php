@@ -9,6 +9,7 @@ use DevDoctor\Core\Baseline\BaselineManager;
 use DevDoctor\Core\Baseline\InvalidBaseline;
 use DevDoctor\Core\DiagnosticModuleRunner;
 use DevDoctor\Core\DiagnosticRunOptions;
+use DevDoctor\Core\EcosystemModuleSelector;
 use DevDoctor\Core\ExitCode;
 use DevDoctor\Core\Issue;
 use DevDoctor\Core\IssueCode;
@@ -110,6 +111,11 @@ final class CiCommand extends Command
     private function selectedModules(): array
     {
         $modules = $this->stringList((string) ($this->option('modules') ?: 'env,php,node,laravel,composer,git,docker'));
+
+        if (! $this->option('modules')) {
+            $modules = app(EcosystemModuleSelector::class)->addDetected((string) $this->option('path'), $modules);
+        }
+
         $exclude = $this->stringList((string) ($this->option('exclude') ?: ''));
 
         return array_values(array_diff($modules, $exclude));

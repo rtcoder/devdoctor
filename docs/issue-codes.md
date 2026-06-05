@@ -65,6 +65,7 @@ The machine-readable v1 catalog is available at [`schemas/v1/issue-codes.json`](
 
 - `DD_NODE_BINARY_MISSING`
 - `DD_NODE_LOCK_MISSING`
+- `DD_NODE_LOCK_OUTDATED`
 - `DD_NODE_MODULES_MISSING`
 - `DD_NODE_MULTIPLE_LOCKFILES`
 - `DD_NODE_NOT_PROJECT`
@@ -86,6 +87,13 @@ The machine-readable v1 catalog is available at [`schemas/v1/issue-codes.json`](
 - `DD_LARAVEL_NOT_PROJECT`
 - `DD_LARAVEL_PROD_DEBUG`
 - `DD_LARAVEL_READY`
+
+## Frontend
+
+- `DD_FRONTEND_BUILD_SCRIPT_MISSING`
+- `DD_FRONTEND_NOT_PROJECT`
+- `DD_FRONTEND_PRESET_DETECTED`
+- `DD_FRONTEND_READY`
 
 ## Security
 

@@ -52,6 +52,7 @@ enum IssueCode: string
     case DD_PHP_XDEBUG_ENABLED_IN_CI = 'DD_PHP_XDEBUG_ENABLED_IN_CI';
     case DD_NODE_BINARY_MISSING = 'DD_NODE_BINARY_MISSING';
     case DD_NODE_LOCK_MISSING = 'DD_NODE_LOCK_MISSING';
+    case DD_NODE_LOCK_OUTDATED = 'DD_NODE_LOCK_OUTDATED';
     case DD_NODE_MODULES_MISSING = 'DD_NODE_MODULES_MISSING';
     case DD_NODE_MULTIPLE_LOCKFILES = 'DD_NODE_MULTIPLE_LOCKFILES';
     case DD_NODE_NOT_PROJECT = 'DD_NODE_NOT_PROJECT';
@@ -70,6 +71,10 @@ enum IssueCode: string
     case DD_LARAVEL_NOT_PROJECT = 'DD_LARAVEL_NOT_PROJECT';
     case DD_LARAVEL_PROD_DEBUG = 'DD_LARAVEL_PROD_DEBUG';
     case DD_LARAVEL_READY = 'DD_LARAVEL_READY';
+    case DD_FRONTEND_BUILD_SCRIPT_MISSING = 'DD_FRONTEND_BUILD_SCRIPT_MISSING';
+    case DD_FRONTEND_NOT_PROJECT = 'DD_FRONTEND_NOT_PROJECT';
+    case DD_FRONTEND_PRESET_DETECTED = 'DD_FRONTEND_PRESET_DETECTED';
+    case DD_FRONTEND_READY = 'DD_FRONTEND_READY';
     case DD_SECURITY_DOCKER_PRIVILEGED = 'DD_SECURITY_DOCKER_PRIVILEGED';
     case DD_SECURITY_DOCKER_SOCKET_MOUNT = 'DD_SECURITY_DOCKER_SOCKET_MOUNT';
     case DD_SECURITY_ENV_NOT_IGNORED = 'DD_SECURITY_ENV_NOT_IGNORED';
@@ -194,6 +199,7 @@ enum IssueCode: string
             self::DD_PHP_XDEBUG_ENABLED_IN_CI => 'Disable Xdebug in CI, for example by setting XDEBUG_MODE=off.',
             self::DD_NODE_BINARY_MISSING => 'Install Node.js or add it to PATH before running Node diagnostics.',
             self::DD_NODE_LOCK_MISSING => 'Generate and commit the intended package manager lockfile.',
+            self::DD_NODE_LOCK_OUTDATED => 'Regenerate the lockfile with the package manager selected by the project.',
             self::DD_NODE_MODULES_MISSING => 'Install dependencies with the package manager selected by the project lockfile.',
             self::DD_NODE_MULTIPLE_LOCKFILES => 'Keep only the lockfile for the package manager the project actually uses.',
             self::DD_NODE_PACKAGE_JSON_INVALID => 'Fix package.json syntax before running package manager commands.',
@@ -208,6 +214,7 @@ enum IssueCode: string
             self::DD_LARAVEL_DIRECTORY_NOT_WRITABLE => 'Adjust ownership or permissions so the current user can write Laravel runtime files.',
             self::DD_LARAVEL_ENV_MISSING => 'Create .env from .env.example and fill required Laravel values.',
             self::DD_LARAVEL_PROD_DEBUG => 'Disable APP_DEBUG before using production environment settings.',
+            self::DD_FRONTEND_BUILD_SCRIPT_MISSING => 'Add a build script or document why this frontend project is served without a build step.',
             self::DD_SECURITY_DOCKER_PRIVILEGED => 'Avoid privileged containers unless the service explicitly requires host-level access.',
             self::DD_SECURITY_DOCKER_SOCKET_MOUNT => 'Avoid mounting the Docker socket into containers unless this is an intentional trusted control plane.',
             self::DD_SECURITY_ENV_NOT_IGNORED => 'Add .env patterns to .gitignore to reduce accidental secret commits.',

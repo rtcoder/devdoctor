@@ -71,6 +71,7 @@ final readonly class NodeAnalyzer
         }
 
         $this->checkLockfiles($issues, $lockfiles, $hasDependencies);
+        $this->checkOutdatedLockfiles($issues, $paths, $lockfiles);
         $this->checkPackageManager($issues, $data, $lockfiles);
         $this->checkNodeModules($issues, $paths, $options, $hasDependencies);
         $this->checkVersion($issues, $paths, $data, $options);
@@ -176,6 +177,38 @@ final readonly class NodeAnalyzer
                 module: ModuleName::NODE,
                 file: 'package.json',
             ));
+        }
+    }
+
+    /**
+     * @param  array<string, string>  $lockfiles
+     */
+    private function checkOutdatedLockfiles(IssueCollection $issues, PathResolver $paths, array $lockfiles): void
+    {
+        $packageJson = $paths->absolute('package.json');
+
+        if (! is_file($packageJson) || $lockfiles === []) {
+            return;
+        }
+
+        $packageModifiedAt = filemtime($packageJson);
+
+        if ($packageModifiedAt === false) {
+            return;
+        }
+
+        foreach (array_keys($lockfiles) as $lockfile) {
+            $lockModifiedAt = filemtime($paths->absolute($lockfile));
+
+            if ($lockModifiedAt !== false && $lockModifiedAt < $packageModifiedAt) {
+                $issues->add(new Issue(
+                    code: IssueCode::DD_NODE_LOCK_OUTDATED,
+                    severity: Severity::WARNING,
+                    message: $lockfile.' is older than package.json',
+                    module: ModuleName::NODE,
+                    file: $lockfile,
+                ));
+            }
         }
     }
 

@@ -84,6 +84,22 @@ it('reports multiple lockfiles and package manager mismatch', function () {
         ->and($codes)->toContain('DD_NODE_PACKAGE_MANAGER_MISMATCH');
 });
 
+it('reports lockfiles older than package json', function () {
+    $path = nodeFixture([
+        'package-lock.json' => '{}',
+        'package.json' => '{"packageManager":"npm@10.0.0","dependencies":{"vite":"^7.0.0"}}',
+        'node_modules' => null,
+    ]);
+
+    touch($path.'/package-lock.json', time() - 60);
+    touch($path.'/package.json', time());
+
+    $issues = (new NodeAnalyzer(runtime: new FakeNodeRuntime))->analyze(new NodeOptions(path: $path));
+
+    expect(array_map(static fn ($issue): string => $issue->code->value, $issues->all()))
+        ->toContain('DD_NODE_LOCK_OUTDATED');
+});
+
 it('reports missing node binary and version mismatch', function () {
     $issues = (new NodeAnalyzer(runtime: new FakeNodeRuntime(available: false, version: null)))->analyze(new NodeOptions(path: nodeFixture([
         'package.json' => '{"engines":{"node":"^22.0.0"}}',

@@ -215,7 +215,7 @@ After the first complete version:
 - `v1.11.0`: Dependency diagnostics aggregator for Composer and Node projects. Complete.
 - `v1.12.0`: Doctor alias for the broad health diagnostics workflow. Complete.
 - `v1.13.0`: Multi-stack preset foundation for frontend, Python, Go, Rust, JVM, C/C++, .NET, generic web, and deeper Symfony planning. Complete.
-- `v1.14.0`: Frontend and Node package manager diagnostics for Vite, Next.js, Nuxt, Astro, npm, Yarn, pnpm, and Bun.
+- `v1.14.0`: Frontend and Node package manager diagnostics for Vite, Next.js, Nuxt, Astro, npm, Yarn, pnpm, and Bun. Complete.
 - `v1.15.0`: Python diagnostics for pip, Poetry, Pipenv, uv, and Conda manifests.
 - `v1.16.0`: Go module diagnostics for `go.mod`, `go.sum`, and workspaces.
 - `v1.17.0`: Rust Cargo diagnostics for manifests, lockfiles, workspaces, and toolchains.
