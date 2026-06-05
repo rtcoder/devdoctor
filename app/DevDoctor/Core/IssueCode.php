@@ -119,6 +119,12 @@ enum IssueCode: string
     case DD_PORT_PROVIDER_UNAVAILABLE = 'DD_PORT_PROVIDER_UNAVAILABLE';
     case DD_PRESET_DETECTED = 'DD_PRESET_DETECTED';
     case DD_PRESET_NONE_DETECTED = 'DD_PRESET_NONE_DETECTED';
+    case DD_QUEUE_CONNECTION_MISSING = 'DD_QUEUE_CONNECTION_MISSING';
+    case DD_QUEUE_CONNECTION_UNKNOWN = 'DD_QUEUE_CONNECTION_UNKNOWN';
+    case DD_QUEUE_DATABASE_REQUIRES_DB = 'DD_QUEUE_DATABASE_REQUIRES_DB';
+    case DD_QUEUE_READY = 'DD_QUEUE_READY';
+    case DD_QUEUE_REQUIRED_KEY_MISSING = 'DD_QUEUE_REQUIRED_KEY_MISSING';
+    case DD_QUEUE_SYNC_IN_PRODUCTION = 'DD_QUEUE_SYNC_IN_PRODUCTION';
 
     public function hint(): ?string
     {
@@ -149,6 +155,11 @@ enum IssueCode: string
             self::DD_PORT_MULTIPLE_LISTENERS => 'Inspect all listeners and stop only the process that should not own the port.',
             self::DD_PORT_PROVIDER_UNAVAILABLE => 'Install a supported port inspection tool for this operating system.',
             self::DD_PORT_IN_USE => 'Confirm the process can be stopped before freeing the port.',
+            self::DD_QUEUE_CONNECTION_MISSING => 'Set QUEUE_CONNECTION when the application relies on background jobs.',
+            self::DD_QUEUE_CONNECTION_UNKNOWN => 'Use a supported queue connection name or document the custom driver intentionally.',
+            self::DD_QUEUE_DATABASE_REQUIRES_DB => 'Configure database diagnostics first because database queues depend on DB settings.',
+            self::DD_QUEUE_REQUIRED_KEY_MISSING => 'Add the required queue environment key or document an intentional runtime default.',
+            self::DD_QUEUE_SYNC_IN_PRODUCTION => 'Use a real asynchronous queue driver before relying on production background jobs.',
             self::DD_COMPOSER_BINARY_MISSING => 'Install Composer or add it to PATH before running Composer diagnostics.',
             self::DD_COMPOSER_EXTENSION_MISSING => 'Install and enable the required PHP extension.',
             self::DD_COMPOSER_JSON_INVALID => 'Fix composer.json syntax before running Composer commands.',

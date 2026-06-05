@@ -113,6 +113,12 @@
         {"code": "DD_PORT_PRIVILEGED", "module": "ports", "description": "A requested port is privileged.", "introduced": "0.8.0", "status": "active"},
         {"code": "DD_PORT_PROVIDER_UNAVAILABLE", "module": "ports", "description": "No supported port inspection provider is available.", "introduced": "0.8.0", "status": "active"},
         {"code": "DD_PRESET_DETECTED", "module": "presets", "description": "A supported project preset was detected.", "introduced": "0.9.0", "status": "active"},
-        {"code": "DD_PRESET_NONE_DETECTED", "module": "presets", "description": "No supported project preset was detected.", "introduced": "0.9.0", "status": "active"}
+        {"code": "DD_PRESET_NONE_DETECTED", "module": "presets", "description": "No supported project preset was detected.", "introduced": "0.9.0", "status": "active"},
+        {"code": "DD_QUEUE_CONNECTION_MISSING", "module": "queue", "description": "Queue connection configuration is missing.", "introduced": "1.8.0", "status": "active"},
+        {"code": "DD_QUEUE_CONNECTION_UNKNOWN", "module": "queue", "description": "Queue connection configuration uses an unknown driver.", "introduced": "1.8.0", "status": "active"},
+        {"code": "DD_QUEUE_DATABASE_REQUIRES_DB", "module": "queue", "description": "Database queue configuration is missing database settings.", "introduced": "1.8.0", "status": "active"},
+        {"code": "DD_QUEUE_READY", "module": "queue", "description": "Queue diagnostics found no actionable issues.", "introduced": "1.8.0", "status": "active"},
+        {"code": "DD_QUEUE_REQUIRED_KEY_MISSING", "module": "queue", "description": "A required queue environment key is missing.", "introduced": "1.8.0", "status": "active"},
+        {"code": "DD_QUEUE_SYNC_IN_PRODUCTION", "module": "queue", "description": "The sync queue driver is configured for production.", "introduced": "1.8.0", "status": "active"}
     ]
 }

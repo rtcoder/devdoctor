@@ -5,8 +5,8 @@ use Illuminate\Support\Facades\Artisan;
 it('exposes the env command with json output', function () {
     $path = sys_get_temp_dir().'/devdoctor-env-'.bin2hex(random_bytes(4));
     mkdir($path);
-    file_put_contents($path.'/.env', "APP_ENV=local\nDB_CONNECTION=sqlite\nDB_DATABASE=:memory:\n");
-    file_put_contents($path.'/.env.example', "APP_ENV=local\nDB_CONNECTION=sqlite\nDB_DATABASE=:memory:\n");
+    file_put_contents($path.'/.env', "APP_ENV=local\nDB_CONNECTION=sqlite\nDB_DATABASE=:memory:\nQUEUE_CONNECTION=sync\n");
+    file_put_contents($path.'/.env.example', "APP_ENV=local\nDB_CONNECTION=sqlite\nDB_DATABASE=:memory:\nQUEUE_CONNECTION=sync\n");
 
     $this->artisan('env', ['--path' => $path, '--format' => 'json'])
         ->assertExitCode(0)
@@ -56,6 +56,16 @@ it('runs database diagnostics with json output', function () {
         ->expectsOutputToContain('DD_DB_READY');
 });
 
+it('runs queue diagnostics with json output', function () {
+    $path = sys_get_temp_dir().'/devdoctor-queue-command-'.bin2hex(random_bytes(4));
+    mkdir($path);
+    file_put_contents($path.'/.env', "APP_ENV=local\nQUEUE_CONNECTION=sync\n");
+
+    $this->artisan('queue', ['--path' => $path, '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('DD_QUEUE_READY');
+});
+
 it('runs node diagnostics with json output', function () {
     $path = sys_get_temp_dir().'/devdoctor-node-command-'.bin2hex(random_bytes(4));
     mkdir($path);
@@ -87,15 +97,15 @@ it('runs security diagnostics with json output', function () {
 it('runs health diagnostics with json output', function () {
     $path = sys_get_temp_dir().'/devdoctor-health-command-'.bin2hex(random_bytes(4));
     mkdir($path);
-    file_put_contents($path.'/.env', "APP_ENV=local\nDB_CONNECTION=sqlite\nDB_DATABASE=:memory:\n");
-    file_put_contents($path.'/.env.example', "APP_ENV=local\nDB_CONNECTION=sqlite\nDB_DATABASE=:memory:\n");
+    file_put_contents($path.'/.env', "APP_ENV=local\nDB_CONNECTION=sqlite\nDB_DATABASE=:memory:\nQUEUE_CONNECTION=sync\n");
+    file_put_contents($path.'/.env.example', "APP_ENV=local\nDB_CONNECTION=sqlite\nDB_DATABASE=:memory:\nQUEUE_CONNECTION=sync\n");
     file_put_contents($path.'/.gitignore', ".env\n");
 
     $exitCode = Artisan::call('health', ['--path' => $path, '--format' => 'json']);
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect($exitCode)->toBe(0)
-        ->and(array_column($output['modules'], 'name'))->toBe(['presets', 'env', 'cache', 'php', 'node', 'laravel', 'composer', 'db', 'git', 'docker', 'security']);
+        ->and(array_column($output['modules'], 'name'))->toBe(['presets', 'env', 'cache', 'php', 'node', 'laravel', 'composer', 'db', 'queue', 'git', 'docker', 'security']);
 });
 
 it('supports health module selection ports opt in and unknown modules', function () {
@@ -229,6 +239,10 @@ it('supports ci module selection exclude and unknown module handling', function 
     $this->artisan('ci', ['--path' => $path, '--modules' => 'cache', '--format' => 'json'])
         ->assertExitCode(0)
         ->expectsOutputToContain('"name": "cache"');
+
+    $this->artisan('ci', ['--path' => $path, '--modules' => 'queue', '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('"name": "queue"');
 });
 
 it('supports ci fail on warnings controls', function () {

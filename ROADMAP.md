@@ -209,3 +209,4 @@ After the first complete version:
 - `v1.5.0`: Health aggregator for broad local project diagnostics with opt-in port checks. Complete.
 - `v1.6.0`: Database configuration diagnostics with optional read-only PDO connection checks. Complete.
 - `v1.7.0`: Cache diagnostics for framework/tool caches, size thresholds, permissions, and Laravel artifacts. Complete.
+- `v1.8.0`: Queue configuration diagnostics for common drivers and production sync risks. Complete.

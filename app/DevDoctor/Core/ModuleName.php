@@ -19,5 +19,6 @@ enum ModuleName: string
     case PHP = 'php';
     case PORTS = 'ports';
     case PRESETS = 'presets';
+    case QUEUE = 'queue';
     case SECURITY = 'security';
 }

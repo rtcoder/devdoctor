@@ -2,9 +2,9 @@
 
 Developer diagnostics for humans.
 
-DevDoctor is a read-only CLI for catching common local, repository, environment, cache, database, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
+DevDoctor is a read-only CLI for catching common local, repository, environment, cache, database, queue, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.7.0`
+Current version: `1.8.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.7.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.8.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -52,6 +52,7 @@ cache     Check framework and tool cache health
 ports      Check local development port conflicts
 composer   Check Composer project health
 db         Check database environment configuration
+queue      Check queue environment configuration
 php        Check PHP runtime and platform health
 node       Check Node.js project and package manager health
 laravel    Check Laravel application health
@@ -95,6 +96,7 @@ php devdoctor security
 php devdoctor composer
 php devdoctor db
 php devdoctor db --connect
+php devdoctor queue
 php devdoctor git --require-clean --scan-large-files
 php devdoctor docker --compose-file=docker-compose.yml
 php devdoctor health
@@ -122,6 +124,7 @@ DevDoctor targets Linux, macOS, and Windows:
 | Security posture diagnostics | Supported | Supported | Supported |
 | Database configuration diagnostics | Supported | Supported | Supported |
 | Database connection diagnostics | Supported when the matching PDO driver is installed | Supported when the matching PDO driver is installed | Supported when the matching PDO driver is installed |
+| Queue configuration diagnostics | Supported | Supported | Supported |
 | Composer, Git, Docker | Supported when their executables are installed | Supported when their executables are installed | Supported when their executables are installed |
 
 Platform-specific commands are only suggested. DevDoctor never terminates a process automatically.
@@ -137,8 +140,9 @@ Platform-specific commands are only suggested. DevDoctor never terminates a proc
 - Node.js diagnostics inspect `package.json`, package manager lockfiles, `node_modules`, `engines.node`, `.nvmrc`, `.node-version`, and risky package scripts.
 - Laravel diagnostics inspect `.env`, `APP_KEY`, production debug mode, `APP_URL`, runtime directories, and config cache state.
 - Database diagnostics inspect `DB_CONNECTION`, required database keys, valid ports, SQLite file paths, and optional read-only PDO connectivity with `--connect`.
+- Queue diagnostics inspect `QUEUE_CONNECTION`, common async driver requirements, and production environments that still use the synchronous queue driver.
 - Security diagnostics inspect env example secrets, hard-coded secret patterns, risky Composer and package scripts, Docker privileged mode, Docker socket mounts, and `.env` ignore gaps.
-- Health aggregates local project diagnostics across `presets`, `env`, `cache`, `php`, `node`, `laravel`, `composer`, `db`, `git`, `docker`, and `security`; add `--include-ports` to include common local port checks.
+- Health aggregates local project diagnostics across `presets`, `env`, `cache`, `php`, `node`, `laravel`, `composer`, `db`, `queue`, `git`, `docker`, and `security`; add `--include-ports` to include common local port checks.
 - Composer reports `DD_COMPOSER_LOCK_OUTDATED` when `composer.lock` is older than `composer.json`.
 - Process execution uses argument arrays and supports project paths containing spaces.
 
@@ -258,9 +262,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.7.0
+- uses: rtcoder/devdoctor@v1.8.0
   with:
-    version: v1.7.0
+    version: v1.8.0
     format: sarif
 ```
 
@@ -414,7 +418,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.7.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.8.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version

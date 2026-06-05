@@ -27,6 +27,8 @@ use DevDoctor\Modules\Php\PhpOptions;
 use DevDoctor\Modules\Ports\PortsAnalyzer;
 use DevDoctor\Modules\Ports\PortsOptions;
 use DevDoctor\Modules\Presets\PresetsAnalyzer;
+use DevDoctor\Modules\Queue\QueueAnalyzer;
+use DevDoctor\Modules\Queue\QueueOptions;
 use DevDoctor\Modules\Security\SecurityAnalyzer;
 use DevDoctor\Modules\Security\SecurityOptions;
 
@@ -49,6 +51,7 @@ final class DiagnosticModuleRunner
             ModuleName::DOCKER,
             ModuleName::PORTS,
             ModuleName::PRESETS,
+            ModuleName::QUEUE,
             ModuleName::SECURITY,
         ]);
     }
@@ -103,6 +106,10 @@ final class DiagnosticModuleRunner
                 strict: $options->strict,
             ))),
             ModuleName::PRESETS->value => new ModuleResult(ModuleName::PRESETS, app(PresetsAnalyzer::class)->analyze($options->path)),
+            ModuleName::QUEUE->value => new ModuleResult(ModuleName::QUEUE, app(QueueAnalyzer::class)->analyze(new QueueOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
             ModuleName::SECURITY->value => new ModuleResult(ModuleName::SECURITY, app(SecurityAnalyzer::class)->analyze(new SecurityOptions(
                 path: $options->path,
                 strict: $options->strict,
