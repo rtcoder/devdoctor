@@ -32,6 +32,10 @@ final readonly class EcosystemModuleSelector
             $modules[] = ModuleName::PYTHON->value;
         }
 
+        if ($this->hasAny($presets, [ProjectPreset::GO])) {
+            $modules[] = ModuleName::GO->value;
+        }
+
         return array_values(array_unique($modules));
     }
 

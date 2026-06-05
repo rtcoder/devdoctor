@@ -82,6 +82,14 @@ enum IssueCode: string
     case DD_PYTHON_SUSPICIOUS_SOURCE = 'DD_PYTHON_SUSPICIOUS_SOURCE';
     case DD_PYTHON_VERSION_CONFLICT = 'DD_PYTHON_VERSION_CONFLICT';
     case DD_PYTHON_VENV_MISSING = 'DD_PYTHON_VENV_MISSING';
+    case DD_GO_MODULE_PATH_INVALID = 'DD_GO_MODULE_PATH_INVALID';
+    case DD_GO_NOT_PROJECT = 'DD_GO_NOT_PROJECT';
+    case DD_GO_READY = 'DD_GO_READY';
+    case DD_GO_REPLACE_DIRECTIVE = 'DD_GO_REPLACE_DIRECTIVE';
+    case DD_GO_SUM_MISSING = 'DD_GO_SUM_MISSING';
+    case DD_GO_TOOLCHAIN_DECLARED = 'DD_GO_TOOLCHAIN_DECLARED';
+    case DD_GO_VENDOR_PRESENT = 'DD_GO_VENDOR_PRESENT';
+    case DD_GO_WORKSPACE_MODULE_MISSING = 'DD_GO_WORKSPACE_MODULE_MISSING';
     case DD_SECURITY_DOCKER_PRIVILEGED = 'DD_SECURITY_DOCKER_PRIVILEGED';
     case DD_SECURITY_DOCKER_SOCKET_MOUNT = 'DD_SECURITY_DOCKER_SOCKET_MOUNT';
     case DD_SECURITY_ENV_NOT_IGNORED = 'DD_SECURITY_ENV_NOT_IGNORED';
@@ -227,6 +235,10 @@ enum IssueCode: string
             self::DD_PYTHON_SUSPICIOUS_SOURCE => 'Review custom package indexes, URL dependencies, and VCS dependencies before installing.',
             self::DD_PYTHON_VERSION_CONFLICT => 'Align Python version constraints across project files.',
             self::DD_PYTHON_VENV_MISSING => 'Create a local virtual environment or document the Conda environment used by the project.',
+            self::DD_GO_MODULE_PATH_INVALID => 'Use the canonical Go module path declared by the repository or package namespace.',
+            self::DD_GO_REPLACE_DIRECTIVE => 'Review local replace directives before committing them because they may only work on one machine.',
+            self::DD_GO_SUM_MISSING => 'Regenerate go.sum intentionally after reviewing go.mod dependency changes.',
+            self::DD_GO_WORKSPACE_MODULE_MISSING => 'Fix the go.work use path or add the missing module go.mod file.',
             self::DD_SECURITY_DOCKER_PRIVILEGED => 'Avoid privileged containers unless the service explicitly requires host-level access.',
             self::DD_SECURITY_DOCKER_SOCKET_MOUNT => 'Avoid mounting the Docker socket into containers unless this is an intentional trusted control plane.',
             self::DD_SECURITY_ENV_NOT_IGNORED => 'Add .env patterns to .gitignore to reduce accidental secret commits.',

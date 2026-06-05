@@ -20,6 +20,11 @@ final readonly class ProjectFiles
         return is_file($this->paths->absolute($file));
     }
 
+    public function existsIn(string $directory, string $file): bool
+    {
+        return $this->exists(rtrim($directory, '/\\').DIRECTORY_SEPARATOR.$file);
+    }
+
     /**
      * @param  list<string>  $files
      */

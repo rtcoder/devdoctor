@@ -20,6 +20,8 @@ use DevDoctor\Modules\Frontend\FrontendAnalyzer;
 use DevDoctor\Modules\Frontend\FrontendOptions;
 use DevDoctor\Modules\Git\GitAnalyzer;
 use DevDoctor\Modules\Git\GitOptions;
+use DevDoctor\Modules\Go\GoAnalyzer;
+use DevDoctor\Modules\Go\GoOptions;
 use DevDoctor\Modules\Http\HttpAnalyzer;
 use DevDoctor\Modules\Http\HttpOptions;
 use DevDoctor\Modules\Laravel\LaravelAnalyzer;
@@ -53,6 +55,7 @@ final class DiagnosticModuleRunner
             ModuleName::NODE,
             ModuleName::FRONTEND,
             ModuleName::PYTHON,
+            ModuleName::GO,
             ModuleName::LARAVEL,
             ModuleName::COMPOSER,
             ModuleName::DATABASE,
@@ -94,6 +97,10 @@ final class DiagnosticModuleRunner
                 strict: $options->strict,
             ))),
             ModuleName::PYTHON->value => new ModuleResult(ModuleName::PYTHON, app(PythonAnalyzer::class)->analyze(new PythonOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
+            ModuleName::GO->value => new ModuleResult(ModuleName::GO, app(GoAnalyzer::class)->analyze(new GoOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),
