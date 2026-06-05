@@ -2,9 +2,9 @@
 
 Developer diagnostics for humans.
 
-DevDoctor is a read-only CLI for catching common local, repository, environment, database, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
+DevDoctor is a read-only CLI for catching common local, repository, environment, cache, database, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.6.0`
+Current version: `1.7.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.6.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.7.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -48,6 +48,7 @@ vendor/bin/devdoctor ci
 
 ```text
 env        Check dotenv files and DevDoctor env rules
+cache     Check framework and tool cache health
 ports      Check local development port conflicts
 composer   Check Composer project health
 db         Check database environment configuration
@@ -82,6 +83,8 @@ php devdoctor env --env-file=.env.local --example=.env.example
 ```bash
 php devdoctor env
 php devdoctor env --format=json --strict
+php devdoctor cache
+php devdoctor cache --max-size=1024
 php devdoctor ports --common
 php devdoctor ports --port=3000 --port=5173
 php devdoctor php
@@ -112,6 +115,7 @@ DevDoctor targets Linux, macOS, and Windows:
 | Command discovery | Native executable lookup | Native executable lookup | Native executable lookup |
 | Port listeners | `lsof`, then `ss` | `lsof` | `netstat -ano` |
 | Process suggestion | `kill -TERM <pid>` | `kill -TERM <pid>` | `taskkill /PID <pid>` |
+| Cache diagnostics | Supported | Supported | Supported |
 | PHP runtime diagnostics | Supported | Supported | Supported |
 | Node.js project diagnostics | Supported | Supported | Supported |
 | Laravel application diagnostics | Supported | Supported | Supported |
@@ -128,12 +132,13 @@ Platform-specific commands are only suggested. DevDoctor never terminates a proc
 - Compose references with defaults such as `${VAR:-default}` and `${VAR-default}` do not produce missing-variable warnings.
 - Git reports `DD_GIT_BINARY_MISSING` when Git is unavailable instead of treating the path as a non-repository.
 - Windows port diagnostics use `tasklist` when available to resolve a PID to a process name.
+- Cache diagnostics inspect known Laravel, Symfony, and Node cache directories, size thresholds, writability, and Laravel cache artifacts without deleting anything.
 - PHP diagnostics compare the active CLI runtime with `composer.json`, required `ext-*` packages, `memory_limit`, loaded `php.ini`, and Xdebug state in CI.
 - Node.js diagnostics inspect `package.json`, package manager lockfiles, `node_modules`, `engines.node`, `.nvmrc`, `.node-version`, and risky package scripts.
 - Laravel diagnostics inspect `.env`, `APP_KEY`, production debug mode, `APP_URL`, runtime directories, and config cache state.
 - Database diagnostics inspect `DB_CONNECTION`, required database keys, valid ports, SQLite file paths, and optional read-only PDO connectivity with `--connect`.
 - Security diagnostics inspect env example secrets, hard-coded secret patterns, risky Composer and package scripts, Docker privileged mode, Docker socket mounts, and `.env` ignore gaps.
-- Health aggregates local project diagnostics across `presets`, `env`, `php`, `node`, `laravel`, `composer`, `db`, `git`, `docker`, and `security`; add `--include-ports` to include common local port checks.
+- Health aggregates local project diagnostics across `presets`, `env`, `cache`, `php`, `node`, `laravel`, `composer`, `db`, `git`, `docker`, and `security`; add `--include-ports` to include common local port checks.
 - Composer reports `DD_COMPOSER_LOCK_OUTDATED` when `composer.lock` is older than `composer.json`.
 - Process execution uses argument arrays and supports project paths containing spaces.
 
@@ -253,9 +258,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.6.0
+- uses: rtcoder/devdoctor@v1.7.0
   with:
-    version: v1.6.0
+    version: v1.7.0
     format: sarif
 ```
 
@@ -409,7 +414,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.6.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.7.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version

@@ -37,6 +37,15 @@ it('runs php diagnostics with json output', function () {
         ->expectsOutputToContain('"name": "php"');
 });
 
+it('runs cache diagnostics with json output', function () {
+    $path = sys_get_temp_dir().'/devdoctor-cache-command-'.bin2hex(random_bytes(4));
+    mkdir($path.'/bootstrap/cache', recursive: true);
+
+    $this->artisan('cache', ['--path' => $path, '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('DD_CACHE_READY');
+});
+
 it('runs database diagnostics with json output', function () {
     $path = sys_get_temp_dir().'/devdoctor-db-command-'.bin2hex(random_bytes(4));
     mkdir($path);
@@ -86,7 +95,7 @@ it('runs health diagnostics with json output', function () {
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect($exitCode)->toBe(0)
-        ->and(array_column($output['modules'], 'name'))->toBe(['presets', 'env', 'php', 'node', 'laravel', 'composer', 'db', 'git', 'docker', 'security']);
+        ->and(array_column($output['modules'], 'name'))->toBe(['presets', 'env', 'cache', 'php', 'node', 'laravel', 'composer', 'db', 'git', 'docker', 'security']);
 });
 
 it('supports health module selection ports opt in and unknown modules', function () {
@@ -216,6 +225,10 @@ it('supports ci module selection exclude and unknown module handling', function 
     $this->artisan('ci', ['--path' => $path, '--modules' => 'db', '--format' => 'json'])
         ->assertExitCode(1)
         ->expectsOutputToContain('"name": "db"');
+
+    $this->artisan('ci', ['--path' => $path, '--modules' => 'cache', '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('"name": "cache"');
 });
 
 it('supports ci fail on warnings controls', function () {

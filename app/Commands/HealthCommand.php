@@ -89,7 +89,7 @@ final class HealthCommand extends Command
 
     private function defaultModules(): string
     {
-        $modules = ['presets', 'env', 'php', 'node', 'laravel', 'composer', 'db', 'git', 'docker', 'security'];
+        $modules = ['presets', 'env', 'cache', 'php', 'node', 'laravel', 'composer', 'db', 'git', 'docker', 'security'];
 
         if ((bool) $this->option('include-ports')) {
             array_splice($modules, 8, 0, 'ports');

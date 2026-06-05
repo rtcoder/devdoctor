@@ -30,6 +30,10 @@ final class IssueSuggestionCatalog
                 $code->hint(),
                 new FixSuggestion('Install locked Composer dependencies.', 'composer install'),
             ),
+            IssueCode::DD_CACHE_LARAVEL_ARTIFACT => self::suggest(
+                $code->hint(),
+                new FixSuggestion('Clear Laravel cached framework artifacts intentionally.', 'php artisan optimize:clear'),
+            ),
             default => new HintAndFixIssue($code->hint()),
         };
     }

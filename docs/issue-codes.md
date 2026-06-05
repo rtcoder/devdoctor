@@ -11,6 +11,14 @@ The machine-readable v1 catalog is available at [`schemas/v1/issue-codes.json`](
 - `DD_CI_BASELINE_MISSING`
 - `DD_CI_UNKNOWN_MODULE`
 
+## Cache
+
+- `DD_CACHE_DIRECTORY_LARGE`
+- `DD_CACHE_DIRECTORY_NOT_WRITABLE`
+- `DD_CACHE_LARAVEL_ARTIFACT`
+- `DD_CACHE_NOT_DETECTED`
+- `DD_CACHE_READY`
+
 ## Health
 
 - `DD_HEALTH_UNKNOWN_MODULE`

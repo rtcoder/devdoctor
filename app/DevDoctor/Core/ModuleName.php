@@ -7,6 +7,7 @@ namespace DevDoctor\Core;
 enum ModuleName: string
 {
     case CI = 'ci';
+    case CACHE = 'cache';
     case COMPOSER = 'composer';
     case DATABASE = 'db';
     case DOCKER = 'docker';

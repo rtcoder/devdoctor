@@ -6,6 +6,8 @@ namespace DevDoctor\Core;
 
 use DevDoctor\Core\Config\ConfigLoader;
 use DevDoctor\Core\Config\InvalidDevDoctorConfig;
+use DevDoctor\Modules\Cache\CacheAnalyzer;
+use DevDoctor\Modules\Cache\CacheOptions;
 use DevDoctor\Modules\Composer\ComposerAnalyzer;
 use DevDoctor\Modules\Composer\ComposerOptions;
 use DevDoctor\Modules\Database\DatabaseAnalyzer;
@@ -37,6 +39,7 @@ final class DiagnosticModuleRunner
     {
         return array_map(static fn (ModuleName $module): string => $module->value, [
             ModuleName::ENV,
+            ModuleName::CACHE,
             ModuleName::PHP,
             ModuleName::NODE,
             ModuleName::LARAVEL,
@@ -57,6 +60,10 @@ final class DiagnosticModuleRunner
     {
         return match ($module) {
             ModuleName::ENV->value => $this->runEnv($options),
+            ModuleName::CACHE->value => new ModuleResult(ModuleName::CACHE, app(CacheAnalyzer::class)->analyze(new CacheOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
             ModuleName::PHP->value => new ModuleResult(ModuleName::PHP, app(PhpAnalyzer::class)->analyze(new PhpOptions(
                 path: $options->path,
                 ci: $options->ci,

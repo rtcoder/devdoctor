@@ -10,6 +10,11 @@ enum IssueCode: string
     case DD_CI_BASELINE_INVALID = 'DD_CI_BASELINE_INVALID';
     case DD_CI_BASELINE_MISSING = 'DD_CI_BASELINE_MISSING';
     case DD_CI_UNKNOWN_MODULE = 'DD_CI_UNKNOWN_MODULE';
+    case DD_CACHE_DIRECTORY_LARGE = 'DD_CACHE_DIRECTORY_LARGE';
+    case DD_CACHE_DIRECTORY_NOT_WRITABLE = 'DD_CACHE_DIRECTORY_NOT_WRITABLE';
+    case DD_CACHE_LARAVEL_ARTIFACT = 'DD_CACHE_LARAVEL_ARTIFACT';
+    case DD_CACHE_NOT_DETECTED = 'DD_CACHE_NOT_DETECTED';
+    case DD_CACHE_READY = 'DD_CACHE_READY';
     case DD_HEALTH_UNKNOWN_MODULE = 'DD_HEALTH_UNKNOWN_MODULE';
     case DD_COMPOSER_BINARY_MISSING = 'DD_COMPOSER_BINARY_MISSING';
     case DD_COMPOSER_EXTENSION_MISSING = 'DD_COMPOSER_EXTENSION_MISSING';
@@ -123,6 +128,9 @@ enum IssueCode: string
             self::DD_CI_BASELINE_MISSING => 'Create the baseline file with --write-baseline or correct the provided path.',
             self::DD_CI_BASELINE_INVALID => 'Regenerate the baseline file with --write-baseline.',
             self::DD_CI_BASELINE_EXISTS => 'Review the existing baseline before replacing it with --force.',
+            self::DD_CACHE_DIRECTORY_LARGE => 'Review whether the cache can be pruned by the framework or package manager.',
+            self::DD_CACHE_DIRECTORY_NOT_WRITABLE => 'Adjust ownership or permissions so the current user can write this runtime cache directory.',
+            self::DD_CACHE_LARAVEL_ARTIFACT => 'Rebuild Laravel cache artifacts after changing configuration, routes, events, or packages.',
             self::DD_ENV_DUPLICATE_KEY => 'Keep a single declaration for this key so its effective value is unambiguous.',
             self::DD_ENV_EMPTY_VALUE => 'Set a meaningful value or explicitly ignore the key in devdoctor.yml.',
             self::DD_ENV_EXAMPLE_MISSING => 'Create the example file and document every required environment key.',
