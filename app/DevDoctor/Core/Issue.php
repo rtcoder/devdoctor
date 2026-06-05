@@ -27,8 +27,8 @@ final readonly class Issue
         public bool $suppressed = false,
     ) {
         $suggestion = IssueSuggestionCatalog::for($this->code, $context);
-        $this->hint = $hint ?? $suggestion['hint'];
-        $this->fix = $fix ?? $suggestion['fix'];
+        $this->hint = $hint ?? $suggestion->hint;
+        $this->fix = $fix ?? $suggestion->fix;
     }
 
     /**

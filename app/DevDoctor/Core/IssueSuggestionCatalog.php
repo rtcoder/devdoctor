@@ -7,10 +7,11 @@ namespace DevDoctor\Core;
 final class IssueSuggestionCatalog
 {
     /**
-     * @param  array<string, mixed>  $context
-     * @return array{hint: ?string, fix: ?FixSuggestion}
+     * @param IssueCode $code
+     * @param array<string, mixed> $context
+     * @return HintAndFixIssue
      */
-    public static function for(IssueCode $code, array $context = []): array
+    public static function for(IssueCode $code, array $context = []): HintAndFixIssue
     {
         $suggestedCommand = is_string($context['suggested_command'] ?? null) ? $context['suggested_command'] : null;
 
@@ -105,15 +106,17 @@ final class IssueSuggestionCatalog
             IssueCode::DD_DOCKER_DAEMON_UNAVAILABLE => self::suggest('Start the Docker daemon and verify the current user can access it.'),
             IssueCode::DD_DOCKER_ENV_REFERENCE_MISSING => self::suggest('Define the referenced environment variable or provide an intentional Compose default.'),
             IssueCode::DD_DOCKER_HOST_PORT_CONFLICT => self::suggest('Change the host port mapping or stop the process currently using that port.'),
-            default => ['hint' => null, 'fix' => null],
+            default => new HintAndFixIssue(),
         };
     }
 
     /**
-     * @return array{hint: string, fix: ?FixSuggestion}
+     * @param string $hint
+     * @param FixSuggestion|null $fix
+     * @return HintAndFixIssue
      */
-    private static function suggest(string $hint, ?FixSuggestion $fix = null): array
+    private static function suggest(string $hint, ?FixSuggestion $fix = null): HintAndFixIssue
     {
-        return ['hint' => $hint, 'fix' => $fix];
+        return new HintAndFixIssue($hint, $fix);
     }
 }
