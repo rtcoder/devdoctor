@@ -4,6 +4,7 @@ use DevDoctor\Core\ExitCode;
 use DevDoctor\Core\FixSuggestion;
 use DevDoctor\Core\Issue;
 use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ModuleResult;
 use DevDoctor\Core\Output\JsonRenderer;
 use DevDoctor\Core\Output\SarifRenderer;
@@ -16,9 +17,9 @@ use DevDoctor\Core\Severity;
 
 it('summarizes issues and maps exit codes', function () {
     $issues = new IssueCollection([
-        new Issue('DD_TEST_WARNING', Severity::WARNING, 'warning'),
-        new Issue('DD_TEST_ERROR', Severity::ERROR, 'error'),
-        new Issue('DD_TEST_INFO', Severity::INFO, 'info'),
+        new Issue('DD_ENV_MISSING_IN_ENV', Severity::WARNING, 'warning'),
+        new Issue('DD_ENV_FILE_MISSING', Severity::ERROR, 'error'),
+        new Issue('DD_ENV_READY', Severity::INFO, 'info'),
     ]);
 
     expect($issues->summary())->toBe([
@@ -31,7 +32,7 @@ it('summarizes issues and maps exit codes', function () {
 
 it('excludes suppressed issues from status and exit code summaries', function () {
     $issues = new IssueCollection([
-        (new Issue('DD_TEST_WARNING', Severity::WARNING, 'warning'))->withSuppressed(),
+        new Issue('DD_ENV_MISSING_IN_ENV', Severity::WARNING, 'warning')->withSuppressed(),
     ]);
 
     expect($issues->summary())->toBe([
@@ -43,7 +44,7 @@ it('excludes suppressed issues from status and exit code summaries', function ()
 });
 
 it('renders valid json output', function () {
-    $result = new ModuleResult('env', new IssueCollection([
+    $result = new ModuleResult(ModuleName::ENV, new IssueCollection([
         new Issue(
             'DD_ENV_MISSING_IN_ENV',
             Severity::WARNING,
@@ -66,7 +67,7 @@ it('renders valid json output', function () {
 });
 
 it('renders table output', function () {
-    $result = new ModuleResult('env', new IssueCollection([
+    $result = new ModuleResult(ModuleName::ENV, new IssueCollection([
         new Issue(
             'DD_ENV_MISSING_IN_ENV',
             Severity::WARNING,
@@ -89,7 +90,7 @@ it('renders table output', function () {
 });
 
 it('renders deterministic sarif output with locations and fingerprints', function () {
-    $result = new ModuleResult('env', new IssueCollection([
+    $result = new ModuleResult(ModuleName::ENV, new IssueCollection([
         new Issue(
             'DD_ENV_MISSING_IN_ENV',
             Severity::WARNING,

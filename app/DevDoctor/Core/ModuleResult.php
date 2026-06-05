@@ -7,9 +7,10 @@ namespace DevDoctor\Core;
 final readonly class ModuleResult
 {
     public function __construct(
-        public string $name,
+        public ModuleName $name,
         public IssueCollection $issues,
-    ) {}
+    ) {
+    }
 
     public function status(): ModuleStatus
     {
@@ -22,7 +23,7 @@ final readonly class ModuleResult
     public function toArray(): array
     {
         return [
-            'name' => $this->name,
+            'name' => $this->name->value,
             'status' => $this->status()->value,
             'summary' => $this->issues->summary(),
             'issues' => array_map(

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DevDoctor\Commands;
 
 use DevDoctor\Commands\Concerns\RendersDiagnostics;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ModuleResult;
 use DevDoctor\Modules\Node\NodeAnalyzer;
 use DevDoctor\Modules\Node\NodeOptions;
@@ -25,7 +26,7 @@ final class NodeCommand extends Command
     public function handle(): int
     {
         return $this->renderDiagnostics([
-            new ModuleResult('node', app(NodeAnalyzer::class)->analyze(new NodeOptions(
+            new ModuleResult(ModuleName::NODE, app(NodeAnalyzer::class)->analyze(new NodeOptions(
                 path: (string) $this->option('path'),
                 strict: (bool) $this->option('strict'),
             ))),

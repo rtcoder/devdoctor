@@ -12,6 +12,7 @@ use DevDoctor\Core\DiagnosticRunOptions;
 use DevDoctor\Core\ExitCode;
 use DevDoctor\Core\Issue;
 use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ModuleResult;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\Severity;
@@ -45,7 +46,7 @@ final class CiCommand extends Command
 
         if ($unknown !== []) {
             return $this->renderDiagnostics([
-                new ModuleResult('ci', new IssueCollection([
+                new ModuleResult(ModuleName::CI, new IssueCollection([
                     new Issue(
                         code: 'DD_CI_UNKNOWN_MODULE',
                         severity: Severity::ERROR,
@@ -211,7 +212,7 @@ final class CiCommand extends Command
     {
         return [
             'results' => [
-                new ModuleResult('ci', new IssueCollection([
+                new ModuleResult(ModuleName::CI, new IssueCollection([
                     new Issue(
                         code: $code,
                         severity: Severity::ERROR,

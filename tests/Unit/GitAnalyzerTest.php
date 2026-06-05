@@ -151,7 +151,7 @@ function gitOk(string $stdout): ProcessResult
  */
 function gitCodes(IssueCollection $issues): array
 {
-    return array_map(static fn ($issue): string => $issue->code, $issues->all());
+    return array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 }
 
 function gitTempPath(): string

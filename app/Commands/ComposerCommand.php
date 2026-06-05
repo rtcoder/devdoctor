@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DevDoctor\Commands;
 
 use DevDoctor\Commands\Concerns\RendersDiagnostics;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ModuleResult;
 use DevDoctor\Modules\Composer\ComposerAnalyzer;
 use DevDoctor\Modules\Composer\ComposerOptions;
@@ -28,7 +29,7 @@ final class ComposerCommand extends Command
     public function handle(): int
     {
         return $this->renderDiagnostics([
-            new ModuleResult('composer', app(ComposerAnalyzer::class)->analyze(new ComposerOptions(
+            new ModuleResult(ModuleName::COMPOSER, app(ComposerAnalyzer::class)->analyze(new ComposerOptions(
                 path: (string) $this->option('path'),
                 strict: (bool) $this->option('strict'),
                 validate: ! (bool) $this->option('no-validate'),

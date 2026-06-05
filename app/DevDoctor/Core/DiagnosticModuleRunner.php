@@ -42,25 +42,25 @@ final class DiagnosticModuleRunner
     public function run(string $module, DiagnosticRunOptions $options): ModuleResult|array
     {
         return match ($module) {
-            'env' => $this->runEnv($options),
-            'php' => new ModuleResult('php', app(PhpAnalyzer::class)->analyze(new PhpOptions(
+            ModuleName::ENV->value => $this->runEnv($options),
+            ModuleName::PHP->value => new ModuleResult(ModuleName::PHP, app(PhpAnalyzer::class)->analyze(new PhpOptions(
                 path: $options->path,
                 ci: $options->ci,
                 strict: $options->strict,
             ))),
-            'node' => new ModuleResult('node', app(NodeAnalyzer::class)->analyze(new NodeOptions(
+            ModuleName::NODE->value => new ModuleResult(ModuleName::NODE, app(NodeAnalyzer::class)->analyze(new NodeOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),
-            'laravel' => new ModuleResult('laravel', app(LaravelAnalyzer::class)->analyze(new LaravelOptions(
+            ModuleName::LARAVEL->value => new ModuleResult(ModuleName::LARAVEL, app(LaravelAnalyzer::class)->analyze(new LaravelOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),
-            'composer' => new ModuleResult('composer', app(ComposerAnalyzer::class)->analyze(new ComposerOptions(
+            ModuleName::COMPOSER->value => new ModuleResult(ModuleName::COMPOSER, app(ComposerAnalyzer::class)->analyze(new ComposerOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),
-            'git' => new ModuleResult('git', app(GitAnalyzer::class)->analyze(new GitOptions(
+            ModuleName::GIT->value => new ModuleResult(ModuleName::GIT, app(GitAnalyzer::class)->analyze(new GitOptions(
                 path: $options->path,
                 strict: $options->strict,
                 requireClean: $options->gitRequireClean,
@@ -68,17 +68,17 @@ final class DiagnosticModuleRunner
                 scanSensitive: $options->gitScanSensitive,
                 scanLargeFiles: $options->gitScanLargeFiles,
             ))),
-            'docker' => new ModuleResult('docker', app(DockerAnalyzer::class)->analyze(new DockerOptions(
+            ModuleName::DOCKER->value => new ModuleResult(ModuleName::DOCKER, app(DockerAnalyzer::class)->analyze(new DockerOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),
-            'ports' => new ModuleResult('ports', app(PortsAnalyzer::class)->analyze(new PortsOptions(
+            ModuleName::PORTS->value => new ModuleResult(ModuleName::PORTS, app(PortsAnalyzer::class)->analyze(new PortsOptions(
                 path: $options->path,
                 common: $options->portsCommon,
                 strict: $options->strict,
             ))),
-            'presets' => new ModuleResult('presets', app(PresetsAnalyzer::class)->analyze($options->path)),
-            'security' => new ModuleResult('security', app(SecurityAnalyzer::class)->analyze(new SecurityOptions(
+            ModuleName::PRESETS->value => new ModuleResult(ModuleName::PRESETS, app(PresetsAnalyzer::class)->analyze($options->path)),
+            ModuleName::SECURITY->value => new ModuleResult(ModuleName::SECURITY, app(SecurityAnalyzer::class)->analyze(new SecurityOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),
@@ -97,7 +97,7 @@ final class DiagnosticModuleRunner
         } catch (InvalidDevDoctorConfig $exception) {
             return [
                 'results' => [
-                    new ModuleResult('env', new IssueCollection([
+                    new ModuleResult(ModuleName::ENV, new IssueCollection([
                         new Issue(
                             code: 'DD_ENV_INVALID_CONFIG',
                             severity: Severity::ERROR,
@@ -111,7 +111,7 @@ final class DiagnosticModuleRunner
             ];
         }
 
-        return new ModuleResult('env', app(EnvAnalyzer::class)->analyze(new EnvAnalysisOptions(
+        return new ModuleResult(ModuleName::ENV, app(EnvAnalyzer::class)->analyze(new EnvAnalysisOptions(
             path: $options->path,
             envFile: $config->envFile,
             exampleFile: $config->exampleFile,

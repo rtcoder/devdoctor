@@ -34,17 +34,17 @@ final class IssueCollection
         usort($issues, static function (Issue $left, Issue $right): int {
             return [
                 $left->severity->rank(),
-                $left->module ?? '',
+                $left->module?->value ?? '',
                 $left->file ?? '',
                 $left->line ?? 0,
-                $left->code,
+                $left->code->value,
                 $left->key ?? '',
             ] <=> [
                 $right->severity->rank(),
-                $right->module ?? '',
+                $right->module?->value ?? '',
                 $right->file ?? '',
                 $right->line ?? 0,
-                $right->code,
+                $right->code->value,
                 $right->key ?? '',
             ];
         });

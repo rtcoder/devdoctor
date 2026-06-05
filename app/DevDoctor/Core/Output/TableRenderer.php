@@ -24,7 +24,7 @@ final class TableRenderer
             $summary = $result->issues->summary();
             $lines[] = sprintf(
                 '%-10s %-8s %6d %8d %5d %10d',
-                $result->name,
+                $result->name->value,
                 $result->status()->value,
                 $summary['errors'],
                 $summary['warnings'],
@@ -96,6 +96,6 @@ final class TableRenderer
 
         $prefix = $location === '' ? '' : $location.' ';
 
-        return sprintf('[%s]%s %s%s', $issue->code, $issue->suppressed ? ' [suppressed]' : '', $prefix, $issue->message);
+        return sprintf('[%s]%s %s%s', $issue->code->value, $issue->suppressed ? ' [suppressed]' : '', $prefix, $issue->message);
     }
 }

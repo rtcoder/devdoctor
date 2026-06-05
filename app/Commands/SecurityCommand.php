@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DevDoctor\Commands;
 
 use DevDoctor\Commands\Concerns\RendersDiagnostics;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ModuleResult;
 use DevDoctor\Modules\Security\SecurityAnalyzer;
 use DevDoctor\Modules\Security\SecurityOptions;
@@ -25,7 +26,7 @@ final class SecurityCommand extends Command
     public function handle(): int
     {
         return $this->renderDiagnostics([
-            new ModuleResult('security', app(SecurityAnalyzer::class)->analyze(new SecurityOptions(
+            new ModuleResult(ModuleName::SECURITY, app(SecurityAnalyzer::class)->analyze(new SecurityOptions(
                 path: (string) $this->option('path'),
                 strict: (bool) $this->option('strict'),
             ))),

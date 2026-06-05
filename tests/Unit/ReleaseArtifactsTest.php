@@ -1,5 +1,7 @@
 <?php
 
+use DevDoctor\Core\IssueCode;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ProcessRunner;
 use Symfony\Component\Yaml\Yaml;
 
@@ -135,16 +137,22 @@ it('catalogs every issue code used by the application', function () {
     $applicationCodes = array_values(array_unique($codes));
     sort($applicationCodes);
     $catalogCodes = array_column($catalog['codes'], 'code');
+    $enumCodes = array_map(static fn (IssueCode $code): string => $code->value, IssueCode::cases());
+    $enumModules = array_map(static fn (ModuleName $module): string => $module->value, ModuleName::cases());
     $uniqueCatalogCodes = array_values(array_unique($catalogCodes));
     sort($catalogCodes);
+    sort($enumCodes);
+    sort($enumModules);
     sort($uniqueCatalogCodes);
 
     expect($catalog['schema_version'])->toBe('1.0')
         ->and($catalogCodes)->toBe($uniqueCatalogCodes)
-        ->and($catalogCodes)->toBe($applicationCodes);
+        ->and($catalogCodes)->toBe($applicationCodes)
+        ->and($catalogCodes)->toBe($enumCodes);
 
     foreach ($catalog['codes'] as $entry) {
         expect($entry)->toHaveKeys(['code', 'module', 'description', 'introduced', 'status'])
+            ->and($entry['module'])->toBeIn($enumModules)
             ->and($entry['status'])->toBeIn(['active', 'deprecated']);
     }
 

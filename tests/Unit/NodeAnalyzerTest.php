@@ -50,7 +50,7 @@ function nodeFixture(array $files): string
 it('reports non node projects as info', function () {
     $issues = (new NodeAnalyzer(runtime: new FakeNodeRuntime))->analyze(new NodeOptions(path: nodeFixture([])));
 
-    expect($issues->all()[0]->code)->toBe('DD_NODE_NOT_PROJECT');
+    expect($issues->all()[0]->code->value)->toBe('DD_NODE_NOT_PROJECT');
 });
 
 it('reports invalid package json', function () {
@@ -58,14 +58,14 @@ it('reports invalid package json', function () {
         'package.json' => '{',
     ])));
 
-    expect($issues->all()[0]->code)->toBe('DD_NODE_PACKAGE_JSON_INVALID');
+    expect($issues->all()[0]->code->value)->toBe('DD_NODE_PACKAGE_JSON_INVALID');
 });
 
 it('reports missing lockfile and node modules when dependencies exist', function () {
     $issues = (new NodeAnalyzer(runtime: new FakeNodeRuntime))->analyze(new NodeOptions(path: nodeFixture([
         'package.json' => '{"dependencies":{"vite":"^7.0.0"}}',
     ])));
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->toContain('DD_NODE_LOCK_MISSING')
         ->and($codes)->toContain('DD_NODE_MODULES_MISSING');
@@ -78,7 +78,7 @@ it('reports multiple lockfiles and package manager mismatch', function () {
         'yarn.lock' => '',
         'node_modules' => null,
     ])));
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->toContain('DD_NODE_MULTIPLE_LOCKFILES')
         ->and($codes)->toContain('DD_NODE_PACKAGE_MANAGER_MISMATCH');
@@ -91,7 +91,7 @@ it('reports missing node binary and version mismatch', function () {
         'node_modules' => null,
     ])));
 
-    expect(array_map(static fn ($issue): string => $issue->code, $issues->all()))
+    expect(array_map(static fn ($issue): string => $issue->code->value, $issues->all()))
         ->toContain('DD_NODE_BINARY_MISSING');
 
     $issues = (new NodeAnalyzer(runtime: new FakeNodeRuntime(version: '20.0.0')))->analyze(new NodeOptions(path: nodeFixture([
@@ -100,7 +100,7 @@ it('reports missing node binary and version mismatch', function () {
         'node_modules' => null,
     ])));
 
-    expect(array_map(static fn ($issue): string => $issue->code, $issues->all()))
+    expect(array_map(static fn ($issue): string => $issue->code->value, $issues->all()))
         ->toContain('DD_NODE_VERSION_MISMATCH');
 });
 
@@ -111,7 +111,7 @@ it('reports node version file conflicts and risky scripts', function () {
         'package-lock.json' => '{}',
         'node_modules' => null,
     ])));
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->toContain('DD_NODE_VERSION_FILE_CONFLICT')
         ->and($codes)->toContain('DD_NODE_SCRIPT_RISKY');
@@ -123,7 +123,7 @@ it('supports compound node engine ranges', function () {
         'package-lock.json' => '{}',
     ])));
 
-    expect($issues->all()[0]->code)->toBe('DD_NODE_READY');
+    expect($issues->all()[0]->code->value)->toBe('DD_NODE_READY');
 });
 
 it('reports ready node projects', function () {
@@ -133,5 +133,5 @@ it('reports ready node projects', function () {
         'node_modules' => null,
     ])));
 
-    expect($issues->all()[0]->code)->toBe('DD_NODE_READY');
+    expect($issues->all()[0]->code->value)->toBe('DD_NODE_READY');
 });

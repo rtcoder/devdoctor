@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DevDoctor\Commands;
 
 use DevDoctor\Commands\Concerns\RendersDiagnostics;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ModuleResult;
 use DevDoctor\Modules\Docker\DockerAnalyzer;
 use DevDoctor\Modules\Docker\DockerOptions;
@@ -28,7 +29,7 @@ final class DockerCommand extends Command
     public function handle(): int
     {
         return $this->renderDiagnostics([
-            new ModuleResult('docker', app(DockerAnalyzer::class)->analyze(new DockerOptions(
+            new ModuleResult(ModuleName::DOCKER, app(DockerAnalyzer::class)->analyze(new DockerOptions(
                 path: (string) $this->option('path'),
                 strict: (bool) $this->option('strict'),
                 composeFile: $this->option('compose-file') !== null ? (string) $this->option('compose-file') : null,

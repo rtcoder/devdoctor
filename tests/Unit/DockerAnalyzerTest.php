@@ -153,7 +153,7 @@ function dockerOk(string $stdout): ProcessResult
  */
 function dockerCodes(IssueCollection $issues): array
 {
-    return array_map(static fn ($issue): string => $issue->code, $issues->all());
+    return array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 }
 
 function dockerTempPath(): string

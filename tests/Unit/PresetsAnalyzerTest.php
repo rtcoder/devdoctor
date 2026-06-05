@@ -24,7 +24,7 @@ function presetsFixture(array $files): string
 it('reports when no supported presets are detected', function () {
     $issues = (new PresetsAnalyzer)->analyze(presetsFixture([]));
 
-    expect($issues->all()[0]->code)->toBe('DD_PRESET_NONE_DETECTED');
+    expect($issues->all()[0]->code->value)->toBe('DD_PRESET_NONE_DETECTED');
 });
 
 it('detects composer framework presets', function () {

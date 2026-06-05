@@ -9,8 +9,8 @@ final class IssueFingerprint
     public static function for(Issue $issue): string
     {
         return hash('sha256', implode("\0", [
-            $issue->code,
-            $issue->module ?? '',
+            $issue->code->value,
+            $issue->module?->value ?? '',
             self::normalizePath($issue->file),
             $issue->key ?? '',
         ]));

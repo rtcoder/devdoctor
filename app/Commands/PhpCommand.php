@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DevDoctor\Commands;
 
 use DevDoctor\Commands\Concerns\RendersDiagnostics;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ModuleResult;
 use DevDoctor\Modules\Php\PhpAnalyzer;
 use DevDoctor\Modules\Php\PhpOptions;
@@ -26,7 +27,7 @@ final class PhpCommand extends Command
     public function handle(): int
     {
         return $this->renderDiagnostics([
-            new ModuleResult('php', app(PhpAnalyzer::class)->analyze(new PhpOptions(
+            new ModuleResult(ModuleName::PHP, app(PhpAnalyzer::class)->analyze(new PhpOptions(
                 path: (string) $this->option('path'),
                 ci: (bool) $this->option('ci'),
                 strict: (bool) $this->option('strict'),

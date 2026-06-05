@@ -10,6 +10,7 @@ use DevDoctor\Core\DiagnosticRunOptions;
 use DevDoctor\Core\ExitCode;
 use DevDoctor\Core\Issue;
 use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ModuleResult;
 use DevDoctor\Core\Severity;
 use LaravelZero\Framework\Commands\Command;
@@ -37,12 +38,12 @@ final class HealthCommand extends Command
 
         if ($unknown !== []) {
             return $this->renderDiagnostics([
-                new ModuleResult('health', new IssueCollection([
+                new ModuleResult(ModuleName::HEALTH, new IssueCollection([
                     new Issue(
                         code: 'DD_HEALTH_UNKNOWN_MODULE',
                         severity: Severity::ERROR,
                         message: 'Unknown health module: '.implode(', ', $unknown),
-                        module: 'health',
+                        module: ModuleName::HEALTH,
                     ),
                 ])),
             ], ExitCode::INVALID_CONFIG);

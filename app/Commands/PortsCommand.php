@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DevDoctor\Commands;
 
 use DevDoctor\Commands\Concerns\RendersDiagnostics;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ModuleResult;
 use DevDoctor\Modules\Ports\PortsAnalyzer;
 use DevDoctor\Modules\Ports\PortsOptions;
@@ -34,7 +35,7 @@ final class PortsCommand extends Command
         );
 
         return $this->renderDiagnostics([
-            new ModuleResult('ports', app(PortsAnalyzer::class)->analyze(new PortsOptions(
+            new ModuleResult(ModuleName::PORTS, app(PortsAnalyzer::class)->analyze(new PortsOptions(
                 path: (string) $this->option('path'),
                 ports: $ports,
                 common: (bool) $this->option('common'),

@@ -26,7 +26,7 @@ function composerFixture(array $files): string
 it('reports non composer projects as info', function () {
     $issues = (new ComposerAnalyzer)->analyze(new ComposerOptions(path: composerFixture([]), validate: false));
 
-    expect($issues->all()[0]->code)->toBe('DD_COMPOSER_NOT_PROJECT');
+    expect($issues->all()[0]->code->value)->toBe('DD_COMPOSER_NOT_PROJECT');
 });
 
 it('reports invalid composer json', function () {
@@ -34,14 +34,14 @@ it('reports invalid composer json', function () {
         'composer.json' => '{',
     ]), validate: false));
 
-    expect($issues->all()[0]->code)->toBe('DD_COMPOSER_JSON_INVALID');
+    expect($issues->all()[0]->code->value)->toBe('DD_COMPOSER_JSON_INVALID');
 });
 
 it('reports missing lock and vendor when dependencies exist', function () {
     $issues = (new ComposerAnalyzer)->analyze(new ComposerOptions(path: composerFixture([
         'composer.json' => '{"require":{"php":"^8.5"}}',
     ]), validate: false));
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->toContain('DD_COMPOSER_LOCK_MISSING')
         ->and($codes)->toContain('DD_COMPOSER_VENDOR_MISSING');
@@ -58,7 +58,7 @@ it('reports composer lock files older than composer json', function () {
 
     $issues = (new ComposerAnalyzer)->analyze(new ComposerOptions(path: $path, validate: false));
 
-    expect(array_map(static fn ($issue): string => $issue->code, $issues->all()))
+    expect(array_map(static fn ($issue): string => $issue->code->value, $issues->all()))
         ->toContain('DD_COMPOSER_LOCK_OUTDATED');
 });
 
@@ -67,7 +67,7 @@ it('reports php version mismatch and missing extensions', function () {
         'composer.json' => '{"require":{"php":"^99.0","ext-definitelymissing":"*"}}',
         'composer.lock' => '{}',
     ]), validate: false));
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->toContain('DD_COMPOSER_PHP_VERSION_MISMATCH')
         ->and($codes)->toContain('DD_COMPOSER_EXTENSION_MISSING');
@@ -80,7 +80,7 @@ it('reports abandoned packages from installed metadata', function () {
         'vendor/composer/installed.json' => '{"packages":[{"name":"old/package","abandoned":"new/package"}]}',
     ]), validate: false));
 
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->toContain('DD_COMPOSER_PACKAGE_ABANDONED');
 });
@@ -91,7 +91,7 @@ it('reports risky install and update scripts', function () {
         'composer.lock' => '{}',
     ]), validate: false));
 
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->toContain('DD_COMPOSER_SCRIPT_RISKY');
 });
@@ -103,6 +103,6 @@ it('reports missing composer binary without using platform shell commands', func
         'vendor/.gitkeep' => '',
     ])));
 
-    expect(array_map(static fn ($issue): string => $issue->code, $issues->all()))
+    expect(array_map(static fn ($issue): string => $issue->code->value, $issues->all()))
         ->toContain('DD_COMPOSER_BINARY_MISSING');
 });

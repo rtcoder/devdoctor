@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DevDoctor\Commands;
 
 use DevDoctor\Commands\Concerns\RendersDiagnostics;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ModuleResult;
 use DevDoctor\Modules\Git\GitAnalyzer;
 use DevDoctor\Modules\Git\GitOptions;
@@ -30,7 +31,7 @@ final class GitCommand extends Command
     public function handle(): int
     {
         return $this->renderDiagnostics([
-            new ModuleResult('git', app(GitAnalyzer::class)->analyze(new GitOptions(
+            new ModuleResult(ModuleName::GIT, app(GitAnalyzer::class)->analyze(new GitOptions(
                 path: (string) $this->option('path'),
                 strict: (bool) $this->option('strict'),
                 requireClean: (bool) $this->option('require-clean'),

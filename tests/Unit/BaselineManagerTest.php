@@ -4,13 +4,14 @@ use DevDoctor\Core\Baseline\BaselineManager;
 use DevDoctor\Core\Baseline\InvalidBaseline;
 use DevDoctor\Core\Issue;
 use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ModuleResult;
 use DevDoctor\Core\Severity;
 
 it('writes and applies warning and error fingerprints', function () {
     $path = sys_get_temp_dir().'/devdoctor-baseline-'.bin2hex(random_bytes(4)).'.json';
     $results = [
-        new ModuleResult('env', new IssueCollection([
+        new ModuleResult(ModuleName::ENV, new IssueCollection([
             new Issue('DD_ENV_MISSING_IN_ENV', Severity::WARNING, 'missing', 'env', '.env.example', 3, 'APP_KEY'),
             new Issue('DD_ENV_READY', Severity::INFO, 'ready', 'env'),
         ])),

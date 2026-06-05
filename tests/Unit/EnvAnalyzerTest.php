@@ -20,7 +20,7 @@ it('reports missing env files', function () {
     $issues = (new EnvAnalyzer)->analyze(new EnvAnalysisOptions(path: envFixture([])));
 
     expect($issues->summary())->toMatchArray(['errors' => 1, 'warnings' => 1])
-        ->and($issues->all()[0]->code)->toBe('DD_ENV_FILE_MISSING');
+        ->and($issues->all()[0]->code->value)->toBe('DD_ENV_FILE_MISSING');
 });
 
 it('detects key drift between env and example files', function () {
@@ -30,7 +30,7 @@ it('detects key drift between env and example files', function () {
     ]);
 
     $issues = (new EnvAnalyzer)->analyze(new EnvAnalysisOptions(path: $path));
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->toContain('DD_ENV_MISSING_IN_ENV')
         ->and($codes)->toContain('DD_ENV_MISSING_IN_EXAMPLE');
@@ -54,7 +54,7 @@ it('detects duplicate keys invalid names empty values and production debug', fun
     ]);
 
     $issues = (new EnvAnalyzer)->analyze(new EnvAnalysisOptions(path: $path));
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->toContain('DD_ENV_DUPLICATE_KEY')
         ->and($codes)->toContain('DD_ENV_INVALID_KEY_NAME')
@@ -69,7 +69,7 @@ it('detects likely malformed url values', function () {
     ]);
 
     $issues = (new EnvAnalyzer)->analyze(new EnvAnalysisOptions(path: $path));
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->toContain('DD_ENV_INVALID_TYPE');
 });
@@ -95,7 +95,7 @@ it('ignores placeholder secrets in example files', function () {
     ]);
 
     $issues = (new EnvAnalyzer)->analyze(new EnvAnalysisOptions(path: $path));
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->not->toContain('DD_ENV_SECRET_IN_EXAMPLE');
 });
@@ -117,7 +117,7 @@ it('applies configured required type allowed and conditional rules', function ()
         ],
     ));
 
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->toContain('DD_ENV_INVALID_ALLOWED_VALUE')
         ->and($codes)->toContain('DD_ENV_FORBIDDEN_WHEN_PRESENT')
@@ -137,7 +137,7 @@ it('respects configured key diff ignores', function () {
         ignoreMissingInExample: ['LOCAL_ONLY'],
     ));
 
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->not->toContain('DD_ENV_MISSING_IN_ENV')
         ->and($codes)->not->toContain('DD_ENV_MISSING_IN_EXAMPLE');

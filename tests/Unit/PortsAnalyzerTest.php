@@ -39,7 +39,7 @@ it('reports no issue for a free port', function () {
     $issues = (new PortsAnalyzer(new FakePortProvider))->analyze(new PortsOptions(path: '.', ports: [8000]));
 
     expect($issues->summary())->toBe(['errors' => 0, 'warnings' => 0, 'info' => 1, 'suppressed' => 0])
-        ->and($issues->all()[0]->code)->toBe('DD_PORTS_READY');
+        ->and($issues->all()[0]->code->value)->toBe('DD_PORTS_READY');
 });
 
 it('reports occupied ports with safe kill suggestion', function () {
@@ -49,7 +49,7 @@ it('reports occupied ports with safe kill suggestion', function () {
 
     $issue = $issues->all()[0];
 
-    expect($issue->code)->toBe('DD_PORT_IN_USE')
+    expect($issue->code->value)->toBe('DD_PORT_IN_USE')
         ->and($issue->context['suggested_command'])->toBe('kill -TERM 1234');
 });
 
@@ -64,12 +64,12 @@ it('uses a windows taskkill suggestion on windows', function () {
 it('reports invalid ports without querying providers', function () {
     $issues = (new PortsAnalyzer(new FakePortProvider))->analyze(new PortsOptions(path: '.', ports: ['70000']));
 
-    expect($issues->all()[0]->code)->toBe('DD_PORT_INVALID_PORT');
+    expect($issues->all()[0]->code->value)->toBe('DD_PORT_INVALID_PORT');
 });
 
 it('reports privileged ports', function () {
     $issues = (new PortsAnalyzer(new FakePortProvider))->analyze(new PortsOptions(path: '.', ports: [80]));
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->toContain('DD_PORT_PRIVILEGED');
 });
@@ -77,7 +77,7 @@ it('reports privileged ports', function () {
 it('reports provider unavailable', function () {
     $issues = (new PortsAnalyzer(new FakePortProvider(available: false)))->analyze(new PortsOptions(path: '.', ports: [8000]));
 
-    expect($issues->all()[0]->code)->toBe('DD_PORT_PROVIDER_UNAVAILABLE');
+    expect($issues->all()[0]->code->value)->toBe('DD_PORT_PROVIDER_UNAVAILABLE');
 });
 
 it('reports multiple listeners', function () {
@@ -88,7 +88,7 @@ it('reports multiple listeners', function () {
         ],
     ])))->analyze(new PortsOptions(path: '.', ports: [8000]));
 
-    $codes = array_map(static fn ($issue): string => $issue->code, $issues->all());
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
 
     expect($codes)->toContain('DD_PORT_MULTIPLE_LISTENERS')
         ->and($codes)->toContain('DD_PORT_IN_USE');

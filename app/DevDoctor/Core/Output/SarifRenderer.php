@@ -26,7 +26,7 @@ final class SarifRenderer
         $rules = [];
 
         foreach ($issues as $issue) {
-            $rules[$issue->code] ??= $this->rule($issue);
+            $rules[$issue->code->value] ??= $this->rule($issue);
         }
 
         ksort($rules);
@@ -53,8 +53,8 @@ final class SarifRenderer
     private function rule(Issue $issue): array
     {
         $rule = [
-            'id' => $issue->code,
-            'name' => $issue->code,
+            'id' => $issue->code->value,
+            'name' => $issue->code->value,
             'shortDescription' => ['text' => $issue->message],
         ];
 
@@ -71,14 +71,14 @@ final class SarifRenderer
     private function result(Issue $issue): array
     {
         $result = [
-            'ruleId' => $issue->code,
+            'ruleId' => $issue->code->value,
             'level' => $this->level($issue->severity),
             'message' => ['text' => $issue->message],
             'partialFingerprints' => [
                 'devdoctorFingerprint/v1' => IssueFingerprint::for($issue),
             ],
             'properties' => array_filter([
-                'module' => $issue->module,
+                'module' => $issue->module?->value,
                 'key' => $issue->key,
                 'hint' => $issue->hint,
                 'fix' => $issue->fix?->toArray(new Redactor),

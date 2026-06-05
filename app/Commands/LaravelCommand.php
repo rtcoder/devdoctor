@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DevDoctor\Commands;
 
 use DevDoctor\Commands\Concerns\RendersDiagnostics;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ModuleResult;
 use DevDoctor\Modules\Laravel\LaravelAnalyzer;
 use DevDoctor\Modules\Laravel\LaravelOptions;
@@ -25,7 +26,7 @@ final class LaravelCommand extends Command
     public function handle(): int
     {
         return $this->renderDiagnostics([
-            new ModuleResult('laravel', app(LaravelAnalyzer::class)->analyze(new LaravelOptions(
+            new ModuleResult(ModuleName::LARAVEL, app(LaravelAnalyzer::class)->analyze(new LaravelOptions(
                 path: (string) $this->option('path'),
                 strict: (bool) $this->option('strict'),
             ))),

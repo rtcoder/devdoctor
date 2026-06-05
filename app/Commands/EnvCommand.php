@@ -10,6 +10,7 @@ use DevDoctor\Core\Config\InvalidDevDoctorConfig;
 use DevDoctor\Core\ExitCode;
 use DevDoctor\Core\Issue;
 use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ModuleResult;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\Severity;
@@ -41,12 +42,12 @@ final class EnvCommand extends Command
             $config = app(ConfigLoader::class)->load($paths->absolute((string) $this->option('config')));
         } catch (InvalidDevDoctorConfig $exception) {
             return $this->renderDiagnostics([
-                new ModuleResult('env', new IssueCollection([
+                new ModuleResult(ModuleName::ENV, new IssueCollection([
                     new Issue(
                         code: 'DD_ENV_INVALID_CONFIG',
                         severity: Severity::ERROR,
                         message: $exception->getMessage(),
-                        module: 'env',
+                        module: ModuleName::ENV,
                         file: $paths->display((string) $this->option('config')),
                     ),
                 ])),
@@ -65,7 +66,7 @@ final class EnvCommand extends Command
         ));
 
         return $this->renderDiagnostics([
-            new ModuleResult('env', $issues),
+            new ModuleResult(ModuleName::ENV, $issues),
         ]);
     }
 }
