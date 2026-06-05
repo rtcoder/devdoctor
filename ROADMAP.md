@@ -6,7 +6,7 @@ Current state:
 
 - Laravel Zero 12.x is initialized.
 - The `devdoctor` binary exists.
-- Public commands are implemented: `env`, `ports`, `php`, `node`, `laravel`, `security`, `docker`, `composer`, `git`, `health`, `ci`, and `presets`.
+- Public commands are implemented: `env`, `ports`, `php`, `node`, `laravel`, `security`, `docker`, `composer`, `git`, `health`, `doctor`, `ci`, and `presets`.
 - Core diagnostics, rendering, redaction, path normalization, config loading, and process execution are in place.
 - `env`, `ports`, `composer`, `git`, `docker`, and `ci` have focused tests and read-only behavior.
 - Cross-platform CI, PHAR smoke tests, a JSON schema, a stable issue code catalog, and project preset detection are included.
@@ -214,3 +214,13 @@ After the first complete version:
 - `v1.10.0`: Global output shaping options for severity filters, summaries, and hidden hints. Complete.
 - `v1.11.0`: Dependency diagnostics aggregator for Composer and Node projects. Complete.
 - `v1.12.0`: Doctor alias for the broad health diagnostics workflow. Complete.
+- `v1.13.0`: Multi-stack preset foundation for frontend, Python, Go, Rust, JVM, C/C++, .NET, generic web, and deeper Symfony planning. Complete.
+- `v1.14.0`: Frontend and Node package manager diagnostics for Vite, Next.js, Nuxt, Astro, npm, Yarn, pnpm, and Bun.
+- `v1.15.0`: Python diagnostics for pip, Poetry, Pipenv, uv, and Conda manifests.
+- `v1.16.0`: Go module diagnostics for `go.mod`, `go.sum`, and workspaces.
+- `v1.17.0`: Rust Cargo diagnostics for manifests, lockfiles, workspaces, and toolchains.
+- `v1.18.0`: Java/JVM diagnostics for Maven, Gradle, Ant, and Spring Boot projects.
+- `v1.19.0`: .NET diagnostics for solutions, projects, SDK pinning, NuGet config, and lockfiles.
+- `v1.20.0`: C/C++ diagnostics for CMake, Make, Meson, Autotools, vcpkg, and Conan projects.
+- `v1.21.0`: Generic web diagnostics for static apps, assets, web config, ports, and security posture.
+- `v1.22.0`: Symfony diagnostics for environment, runtime directories, cache/logs, and Composer integration.

@@ -193,7 +193,7 @@ it('runs presets diagnostics with json output', function () {
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect($exitCode)->toBe(0)
-        ->and(array_column($output['modules'][0]['issues'], 'key'))->toBe(['node', 'vite']);
+        ->and(array_column($output['modules'][0]['issues'], 'key'))->toBe(['frontend', 'node', 'vite', 'web']);
 });
 
 it('prints config wizard output in dry run mode', function () {

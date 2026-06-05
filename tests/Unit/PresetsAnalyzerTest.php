@@ -41,8 +41,10 @@ it('detects node vite and nextjs presets from package json', function () {
         'package.json' => '{"dependencies":{"next":"^15.0"},"devDependencies":{"vite":"^7.0"}}',
     ]));
 
-    expect(array_map(static fn ($issue): ?string => $issue->key, $issues->all()))
-        ->toBe(['nextjs', 'node', 'vite']);
+    $keys = array_map(static fn ($issue): ?string => $issue->key, $issues->all());
+    sort($keys);
+
+    expect($keys)->toBe(['frontend', 'nextjs', 'node', 'vite', 'web']);
 });
 
 it('detects file based framework and tooling presets', function () {
@@ -53,8 +55,10 @@ it('detects file based framework and tooling presets', function () {
         'compose.yaml' => 'services: {}',
     ]));
 
-    expect(array_map(static fn ($issue): ?string => $issue->key, $issues->all()))
-        ->toBe(['laravel', 'symfony', 'docker-compose', 'vite']);
+    $keys = array_map(static fn ($issue): ?string => $issue->key, $issues->all());
+    sort($keys);
+
+    expect($keys)->toBe(['docker-compose', 'frontend', 'laravel', 'symfony', 'vite', 'web']);
 });
 
 it('ignores invalid json while retaining file based node detection', function () {
@@ -64,4 +68,38 @@ it('ignores invalid json while retaining file based node detection', function ()
 
     expect(array_map(static fn ($issue): ?string => $issue->key, $issues->all()))
         ->toBe(['node']);
+});
+
+it('detects multi stack ecosystem presets without running tools', function () {
+    $issues = (new PresetsAnalyzer)->analyze(presetsFixture([
+        'pyproject.toml' => '[project]',
+        'requirements-dev.txt' => 'pytest',
+        'poetry.lock' => '',
+        'go.mod' => 'module example.test/app',
+        'Cargo.toml' => '[package]',
+        'pom.xml' => '<project><artifactId>spring-boot-starter</artifactId></project>',
+        'build.xml' => '<project />',
+        'CMakeLists.txt' => 'cmake_minimum_required(VERSION 3.25)',
+        'App.csproj' => '<Project Sdk="Microsoft.NET.Sdk" />',
+        'public/index.html' => '<!doctype html>',
+    ]));
+
+    $keys = array_map(static fn ($issue): ?string => $issue->key, $issues->all());
+    sort($keys);
+
+    expect($keys)->toBe([
+        'ant',
+        'cmake',
+        'cpp',
+        'dotnet',
+        'go',
+        'java',
+        'maven',
+        'pip',
+        'poetry',
+        'python',
+        'rust',
+        'spring',
+        'web',
+    ]);
 });

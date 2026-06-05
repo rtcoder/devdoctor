@@ -4,34 +4,51 @@ declare(strict_types=1);
 
 namespace DevDoctor\Modules\Presets;
 
-use DevDoctor\Core\PathResolver;
-use JsonException;
+use DevDoctor\Core\ProjectFiles;
 
 final readonly class PresetDetector
 {
+    private const FRONTEND_PACKAGES = [
+        '@angular/core',
+        '@sveltejs/kit',
+        'astro',
+        'next',
+        'nuxt',
+        'react',
+        'svelte',
+        'vite',
+        'vue',
+    ];
+
     /**
      * @return list<PresetMatch>
      */
     public function detect(string $path): array
     {
-        $paths = PathResolver::fromBasePath($path);
-        $composer = $this->jsonFile($paths->absolute('composer.json'));
-        $package = $this->jsonFile($paths->absolute('package.json'));
+        $files = new ProjectFiles($path);
+        $composer = $files->json('composer.json');
+        $package = $files->json('package.json');
         $matches = [];
 
-        if ($this->hasPackage($composer, 'laravel/framework') || is_file($paths->absolute('artisan'))) {
+        if ($this->hasPackage($composer, 'laravel/framework') || $files->exists('artisan')) {
             $matches[] = new PresetMatch(ProjectPreset::LARAVEL, $this->hasPackage($composer, 'laravel/framework') ? 'composer.json' : 'artisan');
         }
 
-        if ($this->hasPackage($composer, 'symfony/framework-bundle') || is_file($paths->absolute('bin/console'))) {
+        if ($this->hasPackage($composer, 'symfony/framework-bundle') || $files->exists('bin/console')) {
             $matches[] = new PresetMatch(ProjectPreset::SYMFONY, $this->hasPackage($composer, 'symfony/framework-bundle') ? 'composer.json' : 'bin/console');
         }
 
-        if (is_file($paths->absolute('package.json'))) {
+        if ($files->exists('package.json')) {
             $matches[] = new PresetMatch(ProjectPreset::NODE, 'package.json');
         }
 
-        $viteConfig = $this->firstExisting($paths, [
+        $frontendEvidence = $this->frontendEvidence($files, $package);
+
+        if ($frontendEvidence !== null) {
+            $matches[] = new PresetMatch(ProjectPreset::FRONTEND, $frontendEvidence);
+        }
+
+        $viteConfig = $files->firstExisting([
             'vite.config.js',
             'vite.config.mjs',
             'vite.config.ts',
@@ -46,7 +63,23 @@ final readonly class PresetDetector
             $matches[] = new PresetMatch(ProjectPreset::NEXTJS, 'package.json');
         }
 
-        $composeFile = $this->firstExisting($paths, [
+        if ($this->hasPackage($package, 'nuxt')) {
+            $matches[] = new PresetMatch(ProjectPreset::NUXT, 'package.json');
+        }
+
+        if ($this->hasPackage($package, 'astro')) {
+            $matches[] = new PresetMatch(ProjectPreset::ASTRO, 'package.json');
+        }
+
+        array_push($matches, ...$this->pythonMatches($files));
+        array_push($matches, ...$this->goMatches($files));
+        array_push($matches, ...$this->rustMatches($files));
+        array_push($matches, ...$this->javaMatches($files));
+        array_push($matches, ...$this->cppMatches($files));
+        array_push($matches, ...$this->dotnetMatches($files));
+        array_push($matches, ...$this->webMatches($files, $frontendEvidence));
+
+        $composeFile = $files->firstExisting([
             'docker-compose.yml',
             'docker-compose.yaml',
             'compose.yml',
@@ -60,22 +93,27 @@ final readonly class PresetDetector
         return $matches;
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function jsonFile(string $file): array
+    private function frontendEvidence(ProjectFiles $files, array $package): ?string
     {
-        if (! is_file($file)) {
-            return [];
+        foreach (self::FRONTEND_PACKAGES as $dependency) {
+            if ($this->hasPackage($package, $dependency)) {
+                return 'package.json';
+            }
         }
 
-        try {
-            $data = json_decode((string) file_get_contents($file), true, flags: JSON_THROW_ON_ERROR);
-        } catch (JsonException) {
-            return [];
-        }
-
-        return is_array($data) ? $data : [];
+        return $files->firstExisting([
+            'index.html',
+            'src/App.vue',
+            'src/App.svelte',
+            'src/App.tsx',
+            'src/App.jsx',
+            'app/page.tsx',
+            'pages/index.tsx',
+            'vite.config.js',
+            'vite.config.mjs',
+            'vite.config.ts',
+            'vite.config.cjs',
+        ]);
     }
 
     /**
@@ -93,16 +131,141 @@ final readonly class PresetDetector
     }
 
     /**
-     * @param  list<string>  $files
+     * @return list<PresetMatch>
      */
-    private function firstExisting(PathResolver $paths, array $files): ?string
+    private function pythonMatches(ProjectFiles $files): array
     {
-        foreach ($files as $file) {
-            if (is_file($paths->absolute($file))) {
-                return $file;
+        $matches = [];
+        $pythonEvidence = $files->firstExisting(['pyproject.toml', 'requirements.txt', 'Pipfile', 'environment.yml', 'conda-lock.yml', 'uv.lock']);
+
+        $requirementsFiles = $files->glob('requirements*.txt');
+
+        if ($pythonEvidence !== null || $requirementsFiles !== []) {
+            $matches[] = new PresetMatch(ProjectPreset::PYTHON, $pythonEvidence ?? $requirementsFiles[0]);
+        }
+
+        if ($requirementsFiles !== []) {
+            $matches[] = new PresetMatch(ProjectPreset::PIP, $requirementsFiles[0]);
+        }
+
+        foreach ([
+            [ProjectPreset::POETRY, ['poetry.lock']],
+            [ProjectPreset::PIPENV, ['Pipfile']],
+            [ProjectPreset::UV, ['uv.lock']],
+            [ProjectPreset::CONDA, ['environment.yml', 'conda-lock.yml']],
+        ] as [$preset, $candidates]) {
+            $evidence = $files->firstExisting($candidates);
+
+            if ($evidence !== null) {
+                $matches[] = new PresetMatch($preset, $evidence);
             }
         }
 
-        return null;
+        return $matches;
+    }
+
+    /**
+     * @return list<PresetMatch>
+     */
+    private function goMatches(ProjectFiles $files): array
+    {
+        $evidence = $files->firstExisting(['go.mod', 'go.work']);
+
+        return $evidence === null ? [] : [new PresetMatch(ProjectPreset::GO, $evidence)];
+    }
+
+    /**
+     * @return list<PresetMatch>
+     */
+    private function rustMatches(ProjectFiles $files): array
+    {
+        $evidence = $files->firstExisting(['Cargo.toml', 'Cargo.lock', 'rust-toolchain.toml']);
+
+        return $evidence === null ? [] : [new PresetMatch(ProjectPreset::RUST, $evidence)];
+    }
+
+    /**
+     * @return list<PresetMatch>
+     */
+    private function javaMatches(ProjectFiles $files): array
+    {
+        $matches = [];
+        $javaEvidence = $files->firstExisting(['pom.xml', 'build.gradle', 'build.gradle.kts', 'settings.gradle', 'settings.gradle.kts', 'build.xml']);
+
+        if ($javaEvidence !== null) {
+            $matches[] = new PresetMatch(ProjectPreset::JAVA, $javaEvidence);
+        }
+
+        foreach ([
+            [ProjectPreset::MAVEN, ['pom.xml', 'mvnw', 'mvnw.cmd']],
+            [ProjectPreset::GRADLE, ['build.gradle', 'build.gradle.kts', 'gradlew', 'gradlew.bat']],
+            [ProjectPreset::ANT, ['build.xml']],
+        ] as [$preset, $candidates]) {
+            $evidence = $files->firstExisting($candidates);
+
+            if ($evidence !== null) {
+                $matches[] = new PresetMatch($preset, $evidence);
+            }
+        }
+
+        if (
+            $files->contains('pom.xml', 'spring-boot')
+            || $files->contains('build.gradle', 'spring-boot')
+            || $files->contains('build.gradle.kts', 'spring-boot')
+        ) {
+            $matches[] = new PresetMatch(ProjectPreset::SPRING, $javaEvidence ?? 'pom.xml');
+        }
+
+        return $matches;
+    }
+
+    /**
+     * @return list<PresetMatch>
+     */
+    private function cppMatches(ProjectFiles $files): array
+    {
+        $matches = [];
+        $cppEvidence = $files->firstExisting(['CMakeLists.txt', 'Makefile', 'meson.build', 'configure.ac', 'vcpkg.json', 'conanfile.txt', 'conanfile.py']);
+
+        if ($cppEvidence !== null) {
+            $matches[] = new PresetMatch(ProjectPreset::CPP, $cppEvidence);
+        }
+
+        if ($files->exists('CMakeLists.txt')) {
+            $matches[] = new PresetMatch(ProjectPreset::CMAKE, 'CMakeLists.txt');
+        }
+
+        return $matches;
+    }
+
+    /**
+     * @return list<PresetMatch>
+     */
+    private function dotnetMatches(ProjectFiles $files): array
+    {
+        $evidence = $files->firstExisting(['global.json', 'NuGet.config']);
+
+        if ($evidence === null) {
+            $projectFiles = [
+                ...$files->glob('*.sln'),
+                ...$files->glob('*.csproj'),
+                ...$files->glob('*.fsproj'),
+                ...$files->glob('*.vbproj'),
+            ];
+
+            $evidence = $projectFiles[0] ?? null;
+        }
+
+        return $evidence === null ? [] : [new PresetMatch(ProjectPreset::DOTNET, $evidence)];
+    }
+
+    /**
+     * @return list<PresetMatch>
+     */
+    private function webMatches(ProjectFiles $files, ?string $frontendEvidence): array
+    {
+        $evidence = $files->firstExisting(['index.html', 'public/index.html', 'nginx.conf', 'Caddyfile', 'vite.config.ts', 'vite.config.js']) ?? $frontendEvidence;
+
+        return $evidence === null ? [] : [new PresetMatch(ProjectPreset::WEB, $evidence)];
     }
 }

@@ -2,9 +2,9 @@
 
 Developer diagnostics for humans.
 
-DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
+DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, Node/frontend, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.12.0`
+Current version: `1.13.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.12.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.13.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -174,9 +174,24 @@ The `presets` command detects supported project stacks from files and declared d
 | Laravel | `laravel/framework` or `artisan` |
 | Symfony | `symfony/framework-bundle` or `bin/console` |
 | Node.js | `package.json` |
+| Frontend | frontend package dependencies, `index.html`, or common app entry files |
 | Vite | `vite` dependency or a `vite.config.*` file |
 | Next.js | `next` dependency |
+| Nuxt | `nuxt` dependency |
+| Astro | `astro` dependency |
+| Python | `pyproject.toml`, `requirements*.txt`, `Pipfile`, `uv.lock`, or Conda files |
+| pip / Poetry / Pipenv / uv / Conda | their lockfiles or manifests |
+| Go | `go.mod` or `go.work` |
+| Rust | `Cargo.toml`, `Cargo.lock`, or `rust-toolchain.toml` |
+| Java/JVM | Maven, Gradle, or Ant build files |
+| Maven / Gradle / Ant / Spring | wrapper/build files or Spring Boot references |
+| C/C++ | CMake, Make, Meson, Autotools, vcpkg, or Conan files |
+| CMake | `CMakeLists.txt` |
+| .NET | solution/project files, `global.json`, or `NuGet.config` |
+| Generic web | static entry files, web server config, or frontend evidence |
 | Docker Compose | A supported Compose file |
+
+`v1.13.0` expands preset detection and shared manifest helpers for multi-stack projects. The new ecosystem commands (`frontend`, `python`, `go`, `rust`, `java`, `cpp`, `dotnet`, `symfony`, and `web`) are planned as separate releases so `ci --modules=<name>` only accepts them once their analyzers exist.
 
 Preset detection is informational and can be included in CI explicitly:
 
@@ -281,9 +296,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.12.0
+- uses: rtcoder/devdoctor@v1.13.0
   with:
-    version: v1.12.0
+    version: v1.13.0
     format: sarif
 ```
 
@@ -437,7 +452,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.12.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.13.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version
