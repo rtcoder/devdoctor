@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.11.0`
+Current version: `1.12.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.11.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.12.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -62,6 +62,7 @@ security   Check project security posture
 git        Check Git repository hygiene
 docker     Check Docker and Docker Compose project health
 health     Run a broad local project health check
+doctor     Alias for health
 ci         Run CI-safe DevDoctor diagnostics
 presets    Detect supported project framework and tooling presets
 init       Generate an initial devdoctor.yml configuration
@@ -116,6 +117,7 @@ php devdoctor git --require-clean --scan-large-files
 php devdoctor docker --compose-file=docker-compose.yml
 php devdoctor health
 php devdoctor health --include-ports
+php devdoctor doctor --summary-only
 php devdoctor ci --modules=env,php,node,laravel,composer,db,git,docker --no-fail-on-warnings
 php devdoctor presets --format=json
 php devdoctor init --dry-run
@@ -279,9 +281,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.11.0
+- uses: rtcoder/devdoctor@v1.12.0
   with:
-    version: v1.11.0
+    version: v1.12.0
     format: sarif
 ```
 
@@ -435,7 +437,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.11.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.12.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version

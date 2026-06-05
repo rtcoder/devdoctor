@@ -213,3 +213,4 @@ After the first complete version:
 - `v1.9.0`: HTTP URL diagnostics for env and explicit targets without network requests. Complete.
 - `v1.10.0`: Global output shaping options for severity filters, summaries, and hidden hints. Complete.
 - `v1.11.0`: Dependency diagnostics aggregator for Composer and Node projects. Complete.
+- `v1.12.0`: Doctor alias for the broad health diagnostics workflow. Complete.
