@@ -223,4 +223,4 @@ After the first complete version:
 - `v1.19.0`: .NET diagnostics for solutions, projects, SDK pinning, target framework drift, NuGet config, and restore lock mode. Complete.
 - `v1.20.0`: C/C++ diagnostics for CMake, Make, Meson, Autotools, vcpkg, Conan, compile command metadata, in-source build artifacts, compiler flags, generator assumptions, and shell portability risks. Complete.
 - `v1.21.0`: Generic web diagnostics for static entry files, obvious asset references, public config exposure, web server config hints, and local port declaration conflicts. Complete.
-- `v1.22.0`: Symfony diagnostics for environment, runtime directories, cache/logs, and Composer integration.
+- `v1.22.0`: Symfony diagnostics for `.env`/`.env.local`, `APP_SECRET`, production debug mode, runtime cache/log directories, Symfony Flex recipe drift, and risky Composer scripts. Complete.

@@ -56,6 +56,10 @@ final readonly class EcosystemModuleSelector
             $modules[] = ModuleName::WEB->value;
         }
 
+        if ($this->hasAny($presets, [ProjectPreset::SYMFONY])) {
+            $modules[] = ModuleName::SYMFONY->value;
+        }
+
         return array_values(array_unique($modules));
     }
 

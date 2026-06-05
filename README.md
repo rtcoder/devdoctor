@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, Node/frontend, Python, Go, Rust, Java/JVM, .NET, C/C++, generic web, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.21.0`
+Current version: `1.22.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.21.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.22.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -66,6 +66,7 @@ dotnet     Check .NET solution, project, SDK, lockfile, and NuGet health
 cpp        Check C/C++ build files, dependency managers, and portability risks
 web        Check generic web entry files, assets, public config, and server hints
 laravel    Check Laravel application health
+symfony    Check Symfony application env, runtime directories, recipes, and Composer scripts
 security   Check project security posture
 git        Check Git repository hygiene
 docker     Check Docker and Docker Compose project health
@@ -123,6 +124,7 @@ php devdoctor dotnet
 php devdoctor cpp
 php devdoctor web
 php devdoctor laravel
+php devdoctor symfony
 php devdoctor security
 php devdoctor composer
 php devdoctor deps
@@ -163,6 +165,7 @@ DevDoctor targets Linux, macOS, and Windows:
 | C/C++ diagnostics | Supported | Supported | Supported |
 | Generic web diagnostics | Supported | Supported | Supported |
 | Laravel application diagnostics | Supported | Supported | Supported |
+| Symfony application diagnostics | Supported | Supported | Supported |
 | Security posture diagnostics | Supported | Supported | Supported |
 | Database configuration diagnostics | Supported | Supported | Supported |
 | Database connection diagnostics | Supported when the matching PDO driver is installed | Supported when the matching PDO driver is installed | Supported when the matching PDO driver is installed |
@@ -190,10 +193,11 @@ Platform-specific commands are only suggested. DevDoctor never terminates a proc
 - C/C++ diagnostics inspect CMake, Make, Meson, Autotools, vcpkg, Conan, compile command metadata, in-source build artifacts, compiler flags, generator assumptions, and shell portability risks without compiling code.
 - Generic web diagnostics inspect static entry files, obvious asset references, public config files, web server config hints, and conflicting local port declarations without running a build.
 - Laravel diagnostics inspect `.env`, `APP_KEY`, production debug mode, `APP_URL`, runtime directories, and config cache state.
+- Symfony diagnostics inspect `.env`/`.env.local`, `APP_SECRET`, production debug mode, runtime cache/log directories, Symfony Flex recipe drift, and Symfony Composer script risks without running `bin/console`.
 - Database diagnostics inspect `DB_CONNECTION`, required database keys, valid ports, SQLite file paths, and optional read-only PDO connectivity with `--connect`.
 - Queue diagnostics inspect `QUEUE_CONNECTION`, common async driver requirements, and production environments that still use the synchronous queue driver.
 - Security diagnostics inspect env example secrets, hard-coded secret patterns, risky Composer and package scripts, Docker privileged mode, Docker socket mounts, and `.env` ignore gaps.
-- Health aggregates local project diagnostics across `presets`, `env`, `cache`, `http`, `php`, `node`, `laravel`, `composer`, `db`, `queue`, `git`, `docker`, and `security`; it adds `frontend`, `python`, `go`, `rust`, `java`, `dotnet`, `cpp`, and `web` automatically when matching presets are detected. Add `--include-ports` to include common local port checks.
+- Health aggregates local project diagnostics across `presets`, `env`, `cache`, `http`, `php`, `node`, `laravel`, `composer`, `db`, `queue`, `git`, `docker`, and `security`; it adds `frontend`, `python`, `go`, `rust`, `java`, `dotnet`, `cpp`, `web`, and `symfony` automatically when matching presets are detected. Add `--include-ports` to include common local port checks.
 - Composer reports `DD_COMPOSER_LOCK_OUTDATED` when `composer.lock` is older than `composer.json`.
 - Process execution uses argument arrays and supports project paths containing spaces.
 
@@ -223,7 +227,7 @@ The `presets` command detects supported project stacks from files and declared d
 | Generic web | static entry files, web server config, or frontend evidence |
 | Docker Compose | A supported Compose file |
 
-`v1.21.0` ships `devdoctor web` with static diagnostics for generic web entry files, asset references, public config files, server config hints, and local port declaration conflicts. The remaining ecosystem command (`symfony`) is planned as a separate release so `ci --modules=symfony` only accepts it once its analyzer exists.
+`v1.22.0` ships `devdoctor symfony` with static diagnostics for Symfony environment hygiene, runtime directories, Symfony Flex recipe drift, and Composer script risks. This completes the first planned multi-stack wave from frontend through Symfony.
 
 Preset detection is informational and can be included in CI explicitly:
 
@@ -310,7 +314,7 @@ Unknown health modules return exit code `3`.
 
 ## CI
 
-The CI aggregator runs `env`, `php`, `node`, `laravel`, `composer`, `git`, and `docker` by default. It adds `frontend`, `python`, `go`, `rust`, `java`, `dotnet`, `cpp`, and `web` automatically when matching presets are detected. `ports` and `security` are excluded by default because they can depend on local machine state or intentionally present local files.
+The CI aggregator runs `env`, `php`, `node`, `laravel`, `composer`, `git`, and `docker` by default. It adds `frontend`, `python`, `go`, `rust`, `java`, `dotnet`, `cpp`, `web`, and `symfony` automatically when matching presets are detected. `ports` and `security` are excluded by default because they can depend on local machine state or intentionally present local files.
 
 ```bash
 php devdoctor ci --format=json
@@ -328,9 +332,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.21.0
+- uses: rtcoder/devdoctor@v1.22.0
   with:
-    version: v1.21.0
+    version: v1.22.0
     format: sarif
 ```
 
@@ -484,7 +488,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.21.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.22.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version

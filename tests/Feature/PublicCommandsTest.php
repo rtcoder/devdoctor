@@ -168,6 +168,15 @@ it('runs web diagnostics with json output', function () {
         ->expectsOutputToContain('DD_WEB_NOT_PROJECT');
 });
 
+it('runs symfony diagnostics with json output', function () {
+    $path = sys_get_temp_dir().'/devdoctor-symfony-command-'.bin2hex(random_bytes(4));
+    mkdir($path);
+
+    $this->artisan('symfony', ['--path' => $path, '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('DD_SYMFONY_NOT_PROJECT');
+});
+
 it('runs laravel diagnostics with json output', function () {
     $path = sys_get_temp_dir().'/devdoctor-laravel-command-'.bin2hex(random_bytes(4));
     mkdir($path);
@@ -370,12 +379,18 @@ it('runs default ci modules without ports', function () {
     file_put_contents($path.'/index.html', '<link rel="stylesheet" href="assets/app.css">');
     mkdir($path.'/assets', recursive: true);
     file_put_contents($path.'/assets/app.css', "body { color: black; }\n");
+    file_put_contents($path.'/composer.json', '{"require":{"symfony/framework-bundle":"^7.0"}}');
+    file_put_contents($path.'/.env.local', "APP_SECRET=real-secret\n");
+    mkdir($path.'/var/cache', recursive: true);
+    mkdir($path.'/var/log', recursive: true);
+    mkdir($path.'/config', recursive: true);
+    file_put_contents($path.'/config/bundles.php', "<?php\nreturn [];\n");
 
     $exitCode = Artisan::call('ci', ['--path' => $path, '--format' => 'json']);
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect($exitCode)->toBe(1)
-        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'go', 'rust', 'java', 'dotnet', 'cpp', 'web']);
+        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'go', 'rust', 'java', 'dotnet', 'cpp', 'web', 'symfony']);
 });
 
 it('supports ci module selection exclude and unknown module handling', function () {

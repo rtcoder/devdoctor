@@ -47,6 +47,8 @@ use DevDoctor\Modules\Rust\RustAnalyzer;
 use DevDoctor\Modules\Rust\RustOptions;
 use DevDoctor\Modules\Security\SecurityAnalyzer;
 use DevDoctor\Modules\Security\SecurityOptions;
+use DevDoctor\Modules\Symfony\SymfonyAnalyzer;
+use DevDoctor\Modules\Symfony\SymfonyOptions;
 use DevDoctor\Modules\Web\WebAnalyzer;
 use DevDoctor\Modules\Web\WebOptions;
 
@@ -72,6 +74,7 @@ final class DiagnosticModuleRunner
             ModuleName::CPP,
             ModuleName::WEB,
             ModuleName::LARAVEL,
+            ModuleName::SYMFONY,
             ModuleName::COMPOSER,
             ModuleName::DATABASE,
             ModuleName::GIT,
@@ -140,6 +143,10 @@ final class DiagnosticModuleRunner
                 strict: $options->strict,
             ))),
             ModuleName::LARAVEL->value => new ModuleResult(ModuleName::LARAVEL, app(LaravelAnalyzer::class)->analyze(new LaravelOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
+            ModuleName::SYMFONY->value => new ModuleResult(ModuleName::SYMFONY, app(SymfonyAnalyzer::class)->analyze(new SymfonyOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),
