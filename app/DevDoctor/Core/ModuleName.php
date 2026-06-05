@@ -14,6 +14,7 @@ enum ModuleName: string
     case ENV = 'env';
     case GIT = 'git';
     case HEALTH = 'health';
+    case HTTP = 'http';
     case LARAVEL = 'laravel';
     case NODE = 'node';
     case PHP = 'php';

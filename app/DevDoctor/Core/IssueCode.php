@@ -37,6 +37,11 @@ enum IssueCode: string
     case DD_DB_READY = 'DD_DB_READY';
     case DD_DB_REQUIRED_KEY_MISSING = 'DD_DB_REQUIRED_KEY_MISSING';
     case DD_DB_SQLITE_FILE_MISSING = 'DD_DB_SQLITE_FILE_MISSING';
+    case DD_HTTP_INSECURE_PRODUCTION_URL = 'DD_HTTP_INSECURE_PRODUCTION_URL';
+    case DD_HTTP_LOCALHOST_PRODUCTION_URL = 'DD_HTTP_LOCALHOST_PRODUCTION_URL';
+    case DD_HTTP_READY = 'DD_HTTP_READY';
+    case DD_HTTP_URL_INVALID = 'DD_HTTP_URL_INVALID';
+    case DD_HTTP_URL_MISSING = 'DD_HTTP_URL_MISSING';
     case DD_PHP_BINARY_MISSING = 'DD_PHP_BINARY_MISSING';
     case DD_PHP_COMPOSER_JSON_INVALID = 'DD_PHP_COMPOSER_JSON_INVALID';
     case DD_PHP_EXTENSION_MISSING = 'DD_PHP_EXTENSION_MISSING';
@@ -176,6 +181,10 @@ enum IssueCode: string
             self::DD_DB_PORT_INVALID => 'Use a numeric TCP port between 1 and 65535.',
             self::DD_DB_REQUIRED_KEY_MISSING => 'Add the required database environment key or configure an intentional default.',
             self::DD_DB_SQLITE_FILE_MISSING => 'Create the SQLite database file intentionally before relying on it.',
+            self::DD_HTTP_INSECURE_PRODUCTION_URL => 'Use an HTTPS URL for production-facing endpoints.',
+            self::DD_HTTP_LOCALHOST_PRODUCTION_URL => 'Replace localhost with the canonical production or staging host.',
+            self::DD_HTTP_URL_INVALID => 'Use a fully qualified http or https URL.',
+            self::DD_HTTP_URL_MISSING => 'Set APP_URL or provide an explicit --url when HTTP URL diagnostics matter.',
             self::DD_PHP_BINARY_MISSING => 'Install PHP or add it to PATH before running PHP diagnostics.',
             self::DD_PHP_COMPOSER_JSON_INVALID => 'Fix composer.json syntax before relying on PHP platform diagnostics.',
             self::DD_PHP_EXTENSION_MISSING => 'Install and enable the required PHP extension for the active CLI runtime.',

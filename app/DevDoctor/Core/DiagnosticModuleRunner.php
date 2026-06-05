@@ -18,6 +18,8 @@ use DevDoctor\Modules\Env\EnvAnalysisOptions;
 use DevDoctor\Modules\Env\EnvAnalyzer;
 use DevDoctor\Modules\Git\GitAnalyzer;
 use DevDoctor\Modules\Git\GitOptions;
+use DevDoctor\Modules\Http\HttpAnalyzer;
+use DevDoctor\Modules\Http\HttpOptions;
 use DevDoctor\Modules\Laravel\LaravelAnalyzer;
 use DevDoctor\Modules\Laravel\LaravelOptions;
 use DevDoctor\Modules\Node\NodeAnalyzer;
@@ -42,6 +44,7 @@ final class DiagnosticModuleRunner
         return array_map(static fn (ModuleName $module): string => $module->value, [
             ModuleName::ENV,
             ModuleName::CACHE,
+            ModuleName::HTTP,
             ModuleName::PHP,
             ModuleName::NODE,
             ModuleName::LARAVEL,
@@ -64,6 +67,10 @@ final class DiagnosticModuleRunner
         return match ($module) {
             ModuleName::ENV->value => $this->runEnv($options),
             ModuleName::CACHE->value => new ModuleResult(ModuleName::CACHE, app(CacheAnalyzer::class)->analyze(new CacheOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
+            ModuleName::HTTP->value => new ModuleResult(ModuleName::HTTP, app(HttpAnalyzer::class)->analyze(new HttpOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),

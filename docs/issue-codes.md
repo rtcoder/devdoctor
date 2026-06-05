@@ -145,6 +145,14 @@ The machine-readable v1 catalog is available at [`schemas/v1/issue-codes.json`](
 - `DD_GIT_TRACKED_SENSITIVE_FILE`
 - `DD_GIT_UNTRACKED_SENSITIVE_FILE`
 
+## HTTP
+
+- `DD_HTTP_INSECURE_PRODUCTION_URL`
+- `DD_HTTP_LOCALHOST_PRODUCTION_URL`
+- `DD_HTTP_READY`
+- `DD_HTTP_URL_INVALID`
+- `DD_HTTP_URL_MISSING`
+
 ## Ports
 
 - `DD_PORTS_READY`

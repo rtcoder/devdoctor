@@ -46,6 +46,16 @@ it('runs cache diagnostics with json output', function () {
         ->expectsOutputToContain('DD_CACHE_READY');
 });
 
+it('runs http diagnostics with json output', function () {
+    $path = sys_get_temp_dir().'/devdoctor-http-command-'.bin2hex(random_bytes(4));
+    mkdir($path);
+    file_put_contents($path.'/.env', "APP_ENV=local\nAPP_URL=http://localhost:8000\n");
+
+    $this->artisan('http', ['--path' => $path, '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('DD_HTTP_READY');
+});
+
 it('runs database diagnostics with json output', function () {
     $path = sys_get_temp_dir().'/devdoctor-db-command-'.bin2hex(random_bytes(4));
     mkdir($path);
@@ -105,7 +115,7 @@ it('runs health diagnostics with json output', function () {
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect($exitCode)->toBe(0)
-        ->and(array_column($output['modules'], 'name'))->toBe(['presets', 'env', 'cache', 'php', 'node', 'laravel', 'composer', 'db', 'queue', 'git', 'docker', 'security']);
+        ->and(array_column($output['modules'], 'name'))->toBe(['presets', 'env', 'cache', 'http', 'php', 'node', 'laravel', 'composer', 'db', 'queue', 'git', 'docker', 'security']);
 });
 
 it('supports health module selection ports opt in and unknown modules', function () {
