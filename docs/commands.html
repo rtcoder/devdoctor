@@ -21,6 +21,7 @@
         <tr><td><code>php</code></td><td>Check PHP runtime, composer platform requirements, memory, php.ini, and Xdebug in CI.</td><td><code>php devdoctor php --ci</code></td></tr>
         <tr><td><code>node</code></td><td>Check Node.js project and package manager health.</td><td><code>php devdoctor node</code></td></tr>
         <tr><td><code>laravel</code></td><td>Check Laravel .env, APP_KEY, debug mode, APP_URL, runtime directories, and config cache.</td><td><code>php devdoctor laravel</code></td></tr>
+        <tr><td><code>security</code></td><td>Check env examples, hard-coded secrets, risky scripts, and risky Compose settings.</td><td><code>php devdoctor security</code></td></tr>
         <tr><td><code>composer</code></td><td>Check Composer project health without install/update.</td><td><code>php devdoctor composer</code></td></tr>
         <tr><td><code>git</code></td><td>Check repository hygiene and sensitive files.</td><td><code>php devdoctor git --require-clean</code></td></tr>
         <tr><td><code>docker</code></td><td>Check Compose files, daemon state, ports, and containers.</td><td><code>php devdoctor docker --compose-file=docker-compose.yml</code></td></tr>

@@ -32,6 +32,8 @@ use DevDoctor\Modules\Php\PhpOptions;
 use DevDoctor\Modules\Ports\PortsAnalyzer;
 use DevDoctor\Modules\Ports\PortsOptions;
 use DevDoctor\Modules\Presets\PresetsAnalyzer;
+use DevDoctor\Modules\Security\SecurityAnalyzer;
+use DevDoctor\Modules\Security\SecurityOptions;
 use LaravelZero\Framework\Commands\Command;
 
 final class CiCommand extends Command
@@ -121,7 +123,7 @@ final class CiCommand extends Command
      */
     private function knownModules(): array
     {
-        return ['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'ports', 'presets'];
+        return ['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'ports', 'presets', 'security'];
     }
 
     /**
@@ -177,6 +179,10 @@ final class CiCommand extends Command
                 strict: (bool) $this->option('strict'),
             ))),
             'presets' => new ModuleResult('presets', app(PresetsAnalyzer::class)->analyze($path)),
+            'security' => new ModuleResult('security', app(SecurityAnalyzer::class)->analyze(new SecurityOptions(
+                path: $path,
+                strict: (bool) $this->option('strict'),
+            ))),
         };
     }
 

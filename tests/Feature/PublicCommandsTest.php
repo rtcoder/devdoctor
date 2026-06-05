@@ -55,6 +55,16 @@ it('runs laravel diagnostics with json output', function () {
         ->expectsOutputToContain('DD_LARAVEL_NOT_PROJECT');
 });
 
+it('runs security diagnostics with json output', function () {
+    $path = sys_get_temp_dir().'/devdoctor-security-command-'.bin2hex(random_bytes(4));
+    mkdir($path);
+    file_put_contents($path.'/.gitignore', ".env\n");
+
+    $this->artisan('security', ['--path' => $path, '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('DD_SECURITY_READY');
+});
+
 it('runs git diagnostics with json output', function () {
     $path = sys_get_temp_dir().'/devdoctor-git-command-'.bin2hex(random_bytes(4));
     mkdir($path);
@@ -151,6 +161,10 @@ it('supports ci module selection exclude and unknown module handling', function 
     $this->artisan('ci', ['--path' => $path, '--modules' => 'presets', '--format' => 'json'])
         ->assertExitCode(0)
         ->expectsOutputToContain('"name": "presets"');
+
+    $this->artisan('ci', ['--path' => $path, '--modules' => 'security', '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('"name": "security"');
 });
 
 it('supports ci fail on warnings controls', function () {
