@@ -44,6 +44,10 @@ final readonly class EcosystemModuleSelector
             $modules[] = ModuleName::JAVA->value;
         }
 
+        if ($this->hasAny($presets, [ProjectPreset::DOTNET])) {
+            $modules[] = ModuleName::DOTNET->value;
+        }
+
         return array_values(array_unique($modules));
     }
 

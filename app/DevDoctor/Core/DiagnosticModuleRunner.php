@@ -14,6 +14,8 @@ use DevDoctor\Modules\Database\DatabaseAnalyzer;
 use DevDoctor\Modules\Database\DatabaseOptions;
 use DevDoctor\Modules\Docker\DockerAnalyzer;
 use DevDoctor\Modules\Docker\DockerOptions;
+use DevDoctor\Modules\Dotnet\DotnetAnalyzer;
+use DevDoctor\Modules\Dotnet\DotnetOptions;
 use DevDoctor\Modules\Env\EnvAnalysisOptions;
 use DevDoctor\Modules\Env\EnvAnalyzer;
 use DevDoctor\Modules\Frontend\FrontendAnalyzer;
@@ -62,6 +64,7 @@ final class DiagnosticModuleRunner
             ModuleName::GO,
             ModuleName::RUST,
             ModuleName::JAVA,
+            ModuleName::DOTNET,
             ModuleName::LARAVEL,
             ModuleName::COMPOSER,
             ModuleName::DATABASE,
@@ -115,6 +118,10 @@ final class DiagnosticModuleRunner
                 strict: $options->strict,
             ))),
             ModuleName::JAVA->value => new ModuleResult(ModuleName::JAVA, app(JavaAnalyzer::class)->analyze(new JavaOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
+            ModuleName::DOTNET->value => new ModuleResult(ModuleName::DOTNET, app(DotnetAnalyzer::class)->analyze(new DotnetOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),

@@ -106,6 +106,13 @@ enum IssueCode: string
     case DD_JAVA_SPRING_PROD_DEBUG = 'DD_JAVA_SPRING_PROD_DEBUG';
     case DD_JAVA_VERSION_MISMATCH = 'DD_JAVA_VERSION_MISMATCH';
     case DD_JAVA_WRAPPER_MISSING = 'DD_JAVA_WRAPPER_MISSING';
+    case DD_DOTNET_LOCK_MISSING = 'DD_DOTNET_LOCK_MISSING';
+    case DD_DOTNET_MIXED_SOLUTION_STATE = 'DD_DOTNET_MIXED_SOLUTION_STATE';
+    case DD_DOTNET_NOT_PROJECT = 'DD_DOTNET_NOT_PROJECT';
+    case DD_DOTNET_READY = 'DD_DOTNET_READY';
+    case DD_DOTNET_RISKY_NUGET_SOURCE = 'DD_DOTNET_RISKY_NUGET_SOURCE';
+    case DD_DOTNET_SDK_NOT_PINNED = 'DD_DOTNET_SDK_NOT_PINNED';
+    case DD_DOTNET_TARGET_FRAMEWORK_MISMATCH = 'DD_DOTNET_TARGET_FRAMEWORK_MISMATCH';
     case DD_SECURITY_DOCKER_PRIVILEGED = 'DD_SECURITY_DOCKER_PRIVILEGED';
     case DD_SECURITY_DOCKER_SOCKET_MOUNT = 'DD_SECURITY_DOCKER_SOCKET_MOUNT';
     case DD_SECURITY_ENV_NOT_IGNORED = 'DD_SECURITY_ENV_NOT_IGNORED';
@@ -266,6 +273,11 @@ enum IssueCode: string
             self::DD_JAVA_SPRING_PROD_DEBUG => 'Disable debug logging for production Spring profiles.',
             self::DD_JAVA_VERSION_MISMATCH => 'Align Java version declarations across Maven, Gradle, and toolchain configuration.',
             self::DD_JAVA_WRAPPER_MISSING => 'Commit the Maven or Gradle wrapper so builds use a predictable tool version.',
+            self::DD_DOTNET_LOCK_MISSING => 'Generate and commit packages.lock.json intentionally when restore lock mode is enabled.',
+            self::DD_DOTNET_MIXED_SOLUTION_STATE => 'Keep one canonical solution file or document why multiple solutions are maintained.',
+            self::DD_DOTNET_RISKY_NUGET_SOURCE => 'Use HTTPS package sources or document the trusted internal feed explicitly.',
+            self::DD_DOTNET_SDK_NOT_PINNED => 'Add global.json when the repository expects a specific .NET SDK version.',
+            self::DD_DOTNET_TARGET_FRAMEWORK_MISMATCH => 'Review target frameworks and align them unless the split is intentional.',
             self::DD_SECURITY_DOCKER_PRIVILEGED => 'Avoid privileged containers unless the service explicitly requires host-level access.',
             self::DD_SECURITY_DOCKER_SOCKET_MOUNT => 'Avoid mounting the Docker socket into containers unless this is an intentional trusted control plane.',
             self::DD_SECURITY_ENV_NOT_IGNORED => 'Add .env patterns to .gitignore to reduce accidental secret commits.',
