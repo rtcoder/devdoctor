@@ -7,6 +7,7 @@ namespace DevDoctor\Modules\Docker;
 use DevDoctor\Core\CommandAvailability;
 use DevDoctor\Core\CommandAvailabilityInterface;
 use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\Severity;
@@ -40,7 +41,7 @@ final readonly class DockerAnalyzer
 
         if ($composeFiles === []) {
             $issues->add(new Issue(
-                code: 'DD_DOCKER_NO_COMPOSE_PROJECT',
+                code: IssueCode::DD_DOCKER_NO_COMPOSE_PROJECT,
                 severity: Severity::INFO,
                 message: 'No Docker Compose file detected.',
                 module: 'docker',
@@ -70,7 +71,7 @@ final readonly class DockerAnalyzer
 
         if ($issues->isEmpty()) {
             $issues->add(new Issue(
-                code: 'DD_DOCKER_READY',
+                code: IssueCode::DD_DOCKER_READY,
                 severity: Severity::INFO,
                 message: 'Docker diagnostics found no issues.',
                 module: 'docker',
@@ -106,7 +107,7 @@ final readonly class DockerAnalyzer
     {
         if (! $this->commands->available('docker')) {
             $issues->add(new Issue(
-                code: 'DD_DOCKER_BINARY_MISSING',
+                code: IssueCode::DD_DOCKER_BINARY_MISSING,
                 severity: Severity::WARNING,
                 message: 'Docker binary was not found.',
                 module: 'docker',
@@ -126,7 +127,7 @@ final readonly class DockerAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_DOCKER_DAEMON_UNAVAILABLE',
+            code: IssueCode::DD_DOCKER_DAEMON_UNAVAILABLE,
             severity: Severity::WARNING,
             message: 'Docker daemon is unavailable.',
             module: 'docker',
@@ -142,7 +143,7 @@ final readonly class DockerAnalyzer
     {
         if (! is_file($composeFile)) {
             $issues->add(new Issue(
-                code: 'DD_DOCKER_COMPOSE_FILE_MISSING',
+                code: IssueCode::DD_DOCKER_COMPOSE_FILE_MISSING,
                 severity: Severity::ERROR,
                 message: 'Compose file does not exist.',
                 module: 'docker',
@@ -156,7 +157,7 @@ final readonly class DockerAnalyzer
             $data = Yaml::parseFile($composeFile) ?? [];
         } catch (ParseException $exception) {
             $issues->add(new Issue(
-                code: 'DD_DOCKER_COMPOSE_INVALID',
+                code: IssueCode::DD_DOCKER_COMPOSE_INVALID,
                 severity: Severity::ERROR,
                 message: $exception->getMessage(),
                 module: 'docker',
@@ -168,7 +169,7 @@ final readonly class DockerAnalyzer
 
         if (! is_array($data)) {
             $issues->add(new Issue(
-                code: 'DD_DOCKER_COMPOSE_INVALID',
+                code: IssueCode::DD_DOCKER_COMPOSE_INVALID,
                 severity: Severity::ERROR,
                 message: 'Compose file must contain a YAML mapping.',
                 module: 'docker',
@@ -190,7 +191,7 @@ final readonly class DockerAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_DOCKER_COMPOSE_CONFIG_INVALID',
+            code: IssueCode::DD_DOCKER_COMPOSE_CONFIG_INVALID,
             severity: Severity::ERROR,
             message: trim($result->stderr) !== '' ? trim($result->stderr) : 'docker compose config failed.',
             module: 'docker',
@@ -208,7 +209,7 @@ final readonly class DockerAnalyzer
             }
 
             $issues->add(new Issue(
-                code: 'DD_DOCKER_ENV_REFERENCE_MISSING',
+                code: IssueCode::DD_DOCKER_ENV_REFERENCE_MISSING,
                 severity: Severity::WARNING,
                 message: 'Compose references missing environment variable '.$name,
                 module: 'docker',
@@ -232,7 +233,7 @@ final readonly class DockerAnalyzer
         foreach ($ports as $port) {
             foreach ($this->ports->usages($port) as $usage) {
                 $issues->add(new Issue(
-                    code: 'DD_DOCKER_HOST_PORT_CONFLICT',
+                    code: IssueCode::DD_DOCKER_HOST_PORT_CONFLICT,
                     severity: Severity::WARNING,
                     message: 'Compose host port '.$port.' is already in use.',
                     module: 'docker',
@@ -264,7 +265,7 @@ final readonly class DockerAnalyzer
             }
 
             $issues->add(new Issue(
-                code: 'DD_DOCKER_CONTAINER_UNHEALTHY',
+                code: IssueCode::DD_DOCKER_CONTAINER_UNHEALTHY,
                 severity: Severity::WARNING,
                 message: 'Compose container is unhealthy or restarting.',
                 module: 'docker',

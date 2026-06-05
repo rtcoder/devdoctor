@@ -3,6 +3,7 @@
 use DevDoctor\Core\ExitCode;
 use DevDoctor\Core\FixSuggestion;
 use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
 use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ModuleResult;
@@ -17,9 +18,9 @@ use DevDoctor\Core\Severity;
 
 it('summarizes issues and maps exit codes', function () {
     $issues = new IssueCollection([
-        new Issue('DD_ENV_MISSING_IN_ENV', Severity::WARNING, 'warning'),
-        new Issue('DD_ENV_FILE_MISSING', Severity::ERROR, 'error'),
-        new Issue('DD_ENV_READY', Severity::INFO, 'info'),
+        new Issue(IssueCode::DD_ENV_MISSING_IN_ENV, Severity::WARNING, 'warning'),
+        new Issue(IssueCode::DD_ENV_FILE_MISSING, Severity::ERROR, 'error'),
+        new Issue(IssueCode::DD_ENV_READY, Severity::INFO, 'info'),
     ]);
 
     expect($issues->summary())->toBe([
@@ -32,7 +33,7 @@ it('summarizes issues and maps exit codes', function () {
 
 it('excludes suppressed issues from status and exit code summaries', function () {
     $issues = new IssueCollection([
-        new Issue('DD_ENV_MISSING_IN_ENV', Severity::WARNING, 'warning')->withSuppressed(),
+        new Issue(IssueCode::DD_ENV_MISSING_IN_ENV, Severity::WARNING, 'warning')->withSuppressed(),
     ]);
 
     expect($issues->summary())->toBe([
@@ -46,10 +47,10 @@ it('excludes suppressed issues from status and exit code summaries', function ()
 it('renders valid json output', function () {
     $result = new ModuleResult(ModuleName::ENV, new IssueCollection([
         new Issue(
-            'DD_ENV_MISSING_IN_ENV',
+            IssueCode::DD_ENV_MISSING_IN_ENV,
             Severity::WARNING,
             'missing',
-            'env',
+            ModuleName::ENV,
             hint: 'Add it.',
             fix: new FixSuggestion('Add the key.', 'printf token=secret-value'),
         ),
@@ -61,7 +62,7 @@ it('renders valid json output', function () {
     expect(json_last_error())->toBe(JSON_ERROR_NONE)
         ->and($decoded['tool'])->toBe('devdoctor')
         ->and($decoded['schema_version'])->toBe('1.0')
-        ->and($decoded['modules'][0]['name'])->toBe('env')
+        ->and($decoded['modules'][0]['name'])->toBe(ModuleName::ENV->value)
         ->and($decoded['modules'][0]['issues'][0]['hint'])->toBe('Add it.')
         ->and($decoded['modules'][0]['issues'][0]['fix']['command'])->not->toContain('secret-value');
 });
@@ -69,10 +70,10 @@ it('renders valid json output', function () {
 it('renders table output', function () {
     $result = new ModuleResult(ModuleName::ENV, new IssueCollection([
         new Issue(
-            'DD_ENV_MISSING_IN_ENV',
+            IssueCode::DD_ENV_MISSING_IN_ENV,
             Severity::WARNING,
             'missing',
-            'env',
+            ModuleName::ENV,
             hint: 'Add the missing key.',
             fix: new FixSuggestion('Add the key.', 'edit .env'),
         ),
@@ -82,9 +83,9 @@ it('renders table output', function () {
 
     expect($table)
         ->toContain('DevDoctor')
-        ->toContain('env')
+        ->toContain(ModuleName::ENV->value)
         ->toContain('warning')
-        ->toContain('DD_ENV_MISSING_IN_ENV')
+        ->toContain(IssueCode::DD_ENV_MISSING_IN_ENV->value)
         ->toContain('Hint: Add the missing key.')
         ->toContain('Suggested command: edit .env');
 });
@@ -92,10 +93,10 @@ it('renders table output', function () {
 it('renders deterministic sarif output with locations and fingerprints', function () {
     $result = new ModuleResult(ModuleName::ENV, new IssueCollection([
         new Issue(
-            'DD_ENV_MISSING_IN_ENV',
+            IssueCode::DD_ENV_MISSING_IN_ENV,
             Severity::WARNING,
             'missing',
-            'env',
+            ModuleName::ENV,
             '.env.example',
             3,
             'APP_KEY',
@@ -106,7 +107,7 @@ it('renders deterministic sarif output with locations and fingerprints', functio
     $finding = $sarif['runs'][0]['results'][0];
 
     expect($sarif['version'])->toBe('2.1.0')
-        ->and($finding['ruleId'])->toBe('DD_ENV_MISSING_IN_ENV')
+        ->and($finding['ruleId'])->toBe(IssueCode::DD_ENV_MISSING_IN_ENV->value)
         ->and($finding['level'])->toBe('warning')
         ->and($finding['locations'][0]['physicalLocation']['artifactLocation']['uri'])->toBe('.env.example')
         ->and($finding['locations'][0]['physicalLocation']['region']['startLine'])->toBe(3)
@@ -115,10 +116,10 @@ it('renders deterministic sarif output with locations and fingerprints', functio
 
 it('provides catalog suggestions for actionable issues', function () {
     $issue = new Issue(
-        'DD_PORT_IN_USE',
+        IssueCode::DD_PORT_IN_USE,
         Severity::WARNING,
         'occupied',
-        'ports',
+        ModuleName::PORTS,
         context: ['suggested_command' => 'kill -TERM 123'],
     );
 

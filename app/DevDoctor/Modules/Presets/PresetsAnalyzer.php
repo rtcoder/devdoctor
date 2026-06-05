@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DevDoctor\Modules\Presets;
 
 use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
 use DevDoctor\Core\Severity;
 
@@ -21,7 +22,7 @@ final readonly class PresetsAnalyzer
 
         if ($matches === []) {
             $issues->add(new Issue(
-                code: 'DD_PRESET_NONE_DETECTED',
+                code: IssueCode::DD_PRESET_NONE_DETECTED,
                 severity: Severity::INFO,
                 message: 'No supported project presets detected.',
                 module: 'presets',
@@ -32,7 +33,7 @@ final readonly class PresetsAnalyzer
 
         foreach ($matches as $match) {
             $issues->add(new Issue(
-                code: 'DD_PRESET_DETECTED',
+                code: IssueCode::DD_PRESET_DETECTED,
                 severity: Severity::INFO,
                 message: $match->preset->label().' project preset detected.',
                 module: 'presets',

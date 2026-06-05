@@ -99,7 +99,7 @@ final class DiagnosticModuleRunner
                 'results' => [
                     new ModuleResult(ModuleName::ENV, new IssueCollection([
                         new Issue(
-                            code: 'DD_ENV_INVALID_CONFIG',
+                            code: IssueCode::DD_ENV_INVALID_CONFIG,
                             severity: Severity::ERROR,
                             message: $exception->getMessage(),
                             module: 'env',

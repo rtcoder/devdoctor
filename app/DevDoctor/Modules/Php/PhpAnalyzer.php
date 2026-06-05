@@ -7,6 +7,7 @@ namespace DevDoctor\Modules\Php;
 use DevDoctor\Core\CommandAvailability;
 use DevDoctor\Core\CommandAvailabilityInterface;
 use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\Severity;
@@ -26,7 +27,7 @@ final readonly class PhpAnalyzer
 
         if (! $this->commands->available('php')) {
             $issues->add(new Issue(
-                code: 'DD_PHP_BINARY_MISSING',
+                code: IssueCode::DD_PHP_BINARY_MISSING,
                 severity: Severity::ERROR,
                 message: 'PHP binary was not found in PATH',
                 module: 'php',
@@ -37,7 +38,7 @@ final readonly class PhpAnalyzer
 
         if ($composer['invalid']) {
             $issues->add(new Issue(
-                code: 'DD_PHP_COMPOSER_JSON_INVALID',
+                code: IssueCode::DD_PHP_COMPOSER_JSON_INVALID,
                 severity: Severity::ERROR,
                 message: 'composer.json could not be parsed for PHP diagnostics',
                 module: 'php',
@@ -53,7 +54,7 @@ final readonly class PhpAnalyzer
 
         if ($issues->isEmpty()) {
             $issues->add(new Issue(
-                code: 'DD_PHP_READY',
+                code: IssueCode::DD_PHP_READY,
                 severity: Severity::INFO,
                 message: 'PHP diagnostics found no actionable issues.',
                 module: 'php',
@@ -99,7 +100,7 @@ final readonly class PhpAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_PHP_VERSION_MISMATCH',
+            code: IssueCode::DD_PHP_VERSION_MISMATCH,
             severity: Severity::ERROR,
             message: 'Current PHP '.$this->runtime->version().' does not satisfy composer requirement '.$constraint,
             module: 'php',
@@ -127,7 +128,7 @@ final readonly class PhpAnalyzer
             }
 
             $issues->add(new Issue(
-                code: 'DD_PHP_EXTENSION_MISSING',
+                code: IssueCode::DD_PHP_EXTENSION_MISSING,
                 severity: Severity::ERROR,
                 message: 'Required PHP extension '.$package.' is not loaded',
                 module: 'php',
@@ -153,7 +154,7 @@ final readonly class PhpAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_PHP_MEMORY_LIMIT_LOW',
+            code: IssueCode::DD_PHP_MEMORY_LIMIT_LOW,
             severity: $options->strict ? Severity::ERROR : Severity::WARNING,
             message: 'PHP memory_limit '.$value.' is below '.$options->minimumMemoryMb.'M',
             module: 'php',
@@ -169,7 +170,7 @@ final readonly class PhpAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_PHP_INI_MISSING',
+            code: IssueCode::DD_PHP_INI_MISSING,
             severity: Severity::INFO,
             message: 'No php.ini file is loaded by the current PHP runtime',
             module: 'php',
@@ -183,7 +184,7 @@ final readonly class PhpAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_PHP_XDEBUG_ENABLED_IN_CI',
+            code: IssueCode::DD_PHP_XDEBUG_ENABLED_IN_CI,
             severity: Severity::WARNING,
             message: 'Xdebug is enabled while running in CI mode',
             module: 'php',

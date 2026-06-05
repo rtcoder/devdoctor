@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DevDoctor\Modules\Ports;
 
 use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
 use DevDoctor\Core\Platform;
 use DevDoctor\Core\Severity;
@@ -28,7 +29,7 @@ final readonly class PortsAnalyzer
 
         if (! $this->provider->available()) {
             $issues->add(new Issue(
-                code: 'DD_PORT_PROVIDER_UNAVAILABLE',
+                code: IssueCode::DD_PORT_PROVIDER_UNAVAILABLE,
                 severity: Severity::WARNING,
                 message: 'No supported port provider is available',
                 module: 'ports',
@@ -40,7 +41,7 @@ final readonly class PortsAnalyzer
         foreach ($ports as $port) {
             if ($port < 1024) {
                 $issues->add(new Issue(
-                    code: 'DD_PORT_PRIVILEGED',
+                    code: IssueCode::DD_PORT_PRIVILEGED,
                     severity: Severity::INFO,
                     message: 'Port '.$port.' may require elevated permissions to bind',
                     module: 'ports',
@@ -52,7 +53,7 @@ final readonly class PortsAnalyzer
 
             if (count($usages) > 1) {
                 $issues->add(new Issue(
-                    code: 'DD_PORT_MULTIPLE_LISTENERS',
+                    code: IssueCode::DD_PORT_MULTIPLE_LISTENERS,
                     severity: $options->strict ? Severity::ERROR : Severity::WARNING,
                     message: 'Port '.$port.' has multiple listeners',
                     module: 'ports',
@@ -73,7 +74,7 @@ final readonly class PortsAnalyzer
                 }
 
                 $issues->add(new Issue(
-                    code: 'DD_PORT_IN_USE',
+                    code: IssueCode::DD_PORT_IN_USE,
                     severity: $options->strict ? Severity::ERROR : Severity::WARNING,
                     message: 'Port '.$port.' is used by '.$usage->process->command.' (PID '.$usage->process->pid.')',
                     module: 'ports',
@@ -84,7 +85,7 @@ final readonly class PortsAnalyzer
 
         if ($issues->isEmpty()) {
             $issues->add(new Issue(
-                code: 'DD_PORTS_READY',
+                code: IssueCode::DD_PORTS_READY,
                 severity: Severity::INFO,
                 message: 'No checked ports are currently in use.',
                 module: 'ports',
@@ -105,7 +106,7 @@ final readonly class PortsAnalyzer
         foreach ($ports as $port) {
             if (! is_numeric($port) || (string) (int) $port !== (string) $port || (int) $port < 1 || (int) $port > 65535) {
                 $issues->add(new Issue(
-                    code: 'DD_PORT_INVALID_PORT',
+                    code: IssueCode::DD_PORT_INVALID_PORT,
                     severity: Severity::WARNING,
                     message: 'Port '.$port.' is not a valid TCP port',
                     module: 'ports',

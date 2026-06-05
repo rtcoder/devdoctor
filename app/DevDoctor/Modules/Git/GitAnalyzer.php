@@ -7,6 +7,7 @@ namespace DevDoctor\Modules\Git;
 use DevDoctor\Core\CommandAvailability;
 use DevDoctor\Core\CommandAvailabilityInterface;
 use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\Severity;
@@ -25,7 +26,7 @@ final readonly class GitAnalyzer
 
         if (! $this->commands->available('git')) {
             $issues->add(new Issue(
-                code: 'DD_GIT_BINARY_MISSING',
+                code: IssueCode::DD_GIT_BINARY_MISSING,
                 severity: Severity::WARNING,
                 message: 'Git binary was not found.',
                 module: 'git',
@@ -36,7 +37,7 @@ final readonly class GitAnalyzer
 
         if (! $this->isRepository($options->path)) {
             $issues->add(new Issue(
-                code: 'DD_GIT_NOT_REPOSITORY',
+                code: IssueCode::DD_GIT_NOT_REPOSITORY,
                 severity: Severity::INFO,
                 message: 'Path is not inside a Git repository',
                 module: 'git',
@@ -60,7 +61,7 @@ final readonly class GitAnalyzer
 
         if ($issues->isEmpty()) {
             $issues->add(new Issue(
-                code: 'DD_GIT_READY',
+                code: IssueCode::DD_GIT_READY,
                 severity: Severity::INFO,
                 message: 'Git diagnostics found no issues.',
                 module: 'git',
@@ -86,7 +87,7 @@ final readonly class GitAnalyzer
 
         if ($this->hasConflicts($status)) {
             $issues->add(new Issue(
-                code: 'DD_GIT_CONFLICTS',
+                code: IssueCode::DD_GIT_CONFLICTS,
                 severity: Severity::ERROR,
                 message: 'Repository has unresolved merge conflicts',
                 module: 'git',
@@ -94,7 +95,7 @@ final readonly class GitAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_GIT_DIRTY_WORKTREE',
+            code: IssueCode::DD_GIT_DIRTY_WORKTREE,
             severity: $options->requireClean || $options->strict ? Severity::ERROR : Severity::WARNING,
             message: 'Repository has uncommitted changes',
             module: 'git',
@@ -111,7 +112,7 @@ final readonly class GitAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_GIT_DETACHED_HEAD',
+            code: IssueCode::DD_GIT_DETACHED_HEAD,
             severity: Severity::WARNING,
             message: 'Repository is currently on a detached HEAD',
             module: 'git',
@@ -124,7 +125,7 @@ final readonly class GitAnalyzer
 
         if (! $upstream->successful() || trim($upstream->stdout) === '') {
             $issues->add(new Issue(
-                code: 'DD_GIT_NO_UPSTREAM',
+                code: IssueCode::DD_GIT_NO_UPSTREAM,
                 severity: $options->requireUpstream || $options->strict ? Severity::ERROR : Severity::WARNING,
                 message: 'Current branch has no upstream configured',
                 module: 'git',
@@ -148,7 +149,7 @@ final readonly class GitAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_GIT_AHEAD_BEHIND',
+            code: IssueCode::DD_GIT_AHEAD_BEHIND,
             severity: Severity::WARNING,
             message: 'Current branch differs from upstream',
             module: 'git',
@@ -163,7 +164,7 @@ final readonly class GitAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_GIT_ENV_NOT_IGNORED',
+            code: IssueCode::DD_GIT_ENV_NOT_IGNORED,
             severity: Severity::WARNING,
             message: '.env is not ignored by Git',
             module: 'git',
@@ -179,7 +180,7 @@ final readonly class GitAnalyzer
             }
 
             $issues->add(new Issue(
-                code: 'DD_GIT_TRACKED_SENSITIVE_FILE',
+                code: IssueCode::DD_GIT_TRACKED_SENSITIVE_FILE,
                 severity: Severity::ERROR,
                 message: 'Sensitive file is tracked by Git',
                 module: 'git',
@@ -193,7 +194,7 @@ final readonly class GitAnalyzer
             }
 
             $issues->add(new Issue(
-                code: 'DD_GIT_UNTRACKED_SENSITIVE_FILE',
+                code: IssueCode::DD_GIT_UNTRACKED_SENSITIVE_FILE,
                 severity: Severity::WARNING,
                 message: 'Sensitive file is present but untracked',
                 module: 'git',
@@ -214,7 +215,7 @@ final readonly class GitAnalyzer
             }
 
             $issues->add(new Issue(
-                code: 'DD_GIT_LARGE_UNTRACKED_FILE',
+                code: IssueCode::DD_GIT_LARGE_UNTRACKED_FILE,
                 severity: Severity::WARNING,
                 message: 'Large untracked file detected',
                 module: 'git',

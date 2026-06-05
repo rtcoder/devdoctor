@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DevDoctor\Modules\Node;
 
 use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\Severity;
@@ -32,7 +33,7 @@ final readonly class NodeAnalyzer
 
         if (! $this->isNodeProject($paths)) {
             $issues->add(new Issue(
-                code: 'DD_NODE_NOT_PROJECT',
+                code: IssueCode::DD_NODE_NOT_PROJECT,
                 severity: Severity::INFO,
                 message: 'No Node.js project detected',
                 module: 'node',
@@ -45,7 +46,7 @@ final readonly class NodeAnalyzer
 
         if ($package['invalid']) {
             $issues->add(new Issue(
-                code: 'DD_NODE_PACKAGE_JSON_INVALID',
+                code: IssueCode::DD_NODE_PACKAGE_JSON_INVALID,
                 severity: Severity::ERROR,
                 message: 'package.json could not be parsed',
                 module: 'node',
@@ -61,7 +62,7 @@ final readonly class NodeAnalyzer
 
         if (! $this->runtime->available()) {
             $issues->add(new Issue(
-                code: 'DD_NODE_BINARY_MISSING',
+                code: IssueCode::DD_NODE_BINARY_MISSING,
                 severity: Severity::WARNING,
                 message: 'Node.js binary was not found in PATH',
                 module: 'node',
@@ -76,7 +77,7 @@ final readonly class NodeAnalyzer
 
         if ($issues->isEmpty()) {
             $issues->add(new Issue(
-                code: 'DD_NODE_READY',
+                code: IssueCode::DD_NODE_READY,
                 severity: Severity::INFO,
                 message: 'Node.js diagnostics found no actionable issues.',
                 module: 'node',
@@ -158,7 +159,7 @@ final readonly class NodeAnalyzer
     {
         if (count($lockfiles) > 1) {
             $issues->add(new Issue(
-                code: 'DD_NODE_MULTIPLE_LOCKFILES',
+                code: IssueCode::DD_NODE_MULTIPLE_LOCKFILES,
                 severity: Severity::WARNING,
                 message: 'Multiple Node.js lockfiles are present: '.implode(', ', array_keys($lockfiles)),
                 module: 'node',
@@ -168,7 +169,7 @@ final readonly class NodeAnalyzer
 
         if ($hasDependencies && $lockfiles === []) {
             $issues->add(new Issue(
-                code: 'DD_NODE_LOCK_MISSING',
+                code: IssueCode::DD_NODE_LOCK_MISSING,
                 severity: Severity::WARNING,
                 message: 'package.json declares dependencies but no supported lockfile was found',
                 module: 'node',
@@ -194,7 +195,7 @@ final readonly class NodeAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_NODE_PACKAGE_MANAGER_MISMATCH',
+            code: IssueCode::DD_NODE_PACKAGE_MANAGER_MISMATCH,
             severity: Severity::WARNING,
             message: 'packageManager declares '.$declared.' but lockfiles indicate '.implode(', ', array_unique(array_values($lockfiles))),
             module: 'node',
@@ -224,7 +225,7 @@ final readonly class NodeAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_NODE_MODULES_MISSING',
+            code: IssueCode::DD_NODE_MODULES_MISSING,
             severity: $options->strict ? Severity::ERROR : Severity::WARNING,
             message: 'node_modules directory is missing',
             module: 'node',
@@ -241,7 +242,7 @@ final readonly class NodeAnalyzer
 
         if (count(array_unique(array_values($requirements))) > 1) {
             $issues->add(new Issue(
-                code: 'DD_NODE_VERSION_FILE_CONFLICT',
+                code: IssueCode::DD_NODE_VERSION_FILE_CONFLICT,
                 severity: Severity::WARNING,
                 message: 'Node.js version requirements disagree across project files',
                 module: 'node',
@@ -262,7 +263,7 @@ final readonly class NodeAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_NODE_VERSION_MISMATCH',
+            code: IssueCode::DD_NODE_VERSION_MISMATCH,
             severity: Severity::ERROR,
             message: 'Current Node.js '.$version.' does not satisfy project requirement '.$constraint,
             module: 'node',
@@ -316,7 +317,7 @@ final readonly class NodeAnalyzer
             }
 
             $issues->add(new Issue(
-                code: 'DD_NODE_SCRIPT_RISKY',
+                code: IssueCode::DD_NODE_SCRIPT_RISKY,
                 severity: Severity::WARNING,
                 message: 'package.json script '.$name.' contains risky shell execution',
                 module: 'node',

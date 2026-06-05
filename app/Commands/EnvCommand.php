@@ -9,6 +9,7 @@ use DevDoctor\Core\Config\ConfigLoader;
 use DevDoctor\Core\Config\InvalidDevDoctorConfig;
 use DevDoctor\Core\ExitCode;
 use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
 use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ModuleResult;
@@ -44,7 +45,7 @@ final class EnvCommand extends Command
             return $this->renderDiagnostics([
                 new ModuleResult(ModuleName::ENV, new IssueCollection([
                     new Issue(
-                        code: 'DD_ENV_INVALID_CONFIG',
+                        code: IssueCode::DD_ENV_INVALID_CONFIG,
                         severity: Severity::ERROR,
                         message: $exception->getMessage(),
                         module: ModuleName::ENV,

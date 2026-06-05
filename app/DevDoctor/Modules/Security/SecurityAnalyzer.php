@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DevDoctor\Modules\Security;
 
 use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\Severity;
@@ -38,7 +39,7 @@ final readonly class SecurityAnalyzer
 
         if ($issues->isEmpty()) {
             $issues->add(new Issue(
-                code: 'DD_SECURITY_READY',
+                code: IssueCode::DD_SECURITY_READY,
                 severity: Severity::INFO,
                 message: 'Security diagnostics found no actionable issues.',
                 module: 'security',
@@ -63,7 +64,7 @@ final readonly class SecurityAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_SECURITY_ENV_NOT_IGNORED',
+            code: IssueCode::DD_SECURITY_ENV_NOT_IGNORED,
             severity: Severity::WARNING,
             message: '.gitignore does not explicitly ignore .env files',
             module: 'security',
@@ -86,7 +87,7 @@ final readonly class SecurityAnalyzer
                 }
 
                 $issues->add(new Issue(
-                    code: 'DD_SECURITY_SECRET_IN_EXAMPLE',
+                    code: IssueCode::DD_SECURITY_SECRET_IN_EXAMPLE,
                     severity: Severity::ERROR,
                     message: 'Likely secret value appears in '.$file,
                     module: 'security',
@@ -116,7 +117,7 @@ final readonly class SecurityAnalyzer
                 }
 
                 $issues->add(new Issue(
-                    code: 'DD_SECURITY_RISKY_COMPOSER_SCRIPT',
+                    code: IssueCode::DD_SECURITY_RISKY_COMPOSER_SCRIPT,
                     severity: Severity::WARNING,
                     message: 'Composer script '.$event.' contains risky shell execution',
                     module: 'security',
@@ -142,7 +143,7 @@ final readonly class SecurityAnalyzer
             }
 
             $issues->add(new Issue(
-                code: 'DD_SECURITY_RISKY_PACKAGE_SCRIPT',
+                code: IssueCode::DD_SECURITY_RISKY_PACKAGE_SCRIPT,
                 severity: Severity::WARNING,
                 message: 'package.json script '.$name.' contains risky shell execution',
                 module: 'security',
@@ -165,7 +166,7 @@ final readonly class SecurityAnalyzer
 
             if (preg_match('/privileged\s*:\s*true/i', $contents) === 1) {
                 $issues->add(new Issue(
-                    code: 'DD_SECURITY_DOCKER_PRIVILEGED',
+                    code: IssueCode::DD_SECURITY_DOCKER_PRIVILEGED,
                     severity: Severity::WARNING,
                     message: 'Compose file enables privileged mode',
                     module: 'security',
@@ -176,7 +177,7 @@ final readonly class SecurityAnalyzer
 
             if (str_contains($contents, '/var/run/docker.sock')) {
                 $issues->add(new Issue(
-                    code: 'DD_SECURITY_DOCKER_SOCKET_MOUNT',
+                    code: IssueCode::DD_SECURITY_DOCKER_SOCKET_MOUNT,
                     severity: Severity::WARNING,
                     message: 'Compose file mounts the Docker socket',
                     module: 'security',
@@ -212,7 +213,7 @@ final readonly class SecurityAnalyzer
 
             if ($this->containsLikelySecret($contents)) {
                 $issues->add(new Issue(
-                    code: 'DD_SECURITY_SECRET_PATTERN',
+                    code: IssueCode::DD_SECURITY_SECRET_PATTERN,
                     severity: Severity::WARNING,
                     message: 'File contains a likely hard-coded secret pattern',
                     module: 'security',

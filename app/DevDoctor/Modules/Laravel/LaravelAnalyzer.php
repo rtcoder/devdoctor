@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DevDoctor\Modules\Laravel;
 
 use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\Severity;
@@ -26,7 +27,7 @@ final readonly class LaravelAnalyzer
 
         if (! $this->isLaravelProject($paths)) {
             $issues->add(new Issue(
-                code: 'DD_LARAVEL_NOT_PROJECT',
+                code: IssueCode::DD_LARAVEL_NOT_PROJECT,
                 severity: Severity::INFO,
                 message: 'No Laravel project detected',
                 module: 'laravel',
@@ -39,7 +40,7 @@ final readonly class LaravelAnalyzer
 
         if ($env === null) {
             $issues->add(new Issue(
-                code: 'DD_LARAVEL_ENV_MISSING',
+                code: IssueCode::DD_LARAVEL_ENV_MISSING,
                 severity: Severity::WARNING,
                 message: '.env file is missing for this Laravel project',
                 module: 'laravel',
@@ -55,7 +56,7 @@ final readonly class LaravelAnalyzer
 
         if ($issues->isEmpty()) {
             $issues->add(new Issue(
-                code: 'DD_LARAVEL_READY',
+                code: IssueCode::DD_LARAVEL_READY,
                 severity: Severity::INFO,
                 message: 'Laravel diagnostics found no actionable issues.',
                 module: 'laravel',
@@ -101,7 +102,7 @@ final readonly class LaravelAnalyzer
 
         if ($appKey === null || trim($appKey->value) === '') {
             $issues->add(new Issue(
-                code: 'DD_LARAVEL_APP_KEY_MISSING',
+                code: IssueCode::DD_LARAVEL_APP_KEY_MISSING,
                 severity: Severity::ERROR,
                 message: 'APP_KEY is missing or empty',
                 module: 'laravel',
@@ -115,7 +116,7 @@ final readonly class LaravelAnalyzer
 
         if ($appEnv === 'production' && in_array($appDebug, ['true', '1', 'yes', 'on'], true)) {
             $issues->add(new Issue(
-                code: 'DD_LARAVEL_PROD_DEBUG',
+                code: IssueCode::DD_LARAVEL_PROD_DEBUG,
                 severity: Severity::ERROR,
                 message: 'APP_DEBUG is enabled while APP_ENV is production',
                 module: 'laravel',
@@ -128,7 +129,7 @@ final readonly class LaravelAnalyzer
 
         if ($appUrl === '' || in_array($appUrl, ['http://localhost', 'https://localhost'], true)) {
             $issues->add(new Issue(
-                code: 'DD_LARAVEL_APP_URL_DEFAULT',
+                code: IssueCode::DD_LARAVEL_APP_URL_DEFAULT,
                 severity: Severity::WARNING,
                 message: 'APP_URL is missing or still uses the default localhost value',
                 module: 'laravel',
@@ -149,7 +150,7 @@ final readonly class LaravelAnalyzer
 
         if (! is_dir($absolute)) {
             $issues->add(new Issue(
-                code: 'DD_LARAVEL_DIRECTORY_MISSING',
+                code: IssueCode::DD_LARAVEL_DIRECTORY_MISSING,
                 severity: $options->strict ? Severity::ERROR : Severity::WARNING,
                 message: $directory.' directory is missing',
                 module: 'laravel',
@@ -164,7 +165,7 @@ final readonly class LaravelAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_LARAVEL_DIRECTORY_NOT_WRITABLE',
+            code: IssueCode::DD_LARAVEL_DIRECTORY_NOT_WRITABLE,
             severity: $options->strict ? Severity::ERROR : Severity::WARNING,
             message: $directory.' directory is not writable by the current user',
             module: 'laravel',
@@ -179,7 +180,7 @@ final readonly class LaravelAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_LARAVEL_CONFIG_CACHED',
+            code: IssueCode::DD_LARAVEL_CONFIG_CACHED,
             severity: Severity::INFO,
             message: 'Laravel config cache file exists; remember to rebuild it after environment changes',
             module: 'laravel',

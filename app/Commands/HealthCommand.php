@@ -9,6 +9,7 @@ use DevDoctor\Core\DiagnosticModuleRunner;
 use DevDoctor\Core\DiagnosticRunOptions;
 use DevDoctor\Core\ExitCode;
 use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
 use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ModuleResult;
@@ -40,7 +41,7 @@ final class HealthCommand extends Command
             return $this->renderDiagnostics([
                 new ModuleResult(ModuleName::HEALTH, new IssueCollection([
                     new Issue(
-                        code: 'DD_HEALTH_UNKNOWN_MODULE',
+                        code: IssueCode::DD_HEALTH_UNKNOWN_MODULE,
                         severity: Severity::ERROR,
                         message: 'Unknown health module: '.implode(', ', $unknown),
                         module: ModuleName::HEALTH,

@@ -7,7 +7,9 @@ namespace DevDoctor\Modules\Composer;
 use DevDoctor\Core\CommandAvailability;
 use DevDoctor\Core\CommandAvailabilityInterface;
 use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
+use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\ProcessRunner;
 use DevDoctor\Core\Severity;
@@ -28,10 +30,10 @@ final readonly class ComposerAnalyzer
 
         if (! is_file($composerJson)) {
             $issues->add(new Issue(
-                code: 'DD_COMPOSER_NOT_PROJECT',
+                code: IssueCode::DD_COMPOSER_NOT_PROJECT,
                 severity: Severity::INFO,
                 message: 'No composer.json detected',
-                module: 'composer',
+                module: ModuleName::COMPOSER,
             ));
 
             return $issues;
@@ -41,10 +43,10 @@ final readonly class ComposerAnalyzer
             $data = json_decode((string) file_get_contents($composerJson), true, flags: JSON_THROW_ON_ERROR);
         } catch (JsonException $exception) {
             $issues->add(new Issue(
-                code: 'DD_COMPOSER_JSON_INVALID',
+                code: IssueCode::DD_COMPOSER_JSON_INVALID,
                 severity: Severity::ERROR,
                 message: $exception->getMessage(),
-                module: 'composer',
+                module: ModuleName::COMPOSER,
                 file: 'composer.json',
             ));
 
@@ -53,10 +55,10 @@ final readonly class ComposerAnalyzer
 
         if (! is_array($data)) {
             $issues->add(new Issue(
-                code: 'DD_COMPOSER_JSON_INVALID',
+                code: IssueCode::DD_COMPOSER_JSON_INVALID,
                 severity: Severity::ERROR,
                 message: 'composer.json must contain a JSON object',
-                module: 'composer',
+                module: ModuleName::COMPOSER,
                 file: 'composer.json',
             ));
 
@@ -81,10 +83,10 @@ final readonly class ComposerAnalyzer
 
         if ($issues->isEmpty()) {
             $issues->add(new Issue(
-                code: 'DD_COMPOSER_READY',
+                code: IssueCode::DD_COMPOSER_READY,
                 severity: Severity::INFO,
                 message: 'Composer diagnostics found no issues.',
-                module: 'composer',
+                module: ModuleName::COMPOSER,
             ));
         }
 
@@ -101,10 +103,10 @@ final readonly class ComposerAnalyzer
 
         if (! is_file($composerLock) && $this->hasDependencies($data)) {
             $issues->add(new Issue(
-                code: 'DD_COMPOSER_LOCK_MISSING',
+                code: IssueCode::DD_COMPOSER_LOCK_MISSING,
                 severity: Severity::WARNING,
                 message: 'composer.lock is missing while composer.json declares dependencies',
-                module: 'composer',
+                module: ModuleName::COMPOSER,
                 file: 'composer.lock',
             ));
 
@@ -116,10 +118,10 @@ final readonly class ComposerAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_COMPOSER_LOCK_OUTDATED',
+            code: IssueCode::DD_COMPOSER_LOCK_OUTDATED,
             severity: Severity::WARNING,
             message: 'composer.lock is older than composer.json and may be outdated',
-            module: 'composer',
+            module: ModuleName::COMPOSER,
             file: 'composer.lock',
         ));
     }
@@ -131,10 +133,10 @@ final readonly class ComposerAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_COMPOSER_VENDOR_MISSING',
+            code: IssueCode::DD_COMPOSER_VENDOR_MISSING,
             severity: $options->strict ? Severity::ERROR : Severity::WARNING,
             message: 'vendor directory is missing',
-            module: 'composer',
+            module: ModuleName::COMPOSER,
             file: 'vendor',
         ));
     }
@@ -152,10 +154,10 @@ final readonly class ComposerAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_COMPOSER_PHP_VERSION_MISMATCH',
+            code: IssueCode::DD_COMPOSER_PHP_VERSION_MISMATCH,
             severity: Severity::ERROR,
             message: 'Current PHP '.PHP_VERSION.' does not satisfy composer requirement '.$constraint,
-            module: 'composer',
+            module: ModuleName::COMPOSER,
             file: 'composer.json',
             key: 'php',
         ));
@@ -178,10 +180,10 @@ final readonly class ComposerAnalyzer
             }
 
             $issues->add(new Issue(
-                code: 'DD_COMPOSER_EXTENSION_MISSING',
+                code: IssueCode::DD_COMPOSER_EXTENSION_MISSING,
                 severity: Severity::ERROR,
                 message: 'Required PHP extension '.$package.' is not loaded',
-                module: 'composer',
+                module: ModuleName::COMPOSER,
                 file: 'composer.json',
                 key: $package,
                 context: ['constraint' => $constraint],
@@ -218,10 +220,10 @@ final readonly class ComposerAnalyzer
             $replacement = is_string($package['abandoned']) ? ' Use '.$package['abandoned'].' instead.' : '';
 
             $issues->add(new Issue(
-                code: 'DD_COMPOSER_PACKAGE_ABANDONED',
+                code: IssueCode::DD_COMPOSER_PACKAGE_ABANDONED,
                 severity: Severity::WARNING,
                 message: $name.' is marked as abandoned.'.$replacement,
-                module: 'composer',
+                module: ModuleName::COMPOSER,
                 file: 'vendor/composer/installed.json',
                 key: $name,
             ));
@@ -249,10 +251,10 @@ final readonly class ComposerAnalyzer
                 }
 
                 $issues->add(new Issue(
-                    code: 'DD_COMPOSER_SCRIPT_RISKY',
+                    code: IssueCode::DD_COMPOSER_SCRIPT_RISKY,
                     severity: Severity::WARNING,
                     message: $event.' contains risky shell execution',
-                    module: 'composer',
+                    module: ModuleName::COMPOSER,
                     file: 'composer.json',
                     key: $event,
                 ));
@@ -264,10 +266,10 @@ final readonly class ComposerAnalyzer
     {
         if (! $this->commands->available('composer')) {
             $issues->add(new Issue(
-                code: 'DD_COMPOSER_BINARY_MISSING',
+                code: IssueCode::DD_COMPOSER_BINARY_MISSING,
                 severity: Severity::WARNING,
                 message: 'Composer binary was not found; skipped composer validate',
-                module: 'composer',
+                module: ModuleName::COMPOSER,
             ));
 
             return;
@@ -280,10 +282,10 @@ final readonly class ComposerAnalyzer
         }
 
         $issues->add(new Issue(
-            code: 'DD_COMPOSER_VALIDATE_FAILED',
+            code: IssueCode::DD_COMPOSER_VALIDATE_FAILED,
             severity: Severity::ERROR,
             message: trim($result->stderr) !== '' ? trim($result->stderr) : 'composer validate failed',
-            module: 'composer',
+            module: ModuleName::COMPOSER,
             file: 'composer.json',
         ));
     }

@@ -11,6 +11,7 @@ use DevDoctor\Core\DiagnosticModuleRunner;
 use DevDoctor\Core\DiagnosticRunOptions;
 use DevDoctor\Core\ExitCode;
 use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
 use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\ModuleResult;
@@ -48,10 +49,10 @@ final class CiCommand extends Command
             return $this->renderDiagnostics([
                 new ModuleResult(ModuleName::CI, new IssueCollection([
                     new Issue(
-                        code: 'DD_CI_UNKNOWN_MODULE',
+                        code: IssueCode::DD_CI_UNKNOWN_MODULE,
                         severity: Severity::ERROR,
                         message: 'Unknown CI module: '.implode(', ', $unknown),
-                        module: 'ci',
+                        module: ModuleName::CI,
                     ),
                 ])),
             ], ExitCode::INVALID_CONFIG);
@@ -160,13 +161,13 @@ final class CiCommand extends Command
         $baselinePath = PathResolver::fromBasePath($path)->absolute($baselineFile);
 
         if (! is_file($baselinePath)) {
-            return $this->baselineError('DD_CI_BASELINE_MISSING', 'Baseline file does not exist: '.$baselineFile, ExitCode::MISSING_DEPENDENCY);
+            return $this->baselineError(IssueCode::DD_CI_BASELINE_MISSING, 'Baseline file does not exist: '.$baselineFile, ExitCode::MISSING_DEPENDENCY);
         }
 
         try {
             $baseline = app(BaselineManager::class)->load($baselinePath);
         } catch (InvalidBaseline $exception) {
-            return $this->baselineError('DD_CI_BASELINE_INVALID', $exception->getMessage(), ExitCode::INVALID_CONFIG);
+            return $this->baselineError(IssueCode::DD_CI_BASELINE_INVALID, $exception->getMessage(), ExitCode::INVALID_CONFIG);
         }
 
         return app(BaselineManager::class)->apply($baseline, $results);
@@ -188,7 +189,7 @@ final class CiCommand extends Command
 
         if (is_file($baselinePath) && ! (bool) $this->option('force')) {
             return $this->baselineError(
-                'DD_CI_BASELINE_EXISTS',
+                IssueCode::DD_CI_BASELINE_EXISTS,
                 'Baseline file already exists: '.$baselineFile.'. Use --force to replace it.',
                 ExitCode::INVALID_CONFIG,
             );
@@ -208,7 +209,7 @@ final class CiCommand extends Command
     /**
      * @return array{results: list<ModuleResult>, exitCode: ExitCode}
      */
-    private function baselineError(string $code, string $message, ExitCode $exitCode): array
+    private function baselineError(IssueCode $code, string $message, ExitCode $exitCode): array
     {
         return [
             'results' => [
@@ -217,7 +218,7 @@ final class CiCommand extends Command
                         code: $code,
                         severity: Severity::ERROR,
                         message: $message,
-                        module: 'ci',
+                        module: ModuleName::CI,
                     ),
                 ])),
             ],

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DevDoctor\Modules\Env;
 
 use DevDoctor\Core\Issue;
+use DevDoctor\Core\IssueCode;
 use DevDoctor\Core\IssueCollection;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\Redactor;
@@ -49,7 +50,7 @@ final readonly class EnvAnalyzer
 
         if ($issues->isEmpty()) {
             $issues->add(new Issue(
-                code: 'DD_ENV_READY',
+                code: IssueCode::DD_ENV_READY,
                 severity: Severity::INFO,
                 message: 'Env diagnostics found no issues.',
                 module: 'env',
@@ -63,7 +64,7 @@ final readonly class EnvAnalyzer
     {
         if (! $env->exists) {
             $issues->add(new Issue(
-                code: 'DD_ENV_FILE_MISSING',
+                code: IssueCode::DD_ENV_FILE_MISSING,
                 severity: Severity::ERROR,
                 message: $env->path.' does not exist',
                 module: 'env',
@@ -73,7 +74,7 @@ final readonly class EnvAnalyzer
 
         if (! $example->exists) {
             $issues->add(new Issue(
-                code: 'DD_ENV_EXAMPLE_MISSING',
+                code: IssueCode::DD_ENV_EXAMPLE_MISSING,
                 severity: $options->strict ? Severity::ERROR : Severity::WARNING,
                 message: $example->path.' does not exist',
                 module: 'env',
@@ -87,7 +88,7 @@ final readonly class EnvAnalyzer
         foreach ($file->duplicates() as $key => $entries) {
             foreach (array_slice($entries, 1) as $entry) {
                 $issues->add(new Issue(
-                    code: 'DD_ENV_DUPLICATE_KEY',
+                    code: IssueCode::DD_ENV_DUPLICATE_KEY,
                     severity: Severity::ERROR,
                     message: $key.' is defined more than once',
                     module: 'env',
@@ -107,7 +108,7 @@ final readonly class EnvAnalyzer
             }
 
             $issues->add(new Issue(
-                code: 'DD_ENV_INVALID_KEY_NAME',
+                code: IssueCode::DD_ENV_INVALID_KEY_NAME,
                 severity: Severity::WARNING,
                 message: $entry->key.' does not match expected env key format',
                 module: 'env',
@@ -126,7 +127,7 @@ final readonly class EnvAnalyzer
             }
 
             $issues->add(new Issue(
-                code: 'DD_ENV_EMPTY_VALUE',
+                code: IssueCode::DD_ENV_EMPTY_VALUE,
                 severity: Severity::WARNING,
                 message: $entry->key.' is empty',
                 module: 'env',
@@ -149,7 +150,7 @@ final readonly class EnvAnalyzer
             }
 
             $issues->add(new Issue(
-                code: 'DD_ENV_INVALID_TYPE',
+                code: IssueCode::DD_ENV_INVALID_TYPE,
                 severity: Severity::WARNING,
                 message: $entry->key.' should look like a valid URL',
                 module: 'env',
@@ -172,7 +173,7 @@ final readonly class EnvAnalyzer
             if (! $env->has($key) && ! in_array($key, $options->ignoreMissingInEnv, true)) {
                 $entry = $example->get($key);
                 $issues->add(new Issue(
-                    code: 'DD_ENV_MISSING_IN_ENV',
+                    code: IssueCode::DD_ENV_MISSING_IN_ENV,
                     severity: $severity,
                     message: $key.' exists in '.$example->path.' but is missing in '.$env->path,
                     module: 'env',
@@ -187,7 +188,7 @@ final readonly class EnvAnalyzer
             if (! $example->has($key) && ! in_array($key, $options->ignoreMissingInExample, true)) {
                 $entry = $env->get($key);
                 $issues->add(new Issue(
-                    code: 'DD_ENV_MISSING_IN_EXAMPLE',
+                    code: IssueCode::DD_ENV_MISSING_IN_EXAMPLE,
                     severity: $severity,
                     message: $key.' exists in '.$env->path.' but is missing in '.$example->path,
                     module: 'env',
@@ -213,7 +214,7 @@ final readonly class EnvAnalyzer
         if ($appEnv === 'production' && $appDebug === 'true') {
             $entry = $env->get('APP_DEBUG');
             $issues->add(new Issue(
-                code: 'DD_ENV_PROD_DEBUG',
+                code: IssueCode::DD_ENV_PROD_DEBUG,
                 severity: Severity::ERROR,
                 message: 'APP_DEBUG=true while APP_ENV=production',
                 module: 'env',
@@ -226,7 +227,7 @@ final readonly class EnvAnalyzer
         if ($nodeEnv === 'production' && $debug === 'true') {
             $entry = $env->get('DEBUG');
             $issues->add(new Issue(
-                code: 'DD_ENV_PROD_DEBUG',
+                code: IssueCode::DD_ENV_PROD_DEBUG,
                 severity: Severity::ERROR,
                 message: 'DEBUG=true while NODE_ENV=production',
                 module: 'env',
@@ -252,7 +253,7 @@ final readonly class EnvAnalyzer
                 }
 
                 $issues->add(new Issue(
-                    code: 'DD_ENV_SECRET_IN_EXAMPLE',
+                    code: IssueCode::DD_ENV_SECRET_IN_EXAMPLE,
                     severity: Severity::ERROR,
                     message: $entry->key.' appears to contain a real secret in '.$envFile->path,
                     module: 'env',
@@ -276,7 +277,7 @@ final readonly class EnvAnalyzer
 
             if (($rule['required'] ?? false) === true && ($entry === null || $entry->value === '')) {
                 $issues->add(new Issue(
-                    code: 'DD_ENV_REQUIRED_MISSING',
+                    code: IssueCode::DD_ENV_REQUIRED_MISSING,
                     severity: Severity::ERROR,
                     message: $key.' is required',
                     module: 'env',
@@ -288,7 +289,7 @@ final readonly class EnvAnalyzer
                 foreach ($rule['required_when'] as $otherKey => $expected) {
                     if (is_string($otherKey) && $this->valueMatches($env->get($otherKey)?->value, $expected) && ($entry === null || $entry->value === '')) {
                         $issues->add(new Issue(
-                            code: 'DD_ENV_REQUIRED_WHEN_MISSING',
+                            code: IssueCode::DD_ENV_REQUIRED_WHEN_MISSING,
                             severity: Severity::ERROR,
                             message: $key.' is required when '.$otherKey.' is '.$this->stringValue($expected),
                             module: 'env',
@@ -302,7 +303,7 @@ final readonly class EnvAnalyzer
                 foreach ($rule['forbidden_when'] as $otherKey => $expected) {
                     if (is_string($otherKey) && $this->valueMatches($env->get($otherKey)?->value, $expected) && $entry !== null && $entry->value !== '') {
                         $issues->add(new Issue(
-                            code: 'DD_ENV_FORBIDDEN_WHEN_PRESENT',
+                            code: IssueCode::DD_ENV_FORBIDDEN_WHEN_PRESENT,
                             severity: Severity::ERROR,
                             message: $key.' is forbidden when '.$otherKey.' is '.$this->stringValue($expected),
                             module: 'env',
@@ -320,7 +321,7 @@ final readonly class EnvAnalyzer
 
             if (isset($rule['allowed']) && is_array($rule['allowed']) && ! in_array($entry->value, array_map($this->stringValue(...), $rule['allowed']), true)) {
                 $issues->add(new Issue(
-                    code: 'DD_ENV_INVALID_ALLOWED_VALUE',
+                    code: IssueCode::DD_ENV_INVALID_ALLOWED_VALUE,
                     severity: Severity::ERROR,
                     message: $key.' has a value that is not allowed',
                     module: 'env',
@@ -332,7 +333,7 @@ final readonly class EnvAnalyzer
 
             if (isset($rule['type']) && is_string($rule['type']) && ! $this->isValidType($entry->value, $rule['type'])) {
                 $issues->add(new Issue(
-                    code: 'DD_ENV_INVALID_TYPE',
+                    code: IssueCode::DD_ENV_INVALID_TYPE,
                     severity: Severity::ERROR,
                     message: $key.' must be '.$rule['type'],
                     module: 'env',
