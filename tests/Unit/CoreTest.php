@@ -33,7 +33,7 @@ it('summarizes issues and maps exit codes', function () {
 
 it('excludes suppressed issues from status and exit code summaries', function () {
     $issues = new IssueCollection([
-        new Issue(IssueCode::DD_ENV_MISSING_IN_ENV, Severity::WARNING, 'warning')->withSuppressed(),
+        (new Issue(IssueCode::DD_ENV_MISSING_IN_ENV, Severity::WARNING, 'warning'))->withSuppressed(),
     ]);
 
     expect($issues->summary())->toBe([

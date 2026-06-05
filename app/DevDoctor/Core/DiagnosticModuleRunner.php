@@ -33,7 +33,18 @@ final class DiagnosticModuleRunner
      */
     public function knownModules(): array
     {
-        return ['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'ports', 'presets', 'security'];
+        return array_map(static fn (ModuleName $module): string => $module->value, [
+            ModuleName::ENV,
+            ModuleName::PHP,
+            ModuleName::NODE,
+            ModuleName::LARAVEL,
+            ModuleName::COMPOSER,
+            ModuleName::GIT,
+            ModuleName::DOCKER,
+            ModuleName::PORTS,
+            ModuleName::PRESETS,
+            ModuleName::SECURITY,
+        ]);
     }
 
     /**

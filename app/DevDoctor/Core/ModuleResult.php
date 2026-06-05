@@ -9,8 +9,7 @@ final readonly class ModuleResult
     public function __construct(
         public ModuleName $name,
         public IssueCollection $issues,
-    ) {
-    }
+    ) {}
 
     public function status(): ModuleStatus
     {
