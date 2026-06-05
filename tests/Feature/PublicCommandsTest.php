@@ -150,6 +150,15 @@ it('runs java diagnostics with json output', function () {
         ->expectsOutputToContain('DD_JAVA_NOT_PROJECT');
 });
 
+it('runs iac diagnostics with json output', function () {
+    $path = sys_get_temp_dir().'/devdoctor-iac-command-'.bin2hex(random_bytes(4));
+    mkdir($path);
+
+    $this->artisan('iac', ['--path' => $path, '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('DD_IAC_NOT_PROJECT');
+});
+
 it('runs dotnet diagnostics with json output', function () {
     $path = sys_get_temp_dir().'/devdoctor-dotnet-command-'.bin2hex(random_bytes(4));
     mkdir($path);
@@ -398,12 +407,14 @@ it('runs default ci modules without ports', function () {
     file_put_contents($path.'/Gemfile.lock', "GEM\n");
     file_put_contents($path.'/.ruby-version', "3.4.0\n");
     file_put_contents($path.'/config/master.key', "key\n");
+    file_put_contents($path.'/main.tf', "terraform {\n  required_providers {\n    aws = { version = \"~> 5.0\" }\n  }\n}\n");
+    file_put_contents($path.'/.terraform.lock.hcl', "provider \"registry.terraform.io/hashicorp/aws\" {}\n");
 
     $exitCode = Artisan::call('ci', ['--path' => $path, '--format' => 'json']);
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect($exitCode)->toBe(1)
-        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'ruby', 'go', 'rust', 'java', 'dotnet', 'cpp', 'web', 'symfony']);
+        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'ruby', 'go', 'rust', 'java', 'iac', 'dotnet', 'cpp', 'web', 'symfony']);
 });
 
 it('supports ci module selection exclude and unknown module handling', function () {

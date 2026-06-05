@@ -121,6 +121,13 @@ enum IssueCode: string
     case DD_JAVA_SPRING_PROD_DEBUG = 'DD_JAVA_SPRING_PROD_DEBUG';
     case DD_JAVA_VERSION_MISMATCH = 'DD_JAVA_VERSION_MISMATCH';
     case DD_JAVA_WRAPPER_MISSING = 'DD_JAVA_WRAPPER_MISSING';
+    case DD_IAC_BACKEND_SECRET = 'DD_IAC_BACKEND_SECRET';
+    case DD_IAC_LOCK_MISSING = 'DD_IAC_LOCK_MISSING';
+    case DD_IAC_NOT_PROJECT = 'DD_IAC_NOT_PROJECT';
+    case DD_IAC_READY = 'DD_IAC_READY';
+    case DD_IAC_REMOTE_MODULE_UNPINNED = 'DD_IAC_REMOTE_MODULE_UNPINNED';
+    case DD_IAC_SECRET_DEFAULT = 'DD_IAC_SECRET_DEFAULT';
+    case DD_IAC_WILDCARD_PROVIDER_VERSION = 'DD_IAC_WILDCARD_PROVIDER_VERSION';
     case DD_DOTNET_LOCK_MISSING = 'DD_DOTNET_LOCK_MISSING';
     case DD_DOTNET_MIXED_SOLUTION_STATE = 'DD_DOTNET_MIXED_SOLUTION_STATE';
     case DD_DOTNET_NOT_PROJECT = 'DD_DOTNET_NOT_PROJECT';
@@ -314,6 +321,11 @@ enum IssueCode: string
             self::DD_JAVA_SPRING_PROD_DEBUG => 'Disable debug logging for production Spring profiles.',
             self::DD_JAVA_VERSION_MISMATCH => 'Align Java version declarations across Maven, Gradle, and toolchain configuration.',
             self::DD_JAVA_WRAPPER_MISSING => 'Commit the Maven or Gradle wrapper so builds use a predictable tool version.',
+            self::DD_IAC_BACKEND_SECRET => 'Move backend credentials out of Terraform files and into environment or secret manager configuration.',
+            self::DD_IAC_LOCK_MISSING => 'Run the appropriate init flow intentionally and commit the provider lockfile.',
+            self::DD_IAC_REMOTE_MODULE_UNPINNED => 'Pin remote modules to an immutable ref or version.',
+            self::DD_IAC_SECRET_DEFAULT => 'Remove secret-like defaults from variable declarations.',
+            self::DD_IAC_WILDCARD_PROVIDER_VERSION => 'Pin provider versions to a bounded constraint.',
             self::DD_DOTNET_LOCK_MISSING => 'Generate and commit packages.lock.json intentionally when restore lock mode is enabled.',
             self::DD_DOTNET_MIXED_SOLUTION_STATE => 'Keep one canonical solution file or document why multiple solutions are maintained.',
             self::DD_DOTNET_RISKY_NUGET_SOURCE => 'Use HTTPS package sources or document the trusted internal feed explicitly.',

@@ -17,6 +17,7 @@ enum ModuleName: string
     case GO = 'go';
     case HEALTH = 'health';
     case HTTP = 'http';
+    case IAC = 'iac';
     case JAVA = 'java';
     case LARAVEL = 'laravel';
     case NODE = 'node';

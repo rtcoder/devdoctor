@@ -28,6 +28,8 @@ use DevDoctor\Modules\Go\GoAnalyzer;
 use DevDoctor\Modules\Go\GoOptions;
 use DevDoctor\Modules\Http\HttpAnalyzer;
 use DevDoctor\Modules\Http\HttpOptions;
+use DevDoctor\Modules\Iac\IacAnalyzer;
+use DevDoctor\Modules\Iac\IacOptions;
 use DevDoctor\Modules\Java\JavaAnalyzer;
 use DevDoctor\Modules\Java\JavaOptions;
 use DevDoctor\Modules\Laravel\LaravelAnalyzer;
@@ -73,6 +75,7 @@ final class DiagnosticModuleRunner
             ModuleName::GO,
             ModuleName::RUST,
             ModuleName::JAVA,
+            ModuleName::IAC,
             ModuleName::DOTNET,
             ModuleName::CPP,
             ModuleName::WEB,
@@ -134,6 +137,10 @@ final class DiagnosticModuleRunner
                 strict: $options->strict,
             ))),
             ModuleName::JAVA->value => new ModuleResult(ModuleName::JAVA, app(JavaAnalyzer::class)->analyze(new JavaOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
+            ModuleName::IAC->value => new ModuleResult(ModuleName::IAC, app(IacAnalyzer::class)->analyze(new IacOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),

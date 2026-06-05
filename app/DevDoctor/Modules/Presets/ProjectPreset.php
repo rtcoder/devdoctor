@@ -60,6 +60,10 @@ enum ProjectPreset: string
 
     case WEB = 'web';
 
+    case IAC = 'iac';
+
+    case TERRAFORM = 'terraform';
+
     case DOCKER_COMPOSE = 'docker-compose';
 
     public function label(): string
@@ -92,6 +96,8 @@ enum ProjectPreset: string
             self::CMAKE => 'CMake',
             self::DOTNET => '.NET',
             self::WEB => 'Generic web',
+            self::IAC => 'Infrastructure as Code',
+            self::TERRAFORM => 'Terraform/OpenTofu',
             self::DOCKER_COMPOSE => 'Docker Compose',
         };
     }

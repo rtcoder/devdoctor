@@ -79,6 +79,7 @@ final readonly class PresetDetector
         array_push($matches, ...$this->cppMatches($files));
         array_push($matches, ...$this->dotnetMatches($files));
         array_push($matches, ...$this->webMatches($files, $frontendEvidence));
+        array_push($matches, ...$this->iacMatches($files));
 
         $composeFile = $files->firstExisting([
             'docker-compose.yml',
@@ -129,6 +130,26 @@ final readonly class PresetDetector
         }
 
         return false;
+    }
+
+    /**
+     * @return list<PresetMatch>
+     */
+    private function iacMatches(ProjectFiles $files): array
+    {
+        $matches = [];
+        $terraformFiles = $files->glob('*.tf');
+        $evidence = $terraformFiles[0] ?? $files->firstExisting(['terragrunt.hcl', '.terraform.lock.hcl', 'tofu.lock.hcl']);
+
+        if ($evidence !== null) {
+            $matches[] = new PresetMatch(ProjectPreset::IAC, $evidence);
+        }
+
+        if ($terraformFiles !== [] || $files->firstExisting(['.terraform.lock.hcl', 'tofu.lock.hcl', 'terragrunt.hcl']) !== null) {
+            $matches[] = new PresetMatch(ProjectPreset::TERRAFORM, $terraformFiles[0] ?? 'terragrunt.hcl');
+        }
+
+        return $matches;
     }
 
     /**

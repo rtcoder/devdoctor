@@ -225,3 +225,4 @@ After the first complete version:
 - `v1.21.0`: Generic web diagnostics for static entry files, obvious asset references, public config exposure, web server config hints, and local port declaration conflicts. Complete.
 - `v1.22.0`: Symfony diagnostics for `.env`/`.env.local`, `APP_SECRET`, production debug mode, runtime cache/log directories, Symfony Flex recipe drift, and risky Composer scripts. Complete.
 - `v1.23.0`: Ruby/Rails diagnostics for `Gemfile`, `Gemfile.lock`, Ruby versions, Rails credentials, database credential hygiene, and risky gem sources. Complete.
+- `v1.24.0`: Terraform/IaC diagnostics for Terraform, OpenTofu, and Terragrunt manifests, provider locks, broad provider constraints, unpinned remote modules, and secret-like IaC values. Complete.
