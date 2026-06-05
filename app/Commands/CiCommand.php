@@ -23,6 +23,8 @@ use DevDoctor\Modules\Env\EnvAnalysisOptions;
 use DevDoctor\Modules\Env\EnvAnalyzer;
 use DevDoctor\Modules\Git\GitAnalyzer;
 use DevDoctor\Modules\Git\GitOptions;
+use DevDoctor\Modules\Node\NodeAnalyzer;
+use DevDoctor\Modules\Node\NodeOptions;
 use DevDoctor\Modules\Php\PhpAnalyzer;
 use DevDoctor\Modules\Php\PhpOptions;
 use DevDoctor\Modules\Ports\PortsAnalyzer;
@@ -106,7 +108,7 @@ final class CiCommand extends Command
      */
     private function selectedModules(): array
     {
-        $modules = $this->stringList((string) ($this->option('modules') ?: 'env,php,composer,git,docker'));
+        $modules = $this->stringList((string) ($this->option('modules') ?: 'env,php,node,composer,git,docker'));
         $exclude = $this->stringList((string) ($this->option('exclude') ?: ''));
 
         return array_values(array_diff($modules, $exclude));
@@ -117,7 +119,7 @@ final class CiCommand extends Command
      */
     private function knownModules(): array
     {
-        return ['env', 'php', 'composer', 'git', 'docker', 'ports', 'presets'];
+        return ['env', 'php', 'node', 'composer', 'git', 'docker', 'ports', 'presets'];
     }
 
     /**
@@ -141,6 +143,10 @@ final class CiCommand extends Command
             'php' => new ModuleResult('php', app(PhpAnalyzer::class)->analyze(new PhpOptions(
                 path: $path,
                 ci: true,
+                strict: (bool) $this->option('strict'),
+            ))),
+            'node' => new ModuleResult('node', app(NodeAnalyzer::class)->analyze(new NodeOptions(
+                path: $path,
                 strict: (bool) $this->option('strict'),
             ))),
             'composer' => new ModuleResult('composer', app(ComposerAnalyzer::class)->analyze(new ComposerOptions(
