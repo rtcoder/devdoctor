@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.33.0 - 2026-06-06
+
+- Added `devdoctor commands` for terminal-native command discovery.
+- Added `--module` filtering to `devdoctor explain`.
+- Included issue-code module metadata in explain JSON output.
+
 ## v1.32.0 - 2026-06-06
 
 - Added machine-readable documentation metadata in `docs/manifest.json`.

@@ -274,6 +274,14 @@
             "example": "php devdoctor inventory --format=json"
         },
         {
+            "name": "commands",
+            "module": "commands",
+            "type": "utility",
+            "read_only": true,
+            "summary": "List DevDoctor commands and their documentation metadata.",
+            "example": "php devdoctor commands --format=json"
+        },
+        {
             "name": "explain",
             "module": "explain",
             "type": "utility",

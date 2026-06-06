@@ -57,13 +57,15 @@
         <tr><td><code>ci</code></td><td>Run CI-safe diagnostics and aggregate exit codes.</td><td><code>php devdoctor ci --modules=env,php,node,laravel,composer,db,git,docker</code></td></tr>
         <tr><td><code>presets</code></td><td>Detect supported project presets, including PHP, Node/frontend, Flutter/Dart, native mobile, monorepos, Python, Go, Rust, JVM, IaC, Kubernetes/Helm, C/C++, .NET, generic web, and Docker Compose evidence.</td><td><code>php devdoctor presets --format=json</code></td></tr>
         <tr><td><code>inventory</code></td><td>Show detected presets, available modules, and auto-selected modules.</td><td><code>php devdoctor inventory --format=json</code></td></tr>
-        <tr><td><code>explain</code></td><td>Explain issue codes and their built-in hints.</td><td><code>php devdoctor explain DD_ENV_FILE_MISSING --format=json</code></td></tr>
+        <tr><td><code>commands</code></td><td>List DevDoctor commands and their documentation metadata.</td><td><code>php devdoctor commands --format=json</code></td></tr>
+        <tr><td><code>explain</code></td><td>Explain issue codes and their built-in hints, optionally filtered by module.</td><td><code>php devdoctor explain --module=env --format=json</code></td></tr>
         <tr><td><code>policy</code></td><td>Show DevDoctor safety and compatibility policy.</td><td><code>php devdoctor policy --format=json</code></td></tr>
         <tr><td><code>support-bundle</code></td><td>Print redacted support context without writing files.</td><td><code>php devdoctor support-bundle</code></td></tr>
         <tr><td><code>init</code></td><td>Preview and optionally write <code>devdoctor.yml</code>.</td><td><code>php devdoctor init --dry-run</code></td></tr>
         </tbody>
     </table>
     <p><code>v1.29.0</code> adds utility commands: <code>inventory</code>, <code>explain</code>, <code>policy</code>, and <code>support-bundle</code>. They expose project inventory, issue-code hints, safety policy, and redacted support context without modifying project files.</p>
+    <p><code>v1.33.0</code> adds <code>commands</code> and <code>explain --module=...</code> for terminal-native discovery of command metadata and issue-code hints.</p>
     <section class="feature-band">
         <div>
             <p class="eyebrow">Machine-readable reference</p>

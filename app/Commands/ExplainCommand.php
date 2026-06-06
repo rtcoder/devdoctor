@@ -12,7 +12,8 @@ final class ExplainCommand extends Command
 {
     protected $signature = 'explain
         {code? : Issue code to explain}
-        {--format=table : Output format: table or json}';
+        {--format=table : Output format: table or json}
+        {--module= : Filter issue codes by module}';
 
     protected $description = 'Explain DevDoctor issue codes and their hints.';
 
@@ -21,6 +22,8 @@ final class ExplainCommand extends Command
         $format = (string) $this->option('format');
         $code = $this->argument('code');
         $codes = IssueCode::cases();
+        $module = $this->option('module');
+        $modulesByCode = $this->modulesByCode();
 
         if (is_string($code) && $code !== '') {
             $issueCode = IssueCode::tryFrom($code);
@@ -36,10 +39,15 @@ final class ExplainCommand extends Command
             $codes = [$issueCode];
         }
 
+        if (is_string($module) && $module !== '') {
+            $codes = array_values(array_filter($codes, static fn (IssueCode $issueCode): bool => ($modulesByCode[$issueCode->value] ?? null) === $module));
+        }
+
         $payload = [
             'tool' => 'devdoctor',
             'issue_codes' => array_map(static fn (IssueCode $issueCode): array => [
                 'code' => $issueCode->value,
+                'module' => $modulesByCode[$issueCode->value] ?? null,
                 'hint' => $issueCode->hint(),
             ], $codes),
         ];
@@ -55,5 +63,21 @@ final class ExplainCommand extends Command
         }
 
         return ExitCode::OK->value;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function modulesByCode(): array
+    {
+        $path = dirname(__DIR__, 2).'/schemas/v1/issue-codes.json';
+        $catalog = json_decode((string) file_get_contents($path), true, flags: JSON_THROW_ON_ERROR);
+        $modules = [];
+
+        foreach ($catalog['codes'] as $entry) {
+            $modules[$entry['code']] = $entry['module'];
+        }
+
+        return $modules;
     }
 }

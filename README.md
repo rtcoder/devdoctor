@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, Node/frontend, Flutter/Dart, native mobile, monorepos, Python, Ruby/Rails, Go, Rust, Java/JVM, Terraform/IaC, Kubernetes/Helm, .NET, C/C++, generic web, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.32.0`
+Current version: `1.33.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.32.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.33.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -81,6 +81,7 @@ doctor     Alias for health
 ci         Run CI-safe DevDoctor diagnostics
 presets    Detect supported project framework and tooling presets
 inventory  Show detected presets and available modules
+commands   List DevDoctor commands and documentation metadata
 explain    Explain DevDoctor issue codes and hints
 policy     Show DevDoctor safety and compatibility policy
 support-bundle Print a redacted support bundle without writing files
@@ -145,6 +146,7 @@ php devdoctor security
 php devdoctor composer
 php devdoctor deps
 php devdoctor inventory --format=json
+php devdoctor commands --format=json
 php devdoctor explain DD_ENV_FILE_MISSING --format=json
 php devdoctor policy --format=json
 php devdoctor support-bundle
@@ -280,6 +282,8 @@ The `presets` command detects supported project stacks from files and declared d
 
 `v1.32.0` adds machine-readable documentation metadata with `docs/manifest.json` and `docs/commands.json` so tools can consume page and command references without scraping HTML.
 
+`v1.33.0` adds CLI discoverability with `devdoctor commands` and `devdoctor explain --module=...`, making command metadata and issue-code hints available without leaving the terminal.
+
 Preset detection is informational and can be included in CI explicitly:
 
 ```bash
@@ -383,9 +387,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.32.0
+- uses: rtcoder/devdoctor@v1.33.0
   with:
-    version: v1.32.0
+    version: v1.33.0
     format: sarif
 ```
 
@@ -546,7 +550,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.32.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.33.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version

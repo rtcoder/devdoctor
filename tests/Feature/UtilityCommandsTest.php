@@ -8,7 +8,17 @@ it('explains issue codes as json', function () {
 
     expect($exitCode)->toBe(0)
         ->and($output['issue_codes'][0]['code'])->toBe('DD_ENV_FILE_MISSING')
+        ->and($output['issue_codes'][0]['module'])->toBe('env')
         ->and($output['issue_codes'][0]['hint'])->toBeString();
+});
+
+it('filters explained issue codes by module', function () {
+    $exitCode = Artisan::call('explain', ['--module' => 'env', '--format' => 'json']);
+    $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
+
+    expect($exitCode)->toBe(0)
+        ->and($output['issue_codes'])->not->toBeEmpty()
+        ->and(array_unique(array_column($output['issue_codes'], 'module')))->toBe(['env']);
 });
 
 it('returns invalid config for unknown issue codes', function () {
@@ -16,6 +26,16 @@ it('returns invalid config for unknown issue codes', function () {
 
     expect($exitCode)->toBe(3)
         ->and(Artisan::output())->toContain('unknown_issue_code');
+});
+
+it('prints command catalog as json', function () {
+    $exitCode = Artisan::call('commands', ['--module' => 'env', '--format' => 'json']);
+    $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
+
+    expect($exitCode)->toBe(0)
+        ->and($output['schema_version'])->toBe('1.0')
+        ->and($output['commands'][0]['name'])->toBe('env')
+        ->and($output['commands'][0]['read_only'])->toBeTrue();
 });
 
 it('prints inventory with detected presets', function () {
