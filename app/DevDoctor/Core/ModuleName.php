@@ -23,6 +23,7 @@ enum ModuleName: string
     case KUBE = 'kube';
     case LARAVEL = 'laravel';
     case MOBILE = 'mobile';
+    case MONOREPO = 'monorepo';
     case NODE = 'node';
     case PHP = 'php';
     case PORTS = 'ports';

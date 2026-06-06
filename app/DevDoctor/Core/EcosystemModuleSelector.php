@@ -36,6 +36,10 @@ final readonly class EcosystemModuleSelector
             $modules[] = ModuleName::MOBILE->value;
         }
 
+        if ($this->hasAny($presets, [ProjectPreset::MONOREPO])) {
+            $modules[] = ModuleName::MONOREPO->value;
+        }
+
         if ($this->hasAny($presets, [ProjectPreset::PYTHON, ProjectPreset::PIP, ProjectPreset::POETRY, ProjectPreset::PIPENV, ProjectPreset::UV, ProjectPreset::CONDA])) {
             $modules[] = ModuleName::PYTHON->value;
         }

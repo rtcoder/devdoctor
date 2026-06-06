@@ -73,6 +73,7 @@ final readonly class PresetDetector
 
         array_push($matches, ...$this->flutterMatches($files));
         array_push($matches, ...$this->mobileMatches($files));
+        array_push($matches, ...$this->monorepoMatches($files, $package));
         array_push($matches, ...$this->pythonMatches($files));
         array_push($matches, ...$this->rubyMatches($files));
         array_push($matches, ...$this->goMatches($files));
@@ -179,6 +180,21 @@ final readonly class PresetDetector
         }
 
         return $matches;
+    }
+
+    /**
+     * @param  array<string, mixed>  $package
+     * @return list<PresetMatch>
+     */
+    private function monorepoMatches(ProjectFiles $files, array $package): array
+    {
+        $evidence = $files->firstExisting(['nx.json', 'turbo.json', 'lerna.json', 'pnpm-workspace.yaml', 'rush.json', 'WORKSPACE', 'MODULE.bazel', 'pants.toml']);
+
+        if ($evidence === null && is_array($package['workspaces'] ?? null)) {
+            $evidence = 'package.json';
+        }
+
+        return $evidence === null ? [] : [new PresetMatch(ProjectPreset::MONOREPO, $evidence)];
     }
 
     /**

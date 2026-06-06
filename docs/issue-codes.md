@@ -113,6 +113,14 @@ The machine-readable v1 catalog is available at [`schemas/v1/issue-codes.json`](
 - `DD_MOBILE_NOT_PROJECT`
 - `DD_MOBILE_READY`
 
+## Monorepo
+
+- `DD_MONOREPO_LOCK_MISSING`
+- `DD_MONOREPO_MIXED_TOOLS`
+- `DD_MONOREPO_NOT_PROJECT`
+- `DD_MONOREPO_READY`
+- `DD_MONOREPO_RISKY_ROOT_SCRIPT`
+
 ## Python
 
 - `DD_PYTHON_LOCK_MISSING`

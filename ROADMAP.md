@@ -229,3 +229,4 @@ After the first complete version:
 - `v1.25.0`: Kubernetes/Helm diagnostics for manifest hygiene, Helm locks, mutable images, privileged containers, hostPath mounts, NodePort exposure, and values secret hygiene. Complete.
 - `v1.26.0`: Flutter/Dart diagnostics for pubspec lockfiles, Dart SDK constraints, local path/Git dependencies, and Flutter platform markers. Complete.
 - `v1.27.0`: Native mobile diagnostics for Android/iOS markers, Gradle wrappers, Android debug flags, CocoaPods lockfiles, and iOS debug entitlements. Complete.
+- `v1.28.0`: Monorepo diagnostics for Nx, Turbo, Lerna, pnpm workspaces, Rush, Bazel, Pants, workspace lockfiles, and risky root scripts. Complete.

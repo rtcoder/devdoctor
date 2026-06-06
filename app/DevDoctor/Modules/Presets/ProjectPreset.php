@@ -32,6 +32,8 @@ enum ProjectPreset: string
 
     case IOS = 'ios';
 
+    case MONOREPO = 'monorepo';
+
     case PYTHON = 'python';
 
     case PIP = 'pip';
@@ -96,6 +98,7 @@ enum ProjectPreset: string
             self::MOBILE => 'Mobile native',
             self::ANDROID => 'Android',
             self::IOS => 'iOS',
+            self::MONOREPO => 'Monorepo',
             self::PYTHON => 'Python',
             self::PIP => 'pip',
             self::POETRY => 'Poetry',
