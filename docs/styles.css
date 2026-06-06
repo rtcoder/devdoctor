@@ -237,6 +237,11 @@ section {
     margin-top: 18px;
 }
 
+.grid.scenarios {
+    grid-template-columns: auto;
+    grid-template-rows: repeat(auto-fit, minmax(230px, 1fr));
+}
+
 .tile,
 .release,
 .code-card {
