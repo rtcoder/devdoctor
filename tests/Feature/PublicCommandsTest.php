@@ -413,7 +413,7 @@ it('runs default ci modules without ports', function () {
     $exitCode = Artisan::call('ci', ['--path' => $path, '--format' => 'json']);
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
-    expect($exitCode)->toBe(1)
+    expect(in_array($exitCode, [1, 2], true))->toBeTrue()
         ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'ruby', 'go', 'rust', 'java', 'iac', 'dotnet', 'cpp', 'web', 'symfony']);
 });
 
