@@ -126,9 +126,9 @@ it('ships static documentation and pinned CI examples', function () {
         ->and(file_get_contents($root.'/docs/commands.json'))->toContain('"name": "ci"')
         ->and(file_get_contents($root.'/docs/commands.html'))->toContain('docs/commands.json')
         ->and(file_get_contents($root.'/docs/scenarios.html'))->toContain('Kubernetes / Helm')
-        ->and(file_get_contents($root.'/docs/examples/github-actions.yml'))->toContain('v1.33.0')
-        ->and(file_get_contents($root.'/docs/examples/gitlab-ci.yml'))->toContain('v1.33.0')
-        ->and(file_get_contents($root.'/docs/examples/bitbucket-pipelines.yml'))->toContain('v1.33.0')
+        ->and(file_get_contents($root.'/docs/examples/github-actions.yml'))->toContain('v1.34.0')
+        ->and(file_get_contents($root.'/docs/examples/gitlab-ci.yml'))->toContain('v1.34.0')
+        ->and(file_get_contents($root.'/docs/examples/bitbucket-pipelines.yml'))->toContain('v1.34.0')
         ->and(file_get_contents($root.'/README.md'))->toContain('devdoctor-linux-x64')
         ->and(file_get_contents($root.'/docs/installation.html'))->toContain('Standalone Release Binary')
         ->and(file_get_contents($root.'/docs/release-verification.html'))->toContain('devdoctor.sha256');

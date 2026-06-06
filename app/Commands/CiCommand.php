@@ -34,6 +34,7 @@ final class CiCommand extends Command
         {--no-hints : Hide hints and suggested fixes from output}
         {--modules= : Comma-separated modules to run}
         {--exclude= : Comma-separated modules to exclude}
+        {--profile= : CI policy profile: local, ci, strict-ci, or security}
         {--fail-on-warnings : Return a non-zero exit code for warnings}
         {--no-fail-on-warnings : Return zero when diagnostics only contain warnings}
         {--config=devdoctor.yml : DevDoctor config file name}
@@ -46,6 +47,21 @@ final class CiCommand extends Command
     public function handle(DiagnosticModuleRunner $runner): int
     {
         $path = (string) $this->option('path');
+        $profile = (string) ($this->option('profile') ?: '');
+
+        if ($profile !== '' && ! array_key_exists($profile, $this->profiles())) {
+            return $this->renderDiagnostics([
+                new ModuleResult(ModuleName::CI, new IssueCollection([
+                    new Issue(
+                        code: IssueCode::DD_CI_UNKNOWN_PROFILE,
+                        severity: Severity::ERROR,
+                        message: 'Unknown CI profile: '.$profile,
+                        module: ModuleName::CI,
+                    ),
+                ])),
+            ], ExitCode::INVALID_CONFIG);
+        }
+
         $modules = $this->selectedModules();
         $unknown = array_values(array_diff($modules, $runner->knownModules()));
 
@@ -65,7 +81,7 @@ final class CiCommand extends Command
         $results = [];
         $options = new DiagnosticRunOptions(
             path: $path,
-            strict: (bool) $this->option('strict'),
+            strict: $this->effectiveStrict(),
             ci: true,
             configFile: (string) $this->option('config'),
             portsCommon: true,
@@ -110,9 +126,11 @@ final class CiCommand extends Command
      */
     private function selectedModules(): array
     {
-        $modules = $this->stringList((string) ($this->option('modules') ?: 'env,php,node,laravel,composer,git,docker'));
+        $profile = (string) ($this->option('profile') ?: '');
+        $profileSettings = $this->profileSettings($profile);
+        $modules = $this->stringList((string) ($this->option('modules') ?: $profileSettings['modules']));
 
-        if (! $this->option('modules')) {
+        if (! $this->option('modules') && $profileSettings['add_detected']) {
             $modules = app(EcosystemModuleSelector::class)->addDetected((string) $this->option('path'), $modules);
         }
 
@@ -138,7 +156,58 @@ final class CiCommand extends Command
             return false;
         }
 
-        return true;
+        if ((bool) $this->option('fail-on-warnings')) {
+            return true;
+        }
+
+        return $this->profileSettings((string) ($this->option('profile') ?: ''))['fail_on_warnings'];
+    }
+
+    private function effectiveStrict(): bool
+    {
+        return (bool) $this->option('strict')
+            || $this->profileSettings((string) ($this->option('profile') ?: ''))['strict'];
+    }
+
+    /**
+     * @return array{modules: string, fail_on_warnings: bool, strict: bool, add_detected: bool}
+     */
+    private function profileSettings(string $profile): array
+    {
+        return $this->profiles()[$profile === '' ? 'ci' : $profile];
+    }
+
+    /**
+     * @return array<string, array{modules: string, fail_on_warnings: bool, strict: bool, add_detected: bool}>
+     */
+    private function profiles(): array
+    {
+        return [
+            'local' => [
+                'modules' => 'env,php,node,frontend,composer,git,docker',
+                'fail_on_warnings' => false,
+                'strict' => false,
+                'add_detected' => true,
+            ],
+            'ci' => [
+                'modules' => 'env,php,node,laravel,composer,git,docker',
+                'fail_on_warnings' => true,
+                'strict' => false,
+                'add_detected' => true,
+            ],
+            'strict-ci' => [
+                'modules' => 'env,php,node,laravel,composer,git,docker,security',
+                'fail_on_warnings' => true,
+                'strict' => true,
+                'add_detected' => true,
+            ],
+            'security' => [
+                'modules' => 'env,git,docker,security',
+                'fail_on_warnings' => true,
+                'strict' => true,
+                'add_detected' => false,
+            ],
+        ];
     }
 
     /**

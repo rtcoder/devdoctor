@@ -54,7 +54,7 @@
         <tr><td><code>docker</code></td><td>Check Compose files, daemon state, ports, and containers.</td><td><code>php devdoctor docker --compose-file=docker-compose.yml</code></td></tr>
         <tr><td><code>health</code></td><td>Run a broad local project health check, with ports available through <code>--include-ports</code>.</td><td><code>php devdoctor health --format=json</code></td></tr>
         <tr><td><code>doctor</code></td><td>Alias for <code>health</code> with the same broad local project checks.</td><td><code>php devdoctor doctor --summary-only</code></td></tr>
-        <tr><td><code>ci</code></td><td>Run CI-safe diagnostics and aggregate exit codes.</td><td><code>php devdoctor ci --modules=env,php,node,laravel,composer,db,git,docker</code></td></tr>
+        <tr><td><code>ci</code></td><td>Run CI-safe diagnostics and aggregate exit codes, with optional policy profiles.</td><td><code>php devdoctor ci --profile=strict-ci</code></td></tr>
         <tr><td><code>presets</code></td><td>Detect supported project presets, including PHP, Node/frontend, Flutter/Dart, native mobile, monorepos, Python, Go, Rust, JVM, IaC, Kubernetes/Helm, C/C++, .NET, generic web, and Docker Compose evidence.</td><td><code>php devdoctor presets --format=json</code></td></tr>
         <tr><td><code>inventory</code></td><td>Show detected presets, available modules, and auto-selected modules.</td><td><code>php devdoctor inventory --format=json</code></td></tr>
         <tr><td><code>commands</code></td><td>List DevDoctor commands and their documentation metadata.</td><td><code>php devdoctor commands --format=json</code></td></tr>

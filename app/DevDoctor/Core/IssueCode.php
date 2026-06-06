@@ -10,6 +10,7 @@ enum IssueCode: string
     case DD_CI_BASELINE_INVALID = 'DD_CI_BASELINE_INVALID';
     case DD_CI_BASELINE_MISSING = 'DD_CI_BASELINE_MISSING';
     case DD_CI_UNKNOWN_MODULE = 'DD_CI_UNKNOWN_MODULE';
+    case DD_CI_UNKNOWN_PROFILE = 'DD_CI_UNKNOWN_PROFILE';
     case DD_CACHE_DIRECTORY_LARGE = 'DD_CACHE_DIRECTORY_LARGE';
     case DD_CACHE_DIRECTORY_NOT_WRITABLE = 'DD_CACHE_DIRECTORY_NOT_WRITABLE';
     case DD_CACHE_LARAVEL_ARTIFACT = 'DD_CACHE_LARAVEL_ARTIFACT';
@@ -240,6 +241,7 @@ enum IssueCode: string
     {
         return match ($this) {
             self::DD_CI_UNKNOWN_MODULE => 'Use one of the documented CI module names.',
+            self::DD_CI_UNKNOWN_PROFILE => 'Use local, ci, strict-ci, or security.',
             self::DD_HEALTH_UNKNOWN_MODULE => 'Use one of the documented health module names or remove it from --modules.',
             self::DD_CI_BASELINE_MISSING => 'Create the baseline file with --write-baseline or correct the provided path.',
             self::DD_CI_BASELINE_INVALID => 'Regenerate the baseline file with --write-baseline.',

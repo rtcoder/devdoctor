@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, Node/frontend, Flutter/Dart, native mobile, monorepos, Python, Ruby/Rails, Go, Rust, Java/JVM, Terraform/IaC, Kubernetes/Helm, .NET, C/C++, generic web, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.33.0`
+Current version: `1.34.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.33.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.34.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -284,6 +284,8 @@ The `presets` command detects supported project stacks from files and declared d
 
 `v1.33.0` adds CLI discoverability with `devdoctor commands` and `devdoctor explain --module=...`, making command metadata and issue-code hints available without leaving the terminal.
 
+`v1.34.0` adds CI policy profiles: `local`, `ci`, `strict-ci`, and `security`, with documented defaults for warning handling, strict mode, and module selection.
+
 Preset detection is informational and can be included in CI explicitly:
 
 ```bash
@@ -373,12 +375,24 @@ The CI aggregator runs `env`, `php`, `node`, `laravel`, `composer`, `git`, and `
 
 ```bash
 php devdoctor ci --format=json
+php devdoctor ci --profile=local
+php devdoctor ci --profile=strict-ci
+php devdoctor ci --profile=security
 php devdoctor ci --modules=env,php,node,laravel,composer --exclude=composer
 php devdoctor ci --modules=security --no-fail-on-warnings
 php devdoctor ci --no-fail-on-warnings
 ```
 
-Unknown modules return exit code `3`. Selected modules are always included in JSON output.
+CI profiles provide documented defaults:
+
+| Profile | Modules | Behavior |
+| --- | --- | --- |
+| `local` | `env,php,node,frontend,composer,git,docker` plus detected ecosystems | Does not fail on warnings by default |
+| `ci` | `env,php,node,laravel,composer,git,docker` plus detected ecosystems | Current default behavior |
+| `strict-ci` | `ci` modules plus `security` | Enables strict mode and fails on warnings |
+| `security` | `env,git,docker,security` | Security-oriented strict profile |
+
+Unknown modules and unknown profiles return exit code `3`. Selected modules are always included in JSON output.
 
 The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5. It also builds and smoke-tests the PHAR and a PHPacker standalone Linux binary.
 
@@ -387,9 +401,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.33.0
+- uses: rtcoder/devdoctor@v1.34.0
   with:
-    version: v1.33.0
+    version: v1.34.0
     format: sarif
 ```
 
@@ -550,7 +564,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.33.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.34.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version

@@ -28,7 +28,7 @@
             <p>Messages can become clearer over time, but issue codes are the stable contract. Use these identifiers in CI policy, baselines, SARIF consumers, and custom dashboards.</p>
         </div>
         <div class="metric-row">
-            <div class="metric"><strong>229</strong><span>codes</span></div>
+            <div class="metric"><strong>230</strong><span>codes</span></div>
             <div class="metric"><strong>31</strong><span>modules</span></div>
             <div class="metric"><strong>v1</strong><span>schema</span></div>
         </div>
@@ -44,7 +44,7 @@
             <input type="search" id="issue-code-search" placeholder="DD_ENV, docker, lock..." autocomplete="off">
         </label>
         <a href="#module-cache" data-module-link="cache"><span>cache</span><strong>5</strong></a>
-        <a href="#module-ci" data-module-link="ci"><span>ci</span><strong>4</strong></a>
+        <a href="#module-ci" data-module-link="ci"><span>ci</span><strong>5</strong></a>
         <a href="#module-composer" data-module-link="composer"><span>composer</span><strong>12</strong></a>
         <a href="#module-cpp" data-module-link="cpp"><span>cpp</span><strong>8</strong></a>
         <a href="#module-db" data-module-link="db"><span>db</span><strong>9</strong></a>
@@ -76,7 +76,7 @@
         <a href="#module-web" data-module-link="web"><span>web</span><strong>7</strong></a>
     </aside>
     <section class="code-groups" aria-live="polite">
-        <p class="catalog-result-count" id="issue-code-result-count">229 codes shown</p>
+        <p class="catalog-result-count" id="issue-code-result-count">230 codes shown</p>
         <article class="code-group" id="module-cache" data-code-group data-module="cache">
             <div class="group-heading"><h2>cache</h2><span>5 codes</span></div>
             <div class="code-grid">
@@ -108,7 +108,7 @@
             </div>
         </article>
         <article class="code-group" id="module-ci" data-code-group data-module="ci">
-            <div class="group-heading"><h2>ci</h2><span>4 codes</span></div>
+            <div class="group-heading"><h2>ci</h2><span>5 codes</span></div>
             <div class="code-grid">
                 <section class="code-card" id="dd-ci-baseline-exists" data-code-card data-code="DD_CI_BASELINE_EXISTS" data-module="ci" data-description="The baseline output file already exists.">
                     <div class="code-top"><code>DD_CI_BASELINE_EXISTS</code><button class="copy-code" type="button" data-copy-code="DD_CI_BASELINE_EXISTS">Copy</button><span class="status-pill">active</span></div>
@@ -129,6 +129,11 @@
                     <div class="code-top"><code>DD_CI_UNKNOWN_MODULE</code><button class="copy-code" type="button" data-copy-code="DD_CI_UNKNOWN_MODULE">Copy</button><span class="status-pill">active</span></div>
                     <p>An unknown CI module was requested.</p>
                     <dl><div><dt>Module</dt><dd>ci</dd></div><div><dt>Introduced</dt><dd>0.8.0</dd></div></dl>
+                </section>
+                <section class="code-card" id="dd-ci-unknown-profile" data-code-card data-code="DD_CI_UNKNOWN_PROFILE" data-module="ci" data-description="An unknown CI policy profile was requested.">
+                    <div class="code-top"><code>DD_CI_UNKNOWN_PROFILE</code><button class="copy-code" type="button" data-copy-code="DD_CI_UNKNOWN_PROFILE">Copy</button><span class="status-pill">active</span></div>
+                    <p>An unknown CI policy profile was requested.</p>
+                    <dl><div><dt>Module</dt><dd>ci</dd></div><div><dt>Introduced</dt><dd>1.34.0</dd></div></dl>
                 </section>
             </div>
         </article>

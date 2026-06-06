@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.34.0 - 2026-06-06
+
+- Added CI policy profiles: `local`, `ci`, `strict-ci`, and `security`.
+- Added `DD_CI_UNKNOWN_PROFILE` for invalid profile requests.
+- Documented profile behavior in README and CI docs.
+
 ## v1.33.0 - 2026-06-06
 
 - Added `devdoctor commands` for terminal-native command discovery.

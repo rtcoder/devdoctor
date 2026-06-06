@@ -514,6 +514,40 @@ it('supports ci fail on warnings controls', function () {
         ->expectsOutputToContain('DD_ENV_MISSING_IN_ENV');
 });
 
+it('supports ci policy profiles', function () {
+    $path = sys_get_temp_dir().'/devdoctor-ci-profile-'.bin2hex(random_bytes(4));
+    mkdir($path);
+    file_put_contents($path.'/.env', "APP_ENV=local\n");
+    file_put_contents($path.'/.env.example', "APP_ENV=local\nQUEUE_CONNECTION=sync\n");
+
+    $localExitCode = Artisan::call('ci', [
+        '--path' => $path,
+        '--profile' => 'local',
+        '--modules' => 'env',
+        '--format' => 'json',
+    ]);
+    $localOutput = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
+
+    expect($localExitCode)->toBe(0)
+        ->and($localOutput['modules'][0]['name'])->toBe('env');
+
+    $strictExitCode = Artisan::call('ci', [
+        '--path' => $path,
+        '--profile' => 'strict-ci',
+        '--modules' => 'env',
+        '--format' => 'json',
+    ]);
+
+    expect($strictExitCode)->toBe(2);
+});
+
+it('reports unknown ci policy profiles', function () {
+    $exitCode = Artisan::call('ci', ['--profile' => 'nope', '--format' => 'json']);
+
+    expect($exitCode)->toBe(3)
+        ->and(Artisan::output())->toContain('DD_CI_UNKNOWN_PROFILE');
+});
+
 it('rejects invalid output formats consistently', function () {
     $this->artisan('env', ['--format' => 'xml'])
         ->assertExitCode(3)

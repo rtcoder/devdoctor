@@ -254,8 +254,8 @@
             "module": "ci",
             "type": "aggregate",
             "read_only": true,
-            "summary": "Run CI-safe diagnostics and aggregate exit codes.",
-            "example": "php devdoctor ci --modules=env,php,node,laravel,composer,db,git,docker"
+            "summary": "Run CI-safe diagnostics and aggregate exit codes, with optional policy profiles.",
+            "example": "php devdoctor ci --profile=strict-ci"
         },
         {
             "name": "presets",
