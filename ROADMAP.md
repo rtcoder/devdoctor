@@ -228,3 +228,4 @@ After the first complete version:
 - `v1.24.0`: Terraform/IaC diagnostics for Terraform, OpenTofu, and Terragrunt manifests, provider locks, broad provider constraints, unpinned remote modules, and secret-like IaC values. Complete.
 - `v1.25.0`: Kubernetes/Helm diagnostics for manifest hygiene, Helm locks, mutable images, privileged containers, hostPath mounts, NodePort exposure, and values secret hygiene. Complete.
 - `v1.26.0`: Flutter/Dart diagnostics for pubspec lockfiles, Dart SDK constraints, local path/Git dependencies, and Flutter platform markers. Complete.
+- `v1.27.0`: Native mobile diagnostics for Android/iOS markers, Gradle wrappers, Android debug flags, CocoaPods lockfiles, and iOS debug entitlements. Complete.

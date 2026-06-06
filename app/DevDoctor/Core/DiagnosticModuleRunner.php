@@ -38,6 +38,8 @@ use DevDoctor\Modules\Kube\KubeAnalyzer;
 use DevDoctor\Modules\Kube\KubeOptions;
 use DevDoctor\Modules\Laravel\LaravelAnalyzer;
 use DevDoctor\Modules\Laravel\LaravelOptions;
+use DevDoctor\Modules\Mobile\MobileAnalyzer;
+use DevDoctor\Modules\Mobile\MobileOptions;
 use DevDoctor\Modules\Node\NodeAnalyzer;
 use DevDoctor\Modules\Node\NodeOptions;
 use DevDoctor\Modules\Php\PhpAnalyzer;
@@ -75,6 +77,7 @@ final class DiagnosticModuleRunner
             ModuleName::NODE,
             ModuleName::FRONTEND,
             ModuleName::FLUTTER,
+            ModuleName::MOBILE,
             ModuleName::PYTHON,
             ModuleName::RUBY,
             ModuleName::GO,
@@ -127,6 +130,10 @@ final class DiagnosticModuleRunner
                 strict: $options->strict,
             ))),
             ModuleName::FLUTTER->value => new ModuleResult(ModuleName::FLUTTER, app(FlutterAnalyzer::class)->analyze(new FlutterOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
+            ModuleName::MOBILE->value => new ModuleResult(ModuleName::MOBILE, app(MobileAnalyzer::class)->analyze(new MobileOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),

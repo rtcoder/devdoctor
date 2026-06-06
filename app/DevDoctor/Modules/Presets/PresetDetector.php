@@ -72,6 +72,7 @@ final readonly class PresetDetector
         }
 
         array_push($matches, ...$this->flutterMatches($files));
+        array_push($matches, ...$this->mobileMatches($files));
         array_push($matches, ...$this->pythonMatches($files));
         array_push($matches, ...$this->rubyMatches($files));
         array_push($matches, ...$this->goMatches($files));
@@ -150,6 +151,31 @@ final readonly class PresetDetector
 
         if ($files->exists('.metadata') || $files->contains('pubspec.yaml', 'sdk: flutter')) {
             $matches[] = new PresetMatch(ProjectPreset::FLUTTER, $files->exists('.metadata') ? '.metadata' : 'pubspec.yaml');
+        }
+
+        return $matches;
+    }
+
+    /**
+     * @return list<PresetMatch>
+     */
+    private function mobileMatches(ProjectFiles $files): array
+    {
+        $matches = [];
+
+        $androidEvidence = $files->firstExisting(['android/app/build.gradle', 'android/app/build.gradle.kts', 'android/app/src/main/AndroidManifest.xml', 'app/src/main/AndroidManifest.xml']);
+        $iosEvidence = $files->firstExisting(['Podfile', 'Podfile.lock', 'ios/Runner.xcodeproj/project.pbxproj']);
+
+        if ($androidEvidence !== null || $iosEvidence !== null) {
+            $matches[] = new PresetMatch(ProjectPreset::MOBILE, $androidEvidence ?? (string) $iosEvidence);
+        }
+
+        if ($androidEvidence !== null) {
+            $matches[] = new PresetMatch(ProjectPreset::ANDROID, $androidEvidence);
+        }
+
+        if ($iosEvidence !== null) {
+            $matches[] = new PresetMatch(ProjectPreset::IOS, $iosEvidence);
         }
 
         return $matches;

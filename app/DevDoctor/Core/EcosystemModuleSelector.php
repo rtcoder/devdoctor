@@ -32,6 +32,10 @@ final readonly class EcosystemModuleSelector
             $modules[] = ModuleName::FLUTTER->value;
         }
 
+        if ($this->hasAny($presets, [ProjectPreset::MOBILE, ProjectPreset::ANDROID, ProjectPreset::IOS])) {
+            $modules[] = ModuleName::MOBILE->value;
+        }
+
         if ($this->hasAny($presets, [ProjectPreset::PYTHON, ProjectPreset::PIP, ProjectPreset::POETRY, ProjectPreset::PIPENV, ProjectPreset::UV, ProjectPreset::CONDA])) {
             $modules[] = ModuleName::PYTHON->value;
         }

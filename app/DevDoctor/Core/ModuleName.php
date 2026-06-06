@@ -22,6 +22,7 @@ enum ModuleName: string
     case JAVA = 'java';
     case KUBE = 'kube';
     case LARAVEL = 'laravel';
+    case MOBILE = 'mobile';
     case NODE = 'node';
     case PHP = 'php';
     case PORTS = 'ports';

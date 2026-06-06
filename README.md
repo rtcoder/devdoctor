@@ -2,9 +2,9 @@
 
 Developer diagnostics for humans.
 
-DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, Node/frontend, Flutter/Dart, Python, Ruby/Rails, Go, Rust, Java/JVM, Terraform/IaC, Kubernetes/Helm, .NET, C/C++, generic web, and CI problems before they turn into manual debugging sessions.
+DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, Node/frontend, Flutter/Dart, native mobile, Python, Ruby/Rails, Go, Rust, Java/JVM, Terraform/IaC, Kubernetes/Helm, .NET, C/C++, generic web, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.26.0`
+Current version: `1.27.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.26.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.27.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -59,6 +59,7 @@ php        Check PHP runtime and platform health
 node       Check Node.js project and package manager health
 frontend   Check frontend project presets and build readiness
 flutter    Check Flutter and Dart pubspec, lockfile, SDK constraints, dependency sources, and platform markers
+mobile     Check native Android and iOS project markers, wrappers, debug flags, and lockfiles
 python     Check Python manifests and dependency manager health
 ruby       Check Ruby and Rails manifests, lockfiles, versions, credentials, and dependency sources
 go         Check Go module and workspace health
@@ -121,6 +122,7 @@ php devdoctor php --ci --minimum-memory=256
 php devdoctor node
 php devdoctor frontend
 php devdoctor flutter
+php devdoctor mobile
 php devdoctor python
 php devdoctor ruby
 php devdoctor go
@@ -196,6 +198,7 @@ Platform-specific commands are only suggested. DevDoctor never terminates a proc
 - Node.js diagnostics inspect `package.json`, npm/Yarn/pnpm/Bun lockfiles, stale lockfiles, `node_modules`, `engines.node`, `.nvmrc`, `.node-version`, and risky package scripts.
 - Frontend diagnostics inspect Vite, Next.js, Nuxt, Astro, React, Vue, Svelte, Angular, and generic static frontend evidence without running builds.
 - Flutter diagnostics inspect `pubspec.yaml`, `pubspec.lock`, Dart SDK constraints, local path/Git dependency sources, and Flutter platform markers without running `flutter pub get` or builds.
+- Mobile diagnostics inspect native Android/iOS markers, Gradle wrappers, Android debug flags, CocoaPods locks, and iOS debug entitlements without running Gradle, Xcode, or CocoaPods.
 - Python diagnostics inspect `pyproject.toml`, `requirements*.txt`, `Pipfile`, `poetry.lock`, `uv.lock`, and Conda files without installing packages.
 - Ruby diagnostics inspect `Gemfile`, `Gemfile.lock`, `.ruby-version`, Rails credentials, `config/database.yml`, and risky gem sources without running Bundler or Rails.
 - Go diagnostics inspect `go.mod`, `go.sum`, `go.work`, local `replace` directives, toolchain declarations, and vendor metadata without running `go mod tidy` or downloading modules.
@@ -211,7 +214,7 @@ Platform-specific commands are only suggested. DevDoctor never terminates a proc
 - Database diagnostics inspect `DB_CONNECTION`, required database keys, valid ports, SQLite file paths, and optional read-only PDO connectivity with `--connect`.
 - Queue diagnostics inspect `QUEUE_CONNECTION`, common async driver requirements, and production environments that still use the synchronous queue driver.
 - Security diagnostics inspect env example secrets, hard-coded secret patterns, risky Composer and package scripts, Docker privileged mode, Docker socket mounts, and `.env` ignore gaps.
-- Health aggregates local project diagnostics across `presets`, `env`, `cache`, `http`, `php`, `node`, `laravel`, `composer`, `db`, `queue`, `git`, `docker`, and `security`; it adds `frontend`, `flutter`, `python`, `ruby`, `go`, `rust`, `java`, `iac`, `kube`, `dotnet`, `cpp`, `web`, and `symfony` automatically when matching presets are detected. Add `--include-ports` to include common local port checks.
+- Health aggregates local project diagnostics across `presets`, `env`, `cache`, `http`, `php`, `node`, `laravel`, `composer`, `db`, `queue`, `git`, `docker`, and `security`; it adds `frontend`, `flutter`, `mobile`, `python`, `ruby`, `go`, `rust`, `java`, `iac`, `kube`, `dotnet`, `cpp`, `web`, and `symfony` automatically when matching presets are detected. Add `--include-ports` to include common local port checks.
 - Composer reports `DD_COMPOSER_LOCK_OUTDATED` when `composer.lock` is older than `composer.json`.
 - Process execution uses argument arrays and supports project paths containing spaces.
 
@@ -230,6 +233,7 @@ The `presets` command detects supported project stacks from files and declared d
 | Nuxt | `nuxt` dependency |
 | Astro | `astro` dependency |
 | Flutter / Dart | `pubspec.yaml`, `pubspec.lock`, `.metadata`, or Flutter SDK dependency |
+| Mobile native | Android manifests/build files, `Podfile`, `Podfile.lock`, or Xcode project markers |
 | Python | `pyproject.toml`, `requirements*.txt`, `Pipfile`, `uv.lock`, or Conda files |
 | pip / Poetry / Pipenv / uv / Conda | their lockfiles or manifests |
 | Ruby / Rails | `Gemfile`, `.ruby-version`, `config/application.rb`, or `bin/rails` |
@@ -250,6 +254,8 @@ The `presets` command detects supported project stacks from files and declared d
 `v1.25.0` ships `devdoctor kube` with static diagnostics for Kubernetes manifests and Helm charts. It checks Helm dependency locks, literal secrets in values files, mutable image tags, privileged containers, hostPath mounts, and NodePort service exposure without running `kubectl` or `helm`.
 
 `v1.26.0` ships `devdoctor flutter` with static diagnostics for Flutter and Dart projects. It checks pubspec lockfiles, Dart SDK constraints, path/Git dependencies, and platform markers without running Flutter commands or builds.
+
+`v1.27.0` ships `devdoctor mobile` with static diagnostics for native Android and iOS projects. It checks Gradle wrapper presence, Android debuggable manifests, CocoaPods lockfiles, and iOS debug entitlements without running platform build tools.
 
 Preset detection is informational and can be included in CI explicitly:
 
@@ -336,7 +342,7 @@ Unknown health modules return exit code `3`.
 
 ## CI
 
-The CI aggregator runs `env`, `php`, `node`, `laravel`, `composer`, `git`, and `docker` by default. It adds `frontend`, `flutter`, `python`, `ruby`, `go`, `rust`, `java`, `iac`, `kube`, `dotnet`, `cpp`, `web`, and `symfony` automatically when matching presets are detected. `ports` and `security` are excluded by default because they can depend on local machine state or intentionally present local files.
+The CI aggregator runs `env`, `php`, `node`, `laravel`, `composer`, `git`, and `docker` by default. It adds `frontend`, `flutter`, `mobile`, `python`, `ruby`, `go`, `rust`, `java`, `iac`, `kube`, `dotnet`, `cpp`, `web`, and `symfony` automatically when matching presets are detected. `ports` and `security` are excluded by default because they can depend on local machine state or intentionally present local files.
 
 ```bash
 php devdoctor ci --format=json
@@ -354,9 +360,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.26.0
+- uses: rtcoder/devdoctor@v1.27.0
   with:
-    version: v1.26.0
+    version: v1.27.0
     format: sarif
 ```
 
@@ -510,7 +516,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.26.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.27.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version

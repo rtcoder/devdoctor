@@ -26,6 +26,12 @@ enum ProjectPreset: string
 
     case DART = 'dart';
 
+    case MOBILE = 'mobile';
+
+    case ANDROID = 'android';
+
+    case IOS = 'ios';
+
     case PYTHON = 'python';
 
     case PIP = 'pip';
@@ -87,6 +93,9 @@ enum ProjectPreset: string
             self::ASTRO => 'Astro',
             self::FLUTTER => 'Flutter',
             self::DART => 'Dart',
+            self::MOBILE => 'Mobile native',
+            self::ANDROID => 'Android',
+            self::IOS => 'iOS',
             self::PYTHON => 'Python',
             self::PIP => 'pip',
             self::POETRY => 'Poetry',
