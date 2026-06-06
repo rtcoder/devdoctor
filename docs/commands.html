@@ -64,6 +64,18 @@
         </tbody>
     </table>
     <p><code>v1.29.0</code> adds utility commands: <code>inventory</code>, <code>explain</code>, <code>policy</code>, and <code>support-bundle</code>. They expose project inventory, issue-code hints, safety policy, and redacted support context without modifying project files.</p>
+    <section class="feature-band">
+        <div>
+            <p class="eyebrow">Machine-readable reference</p>
+            <h2>Command metadata ships with the documentation.</h2>
+            <p>The static docs include <a href="commands.json"><code>docs/commands.json</code></a> for tooling that wants command names, modules, read-only status, examples, and high-level categories without scraping HTML.</p>
+        </div>
+        <div class="metric-row">
+            <div class="metric"><strong>JSON</strong><span>commands</span></div>
+            <div class="metric"><strong>v1</strong><span>metadata</span></div>
+            <div class="metric"><strong>read-only</strong><span>flag</span></div>
+        </div>
+    </section>
 </main>
 <footer class="site-footer"><span>DevDoctor documentation</span><a href="index.html">Home</a><a href="changelog.html">Changelog</a><a href="release-verification.html">Release verification</a></footer>
 </body>

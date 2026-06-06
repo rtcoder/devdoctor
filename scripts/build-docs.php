@@ -24,6 +24,97 @@ function codeId(string $code): string
 }
 
 /**
+ * @param  array<string, mixed>  $data
+ */
+function prettyJson(array $data): string
+{
+    return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)."\n";
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function docsManifest(): array
+{
+    return [
+        'schema_version' => '1.0',
+        'site' => [
+            'title' => 'DevDoctor Documentation',
+            'home' => 'index.html',
+        ],
+        'pages' => [
+            ['title' => 'Install', 'path' => 'installation.html', 'section' => 'Getting started'],
+            ['title' => 'Commands', 'path' => 'commands.html', 'section' => 'Reference'],
+            ['title' => 'Config', 'path' => 'config.html', 'section' => 'Reference'],
+            ['title' => 'Scenarios', 'path' => 'scenarios.html', 'section' => 'Guides'],
+            ['title' => 'Issue Codes', 'path' => 'issue-codes.html', 'section' => 'Public contract'],
+            ['title' => 'Outputs', 'path' => 'output-formats.html', 'section' => 'Automation'],
+            ['title' => 'Baseline', 'path' => 'baseline.html', 'section' => 'Automation'],
+            ['title' => 'CI', 'path' => 'ci.html', 'section' => 'Automation'],
+            ['title' => 'Safety', 'path' => 'safety.html', 'section' => 'Trust'],
+            ['title' => 'Contracts', 'path' => 'contracts.html', 'section' => 'Trust'],
+            ['title' => 'Release Verification', 'path' => 'release-verification.html', 'section' => 'Trust'],
+            ['title' => 'Changelog', 'path' => 'changelog.html', 'section' => 'History'],
+        ],
+        'machine_readable' => [
+            'commands' => 'commands.json',
+            'issue_codes' => '../schemas/v1/issue-codes.json',
+            'json_schema' => '../schemas/v1/devdoctor-output.schema.json',
+        ],
+    ];
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function commandCatalog(): array
+{
+    return [
+        'schema_version' => '1.0',
+        'commands' => [
+            ['name' => 'env', 'module' => 'env', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check dotenv files and configured env rules.', 'example' => 'php devdoctor env --strict'],
+            ['name' => 'cache', 'module' => 'cache', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check framework and tool cache directories, size, permissions, and Laravel artifacts.', 'example' => 'php devdoctor cache --max-size=512'],
+            ['name' => 'http', 'module' => 'http', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check configured HTTP URLs without making network requests.', 'example' => 'php devdoctor http --url=https://example.test'],
+            ['name' => 'ports', 'module' => 'ports', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check local development port conflicts.', 'example' => 'php devdoctor ports --common'],
+            ['name' => 'php', 'module' => 'php', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check PHP runtime, composer platform requirements, memory, php.ini, and Xdebug in CI.', 'example' => 'php devdoctor php --ci'],
+            ['name' => 'node', 'module' => 'node', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check Node.js project and package manager health.', 'example' => 'php devdoctor node'],
+            ['name' => 'frontend', 'module' => 'frontend', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check frontend presets and build readiness for Vite, Next.js, Nuxt, Astro, and generic frontend projects.', 'example' => 'php devdoctor frontend'],
+            ['name' => 'flutter', 'module' => 'flutter', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check Flutter and Dart pubspec, lockfiles, SDK constraints, dependency sources, and platform markers.', 'example' => 'php devdoctor flutter'],
+            ['name' => 'mobile', 'module' => 'mobile', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check native Android and iOS project markers, wrappers, debug flags, and lockfiles.', 'example' => 'php devdoctor mobile'],
+            ['name' => 'monorepo', 'module' => 'monorepo', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check monorepo tooling, workspace lockfiles, and root package scripts.', 'example' => 'php devdoctor monorepo'],
+            ['name' => 'python', 'module' => 'python', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check Python manifests and dependency manager health for pip, Poetry, Pipenv, uv, and Conda.', 'example' => 'php devdoctor python'],
+            ['name' => 'ruby', 'module' => 'ruby', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check Ruby and Rails manifests, lockfiles, versions, credentials, database config, and gem sources.', 'example' => 'php devdoctor ruby'],
+            ['name' => 'go', 'module' => 'go', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check Go modules, sums, workspaces, local replace directives, toolchain directives, and vendor metadata.', 'example' => 'php devdoctor go'],
+            ['name' => 'rust', 'module' => 'rust', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check Cargo manifests, lockfiles, workspaces, toolchains, dependency sources, and release profiles.', 'example' => 'php devdoctor rust'],
+            ['name' => 'java', 'module' => 'java', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check Maven, Gradle, Ant, wrappers, Java versions, risky build scripts, and Spring profile red flags.', 'example' => 'php devdoctor java'],
+            ['name' => 'iac', 'module' => 'iac', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check Terraform, OpenTofu, and Terragrunt manifests, lockfiles, module refs, and secret hygiene.', 'example' => 'php devdoctor iac'],
+            ['name' => 'kube', 'module' => 'kube', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check Kubernetes manifests and Helm charts, locks, images, services, and secret hygiene.', 'example' => 'php devdoctor kube'],
+            ['name' => 'dotnet', 'module' => 'dotnet', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check .NET solutions, projects, SDK pinning, target frameworks, lock mode, and NuGet sources.', 'example' => 'php devdoctor dotnet'],
+            ['name' => 'cpp', 'module' => 'cpp', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check C/C++ build files, dependency managers, compile commands, and portability risks.', 'example' => 'php devdoctor cpp'],
+            ['name' => 'web', 'module' => 'web', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check generic web entry files, asset references, public config, server hints, and port declarations.', 'example' => 'php devdoctor web'],
+            ['name' => 'laravel', 'module' => 'laravel', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check Laravel .env, APP_KEY, debug mode, APP_URL, runtime directories, and config cache.', 'example' => 'php devdoctor laravel'],
+            ['name' => 'symfony', 'module' => 'symfony', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check Symfony .env hygiene, APP_SECRET, runtime directories, recipe drift, and Composer scripts.', 'example' => 'php devdoctor symfony'],
+            ['name' => 'security', 'module' => 'security', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check env examples, hard-coded secrets, risky scripts, and risky Compose settings.', 'example' => 'php devdoctor security'],
+            ['name' => 'composer', 'module' => 'composer', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check Composer project health without install/update.', 'example' => 'php devdoctor composer'],
+            ['name' => 'deps', 'module' => 'deps', 'type' => 'aggregate', 'read_only' => true, 'summary' => 'Run Composer and Node dependency diagnostics together.', 'example' => 'php devdoctor deps --summary-only'],
+            ['name' => 'db', 'module' => 'db', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check database environment configuration, with optional read-only PDO connection checks.', 'example' => 'php devdoctor db --connect'],
+            ['name' => 'queue', 'module' => 'queue', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check queue environment configuration and production sync risks.', 'example' => 'php devdoctor queue --strict'],
+            ['name' => 'git', 'module' => 'git', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check repository hygiene and sensitive files.', 'example' => 'php devdoctor git --require-clean'],
+            ['name' => 'docker', 'module' => 'docker', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check Compose files, daemon state, ports, and containers.', 'example' => 'php devdoctor docker --compose-file=docker-compose.yml'],
+            ['name' => 'health', 'module' => 'health', 'type' => 'aggregate', 'read_only' => true, 'summary' => 'Run a broad local project health check, with ports available through --include-ports.', 'example' => 'php devdoctor health --format=json'],
+            ['name' => 'doctor', 'module' => 'health', 'type' => 'aggregate', 'read_only' => true, 'summary' => 'Alias for health with the same broad local project checks.', 'example' => 'php devdoctor doctor --summary-only'],
+            ['name' => 'ci', 'module' => 'ci', 'type' => 'aggregate', 'read_only' => true, 'summary' => 'Run CI-safe diagnostics and aggregate exit codes.', 'example' => 'php devdoctor ci --modules=env,php,node,laravel,composer,db,git,docker'],
+            ['name' => 'presets', 'module' => 'presets', 'type' => 'utility', 'read_only' => true, 'summary' => 'Detect supported project presets across ecosystems.', 'example' => 'php devdoctor presets --format=json'],
+            ['name' => 'inventory', 'module' => 'inventory', 'type' => 'utility', 'read_only' => true, 'summary' => 'Show detected presets, available modules, and auto-selected modules.', 'example' => 'php devdoctor inventory --format=json'],
+            ['name' => 'explain', 'module' => 'explain', 'type' => 'utility', 'read_only' => true, 'summary' => 'Explain issue codes and their built-in hints.', 'example' => 'php devdoctor explain DD_ENV_FILE_MISSING --format=json'],
+            ['name' => 'policy', 'module' => 'policy', 'type' => 'utility', 'read_only' => true, 'summary' => 'Show DevDoctor safety and compatibility policy.', 'example' => 'php devdoctor policy --format=json'],
+            ['name' => 'support-bundle', 'module' => 'support-bundle', 'type' => 'utility', 'read_only' => true, 'summary' => 'Print redacted support context without writing files.', 'example' => 'php devdoctor support-bundle'],
+            ['name' => 'init', 'module' => 'config', 'type' => 'writer', 'read_only' => false, 'summary' => 'Preview and optionally write devdoctor.yml after confirmation.', 'example' => 'php devdoctor init --dry-run'],
+        ],
+    ];
+}
+
+/**
  * @param  array<int, array{code:string,module:string,description:string,introduced:string,status:string}>  $codes
  * @return array<string, array<int, array{code:string,module:string,description:string,introduced:string,status:string}>>
  */
@@ -212,4 +303,6 @@ $catalog = json_decode((string) file_get_contents($root.'/schemas/v1/issue-codes
 exit(writeOrCheck([
     $root.'/docs/issue-codes.html' => renderIssueCodesHtml($catalog),
     $root.'/docs/issue-codes.md' => renderIssueCodesMarkdown($catalog),
+    $root.'/docs/manifest.json' => prettyJson(docsManifest()),
+    $root.'/docs/commands.json' => prettyJson(commandCatalog()),
 ], $checkOnly));

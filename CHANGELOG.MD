@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.32.0 - 2026-06-06
+
+- Added machine-readable documentation metadata in `docs/manifest.json`.
+- Added a machine-readable command catalog in `docs/commands.json`.
+- Documented the command metadata catalog from the static command reference.
+
 ## v1.31.0 - 2026-06-06
 
 - Added active documentation navigation and breadcrumbs.

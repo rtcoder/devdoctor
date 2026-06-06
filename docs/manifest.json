@@ -1,0 +1,74 @@
+{
+    "schema_version": "1.0",
+    "site": {
+        "title": "DevDoctor Documentation",
+        "home": "index.html"
+    },
+    "pages": [
+        {
+            "title": "Install",
+            "path": "installation.html",
+            "section": "Getting started"
+        },
+        {
+            "title": "Commands",
+            "path": "commands.html",
+            "section": "Reference"
+        },
+        {
+            "title": "Config",
+            "path": "config.html",
+            "section": "Reference"
+        },
+        {
+            "title": "Scenarios",
+            "path": "scenarios.html",
+            "section": "Guides"
+        },
+        {
+            "title": "Issue Codes",
+            "path": "issue-codes.html",
+            "section": "Public contract"
+        },
+        {
+            "title": "Outputs",
+            "path": "output-formats.html",
+            "section": "Automation"
+        },
+        {
+            "title": "Baseline",
+            "path": "baseline.html",
+            "section": "Automation"
+        },
+        {
+            "title": "CI",
+            "path": "ci.html",
+            "section": "Automation"
+        },
+        {
+            "title": "Safety",
+            "path": "safety.html",
+            "section": "Trust"
+        },
+        {
+            "title": "Contracts",
+            "path": "contracts.html",
+            "section": "Trust"
+        },
+        {
+            "title": "Release Verification",
+            "path": "release-verification.html",
+            "section": "Trust"
+        },
+        {
+            "title": "Changelog",
+            "path": "changelog.html",
+            "section": "History"
+        }
+    ],
+    "machine_readable": {
+        "commands": "commands.json",
+        "issue_codes": "../schemas/v1/issue-codes.json",
+        "json_schema": "../schemas/v1/devdoctor-output.schema.json"
+    }
+}
