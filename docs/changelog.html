@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Changelog - DevDoctor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="topbar">
+        <a class="brand" href="index.html" aria-label="DevDoctor documentation home"><span class="brand-mark">DD</span><span>DevDoctor</span></a>
+        <nav class="primary-nav" aria-label="Primary documentation"><a href="installation.html">Install</a><a href="commands.html">Commands</a><a href="config.html">Config</a><a href="issue-codes.html">Issue Codes</a><a href="output-formats.html">Outputs</a><a href="ci.html">CI</a><a href="safety.html">Safety</a><a href="changelog.html">Changelog</a></nav>
+    </div>
+    <div class="hero">
+        <p class="eyebrow">DevDoctor docs</p>
+        <h1>Changelog</h1>
+        <p class="lead">Tagged DevDoctor releases from the initial Laravel Zero scaffold through the current multi-stack diagnostics tool.</p>
+    </div>
+</header>
+<main>
+    <section class="intro-panel">
+        <p>This page mirrors the repository changelog and lists only versions that exist as Git tags.</p>
+    </section>
+
+    <section class="release-list">
+        <article class="release">
+            <h2>v1.29.0 <span class="meta">2026-06-06</span></h2>
+            <ul>
+                <li>Added utility commands: <code>inventory</code>, <code>explain</code>, <code>policy</code>, and <code>support-bundle</code>.</li>
+                <li>Added redacted support context output for troubleshooting without writing project files.</li>
+                <li>Documented the new utility commands in README and docs.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.28.0 <span class="meta">2026-06-06</span></h2>
+            <ul>
+                <li>Added monorepo diagnostics for Nx, Turbo, Lerna, pnpm workspaces, Rush, Bazel, Pants, workspace lockfiles, and risky root package scripts.</li>
+                <li>Integrated monorepo evidence with preset detection and automatic module selection.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.27.0 <span class="meta">2026-06-06</span></h2>
+            <ul>
+                <li>Added native mobile diagnostics for Android and iOS project markers.</li>
+                <li>Added checks for Gradle wrappers, Android debug flags, CocoaPods lockfiles, and iOS debug entitlements.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.26.0 <span class="meta">2026-06-06</span></h2>
+            <ul>
+                <li>Added Flutter and Dart diagnostics.</li>
+                <li>Added checks for <code>pubspec.yaml</code>, <code>pubspec.lock</code>, Dart SDK constraints, local path or Git dependency sources, and Flutter platform markers.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.25.0 <span class="meta">2026-06-06</span></h2>
+            <ul>
+                <li>Added Kubernetes and Helm diagnostics.</li>
+                <li>Added checks for manifest hygiene, Helm locks, mutable images, privileged containers, hostPath mounts, NodePort exposure, and values secret hygiene.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.24.1 <span class="meta">2026-06-06</span></h2>
+            <ul>
+                <li>Fixed Windows CI expectations for default CI command exit codes.</li>
+                <li>Kept release documentation and version metadata aligned after the hotfix.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.24.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added Terraform, OpenTofu, and Terragrunt diagnostics.</li>
+                <li>Added checks for provider locks, broad provider constraints, unpinned remote modules, and secret-like IaC values.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.23.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added Ruby and Rails diagnostics.</li>
+                <li>Added checks for <code>Gemfile</code>, <code>Gemfile.lock</code>, Ruby versions, Rails credentials, database credential hygiene, and risky gem sources.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.22.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added deeper Symfony diagnostics.</li>
+                <li>Added checks for <code>.env</code> and <code>.env.local</code> hygiene, <code>APP_SECRET</code>, production debug mode, cache/log directories, Symfony Flex recipe drift, and risky Composer scripts.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.21.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added generic web diagnostics.</li>
+                <li>Added checks for static entry files, obvious asset references, public config exposure, web server config hints, and local port declaration conflicts.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.20.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added C and C++ diagnostics.</li>
+                <li>Added checks for CMake, Make, Meson, Autotools, vcpkg, Conan, compile command metadata, in-source build artifacts, compiler flags, generator assumptions, and shell portability risks.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.19.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added .NET diagnostics.</li>
+                <li>Added checks for solutions, projects, SDK pinning, target framework drift, NuGet configuration, and restore lock mode.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.18.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added Java and JVM diagnostics.</li>
+                <li>Added checks for Maven, Gradle, Ant, wrappers, Java version declarations, risky build scripts, and Spring production debug flags.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.17.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added Rust Cargo diagnostics.</li>
+                <li>Added checks for manifests, lockfiles, workspaces, toolchains, dependency sources, and release profile settings.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.16.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added Go module diagnostics.</li>
+                <li>Added checks for <code>go.mod</code>, <code>go.sum</code>, <code>go.work</code>, local <code>replace</code> directives, toolchain declarations, and vendor metadata.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.15.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added Python diagnostics.</li>
+                <li>Added static checks for pip, Poetry, Pipenv, uv, and Conda manifests without running installers.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.14.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Expanded Node diagnostics into frontend and package manager diagnostics.</li>
+                <li>Added checks for Vite, Next.js, Nuxt, Astro, generic frontend projects, npm, Yarn, pnpm, and Bun.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.13.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added multi-stack preset foundation.</li>
+                <li>Extended project detection for frontend, Python, Go, Rust, JVM, C/C++, .NET, generic web, and deeper Symfony planning.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.12.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added <code>doctor</code> as an alias for the broad <code>health</code> diagnostics workflow.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.11.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added dependency diagnostics aggregation for Composer and Node projects.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.10.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added global diagnostic output controls for severity filtering, summaries, and hidden hints.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.9.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added HTTP URL diagnostics.</li>
+                <li>Added static validation for environment-derived and explicit HTTP targets without making network requests.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.8.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added queue configuration diagnostics.</li>
+                <li>Added checks for common queue drivers and production risks around synchronous queue execution.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.7.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added cache diagnostics.</li>
+                <li>Added checks for framework/tool caches, cache size thresholds, permissions, and Laravel cache artifacts.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.6.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added database configuration diagnostics.</li>
+                <li>Added optional read-only PDO connection checks.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.5.1 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Centralized issue hints in the <code>IssueCode</code> enum.</li>
+                <li>Replaced string issue codes and module names with <code>IssueCode</code> and <code>ModuleName</code> enums across diagnostics.</li>
+                <li>Simplified issue suggestion handling with typed value objects.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.5.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added the <code>health</code> diagnostics aggregator for broad local project checks.</li>
+                <li>Added opt-in port checks for the health workflow.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.4.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added security posture diagnostics.</li>
+                <li>Added checks for env example secrets, hard-coded secret patterns, risky scripts, Docker privileged mode, Docker socket mounts, and <code>.env</code> ignore gaps.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.3.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added Laravel application diagnostics.</li>
+                <li>Added checks for <code>.env</code>, <code>APP_KEY</code>, production debug mode, <code>APP_URL</code>, runtime directories, and config cache state.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.2.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added Node.js diagnostics.</li>
+                <li>Added checks for <code>package.json</code>, lockfiles, package manager alignment, <code>node_modules</code>, runtime version files, and risky scripts.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.1.0 <span class="meta">2026-06-05</span></h2>
+            <ul>
+                <li>Added PHP runtime diagnostics.</li>
+                <li>Added checks for Composer platform requirements, extensions, memory limits, loaded <code>php.ini</code>, and Xdebug in CI.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v1.0.0 <span class="meta">2026-06-04</span></h2>
+            <ul>
+                <li>Published the first stable DevDoctor release.</li>
+                <li>Stabilized JSON schema v1 and the issue code catalog.</li>
+                <li>Completed public Composer package identity, documentation site, release verification docs, and CI examples.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v0.15.0 <span class="meta">2026-06-04</span></h2>
+            <ul>
+                <li>Hardened Composer package identity for <code>rtcoder/devdoctor</code>.</li>
+                <li>Migrated the public namespace from <code>App\</code> to <code>DevDoctor\</code>.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v0.14.0 <span class="meta">2026-06-04</span></h2>
+            <ul>
+                <li>Added the static documentation site under <code>docs/</code>.</li>
+                <li>Added pinned CI examples for GitHub Actions, GitLab CI, and Bitbucket Pipelines.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v0.13.0 <span class="meta">2026-06-04</span></h2>
+            <ul>
+                <li>Added versioned JSON schema paths.</li>
+                <li>Added a machine-readable issue code catalog.</li>
+                <li>Documented compatibility expectations for the public contract candidate.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v0.12.1 <span class="meta">2026-06-04</span></h2>
+            <ul>
+                <li>Added Homebrew tap automation.</li>
+                <li>Hardened cross-platform release dependencies and documentation for Homebrew installation.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v0.12.0 <span class="meta">2026-06-04</span></h2>
+            <ul>
+                <li>Added release automation for tagged releases.</li>
+                <li>Added signed PHAR release workflow support and a composite GitHub Action.</li>
+                <li>Added release verification documentation for checksums and signatures.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v0.11.1 <span class="meta">2026-06-04</span></h2>
+            <ul>
+                <li>Added CI baseline support.</li>
+                <li>Added suppression metadata for baseline issues in table, JSON, and SARIF output.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v0.11.0 <span class="meta">2026-06-04</span></h2>
+            <ul>
+                <li>Added SARIF output support for diagnostic commands and <code>ci</code>.</li>
+                <li>Added SARIF rule mapping, severity mapping, locations, fingerprints, hints, and fix descriptions.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v0.10.1 <span class="meta">2026-06-04</span></h2>
+            <ul>
+                <li>Added the <code>init</code> config wizard for safely generating <code>devdoctor.yml</code>.</li>
+                <li>Added dry-run and non-interactive safeguards so configuration is not written accidentally.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v0.10.0 <span class="meta">2026-06-04</span></h2>
+            <ul>
+                <li>Added actionable hints and read-only fix suggestions.</li>
+                <li>Added <code>FixSuggestion</code> and extended issue output in table and JSON formats.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v0.9.0 <span class="meta">2026-06-04</span></h2>
+            <ul>
+                <li>Added project preset detection for Laravel, Symfony, Node, Vite, Next.js, and Docker Compose evidence.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v0.8.0 <span class="meta">2026-06-04</span></h2>
+            <ul>
+                <li>Completed the first broad documentation and release tooling pass.</li>
+                <li>Expanded README with installation, command overview, output examples, CI usage, <code>devdoctor.yml</code>, exit codes, safety guarantees, and roadmap links.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v0.3.0 <span class="meta">2026-06-04</span></h2>
+            <ul>
+                <li>Improved diagnostic correctness across early modules.</li>
+                <li>Strengthened read-only module behavior and output consistency.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v0.2.0 <span class="meta">2026-06-04</span></h2>
+            <ul>
+                <li>Added cross-platform command support.</li>
+                <li>Added platform-aware port provider behavior, including macOS/Linux providers and graceful Windows handling.</li>
+                <li>Migrated the project requirement to PHP 8.5.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v0.1.1 <span class="meta">2026-05-27</span></h2>
+            <ul>
+                <li>Added the project roadmap.</li>
+                <li>Converted core status concepts to enums, including exit codes, severity, and module status.</li>
+                <li>Established the first typed core diagnostic model.</li>
+            </ul>
+        </article>
+        <article class="release">
+            <h2>v0.1.0 <span class="meta">2026-05-27</span></h2>
+            <ul>
+                <li>Initialized the Laravel Zero DevDoctor CLI.</li>
+                <li>Added the first public binary scaffold and initial project structure.</li>
+            </ul>
+        </article>
+    </section>
+</main>
+<footer class="site-footer"><span>DevDoctor documentation</span><a href="index.html">Home</a><a href="changelog.html">Changelog</a><a href="release-verification.html">Release verification</a></footer>
+</body>
+</html>

@@ -7,47 +7,122 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header>
-    <h1>DevDoctor Documentation</h1>
-    <p class="lead">Read-only developer diagnostics for multi-stack projects, from PHP, Node/frontend, Flutter, mobile, and monorepos to Docker, Git, Kubernetes, CI, ecosystem presets, and support utilities.</p>
-    <nav>
-        <a href="installation.html">Installation</a>
-        <a href="commands.html">Commands</a>
-        <a href="config.html">Config</a>
-        <a href="output-formats.html">Output Formats</a>
-        <a href="baseline.html">Baseline</a>
-        <a href="ci.html">CI Examples</a>
-        <a href="safety.html">Safety</a>
-        <a href="contracts.html">Contracts</a>
-        <a href="release-verification.html">Release Verification</a>
-    </nav>
+<header class="site-header">
+    <div class="topbar">
+        <a class="brand" href="index.html" aria-label="DevDoctor documentation home"><span class="brand-mark">DD</span><span>DevDoctor</span></a>
+        <nav class="primary-nav" aria-label="Primary documentation"><a href="installation.html">Install</a><a href="commands.html">Commands</a><a href="config.html">Config</a><a href="issue-codes.html">Issue Codes</a><a href="output-formats.html">Outputs</a><a href="ci.html">CI</a><a href="safety.html">Safety</a><a href="changelog.html">Changelog</a></nav>
+    </div>
+    <div class="hero">
+        <p class="eyebrow">Documentation hub</p>
+        <h1>DevDoctor Documentation</h1>
+        <p class="lead">Read-only developer diagnostics for multi-stack projects, from PHP, Node/frontend, Flutter, mobile, and monorepos to Docker, Git, Kubernetes, CI, ecosystem presets, and support utilities.</p>
+    </div>
 </header>
 <main>
-    <section class="grid">
-        <article class="tile">
-            <h2>Start</h2>
+    <section class="feature-band">
+        <div>
+            <p class="eyebrow">Read-only by default</p>
+            <h2>Find project health issues before they become debugging sessions.</h2>
+            <p>Start with a local command, move the same checks into CI, then automate against stable JSON, SARIF, baselines, and issue codes.</p>
+        </div>
+        <div class="metric-row">
+            <div class="metric"><strong>30+</strong><span>diagnostic modules</span></div>
+            <div class="metric"><strong>v1</strong><span>stable schema</span></div>
+            <div class="metric"><strong>3</strong><span>output formats</span></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Choose Your Path</h2>
+        <div class="grid">
+        <article class="tile accent-left">
+            <h3>Install</h3>
             <p>Install DevDoctor from source, Composer, PHAR, standalone binaries, GitHub Action, or Homebrew.</p>
             <a href="installation.html">Read installation docs</a>
         </article>
-        <article class="tile">
-            <h2>Run Diagnostics</h2>
-            <p>Use focused commands locally, `devdoctor presets` for stack detection, or `devdoctor ci` for non-interactive checks.</p>
+        <article class="tile accent-left">
+            <h3>Run Diagnostics</h3>
+            <p>Use focused commands locally, <code>devdoctor presets</code> for stack detection, or <code>devdoctor ci</code> for non-interactive checks.</p>
             <a href="commands.html">See command reference</a>
         </article>
+        <article class="tile accent-left">
+            <h3>Configure</h3>
+            <p>Generate <code>devdoctor.yml</code>, tune env rules, and keep project-specific policy explicit.</p>
+            <a href="config.html">Open config docs</a>
+        </article>
+        </div>
+    </section>
+
+    <section>
+        <h2>Supported Stacks</h2>
+        <div class="module-index" aria-label="Supported stacks">
+            <a href="commands.html"><span>PHP</span><strong>core</strong></a>
+            <a href="commands.html"><span>Node/frontend</span><strong>web</strong></a>
+            <a href="commands.html"><span>Python</span><strong>py</strong></a>
+            <a href="commands.html"><span>Ruby/Rails</span><strong>rb</strong></a>
+            <a href="commands.html"><span>Go</span><strong>go</strong></a>
+            <a href="commands.html"><span>Rust</span><strong>rs</strong></a>
+            <a href="commands.html"><span>Java/JVM</span><strong>jvm</strong></a>
+            <a href="commands.html"><span>.NET</span><strong>cs</strong></a>
+            <a href="commands.html"><span>C/C++</span><strong>cc</strong></a>
+            <a href="commands.html"><span>Kubernetes</span><strong>k8s</strong></a>
+            <a href="commands.html"><span>Terraform/IaC</span><strong>iac</strong></a>
+            <a href="commands.html"><span>Mobile</span><strong>app</strong></a>
+        </div>
+    </section>
+
+    <section>
+        <h2>Automation</h2>
+        <div class="grid">
         <article class="tile">
-            <h2>Integrate</h2>
+            <h3>CI Workflows</h3>
             <p>Use JSON, SARIF, baselines, and pinned CI examples for repeatable automation.</p>
             <a href="ci.html">Open CI examples</a>
         </article>
         <article class="tile">
-            <h2>Trust Outputs</h2>
-            <p>Review schema v1, issue code policy, release checksums, and signature verification.</p>
+            <h3>Output Formats</h3>
+            <p>Choose table output for humans, JSON for tooling, or SARIF for code scanning.</p>
+            <a href="output-formats.html">Compare formats</a>
+        </article>
+        <article class="tile">
+            <h3>Baselines</h3>
+            <p>Adopt DevDoctor in existing projects without hiding new warnings and errors.</p>
+            <a href="baseline.html">Read baseline docs</a>
+        </article>
+        <article class="tile">
+            <h3>Issue Codes</h3>
+            <p>Browse stable identifiers by module without opening the machine-readable JSON catalog.</p>
+            <a href="issue-codes.html">Browse issue codes</a>
+        </article>
+        </div>
+    </section>
+
+    <section>
+        <h2>Trust & Release History</h2>
+        <div class="grid">
+        <article class="tile">
+            <h3>Safety</h3>
+            <p>Review the read-only contract, redaction behavior, and command execution boundaries.</p>
+            <a href="safety.html">Read safety docs</a>
+        </article>
+        <article class="tile">
+            <h3>Contracts</h3>
+            <p>Review schema v1, issue code policy, and compatibility expectations.</p>
             <a href="contracts.html">Review public contracts</a>
         </article>
+        <article class="tile">
+            <h3>Release Verification</h3>
+            <p>Verify PHAR checksums, signed artifacts, and pinned release usage.</p>
+            <a href="release-verification.html">Verify releases</a>
+        </article>
+        <article class="tile">
+            <h3>Changelog</h3>
+            <p>Track every tagged release from the Laravel Zero scaffold through the current multi-stack diagnostics set.</p>
+            <a href="changelog.html">View changelog</a>
+        </article>
+        </div>
     </section>
 </main>
-<footer>
-    DevDoctor docs are static files published from the repository `docs/` directory.
-</footer>
+<footer class="site-footer"><span>DevDoctor documentation</span><a href="index.html">Home</a><a href="changelog.html">Changelog</a><a href="release-verification.html">Release verification</a></footer>
 </body>
 </html>

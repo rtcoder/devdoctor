@@ -7,25 +7,31 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header>
-    <h1>Contracts</h1>
-    <p class="lead">The v1 JSON schema and issue code catalog are stable public contracts for DevDoctor `v1.x`.</p>
-    <nav><a href="index.html">Home</a><a href="../schemas/v1/devdoctor-output.schema.json">JSON Schema</a><a href="../schemas/v1/issue-codes.json">Issue Catalog</a></nav>
+<header class="site-header">
+    <div class="topbar">
+        <a class="brand" href="index.html" aria-label="DevDoctor documentation home"><span class="brand-mark">DD</span><span>DevDoctor</span></a>
+        <nav class="primary-nav" aria-label="Primary documentation"><a href="installation.html">Install</a><a href="commands.html">Commands</a><a href="config.html">Config</a><a href="issue-codes.html">Issue Codes</a><a href="output-formats.html">Outputs</a><a href="ci.html">CI</a><a href="safety.html">Safety</a><a href="changelog.html">Changelog</a></nav>
+    </div>
+    <div class="hero">
+        <p class="eyebrow">DevDoctor docs</p>
+        <h1>Contracts</h1>
+        <p class="lead">The v1 JSON schema and issue code catalog are stable public contracts for DevDoctor <code>v1.x</code>.</p>
+    </div>
 </header>
 <main>
     <h2>JSON Schema</h2>
     <p>The versioned schema lives at <code>schemas/v1/devdoctor-output.schema.json</code>. The top-level alias <code>schemas/devdoctor-output.schema.json</code> points to the latest schema.</p>
 
     <h2>Issue Codes</h2>
-    <p>The machine-readable catalog lives at <code>schemas/v1/issue-codes.json</code>. The Markdown list is maintained at <a href="issue-codes.md">docs/issue-codes.md</a>.</p>
+    <p>Browse the human-readable catalog at <a href="issue-codes.html">Issue Codes</a>. The machine-readable catalog remains available at <code>schemas/v1/issue-codes.json</code> for automation.</p>
 
     <h2>Compatibility Policy</h2>
     <ul>
-        <li>Schema v1 will not receive breaking changes during `v1.x`.</li>
+        <li>Schema v1 will not receive breaking changes during <code>v1.x</code>.</li>
         <li>Issue codes will not be removed or change meaning without deprecation.</li>
         <li>New issue codes may be added.</li>
     </ul>
 </main>
-<footer><a href="index.html">Back to documentation index</a></footer>
+<footer class="site-footer"><span>DevDoctor documentation</span><a href="index.html">Home</a><a href="changelog.html">Changelog</a><a href="release-verification.html">Release verification</a></footer>
 </body>
 </html>

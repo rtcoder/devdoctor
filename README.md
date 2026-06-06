@@ -459,14 +459,14 @@ The wizard detects supported env files and project presets, previews the YAML, a
 
 - JSON output includes `schema_version` and follows the stable v1 schema at [schemas/v1/devdoctor-output.schema.json](schemas/v1/devdoctor-output.schema.json).
 - [schemas/devdoctor-output.schema.json](schemas/devdoctor-output.schema.json) remains an alias for the latest schema.
-- Issue identifiers are listed in [docs/issue-codes.md](docs/issue-codes.md) and the machine-readable [schemas/v1/issue-codes.json](schemas/v1/issue-codes.json).
+- Issue identifiers are documented in the human-readable [docs/issue-codes.html](docs/issue-codes.html) catalog and the machine-readable [schemas/v1/issue-codes.json](schemas/v1/issue-codes.json).
 - Automation should match issue codes rather than human-readable messages.
 - Schema v1 will not receive breaking changes during `v1.x`. Existing issue codes will not be removed or repurposed without deprecation, and new codes may be added.
 - The version recorded in `composer.json` under `extra.devdoctor.version` matches the Git release tag.
 
 ## Documentation
 
-Full static documentation lives in [docs/](docs/index.html), including installation, command reference, config, output formats, baseline, safety, contracts, release verification, and pinned CI examples for GitHub Actions, GitLab CI, and Bitbucket Pipelines.
+Full static documentation lives in [docs/](docs/index.html), including installation, command reference, config, output formats, baseline, safety, contracts, [issue codes](docs/issue-codes.html), release verification, [changelog](docs/changelog.html), and pinned CI examples for GitHub Actions, GitLab CI, and Bitbucket Pipelines.
 
 ## Safety
 
