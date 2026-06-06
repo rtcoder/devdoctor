@@ -617,6 +617,24 @@ it('writes and applies ci baselines without hiding findings', function () {
     expect($exitCode)->toBe(0)
         ->and($output['summary']['suppressed'])->toBe(1)
         ->and($output['modules'][0]['issues'][0]['suppressed'])->toBeTrue();
+
+    $reportExitCode = Artisan::call('ci', [
+        '--path' => $path,
+        '--modules' => 'env',
+        '--format' => 'json',
+        '--baseline' => 'devdoctor-baseline.json',
+        '--baseline-report' => true,
+    ]);
+    $reportOutput = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
+
+    expect($reportExitCode)->toBe(0)
+        ->and($reportOutput['modules'][1]['name'])->toBe('ci')
+        ->and($reportOutput['modules'][1]['issues'][0]['code'])->toBe('DD_CI_BASELINE_REPORT')
+        ->and($reportOutput['modules'][1]['issues'][0]['context'])->toMatchArray([
+            'active' => 0,
+            'suppressed' => 1,
+            'resolved' => 0,
+        ]);
 });
 
 it('reports missing and invalid ci baselines', function () {

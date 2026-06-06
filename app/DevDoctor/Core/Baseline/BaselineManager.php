@@ -84,4 +84,36 @@ final class BaselineManager
             $results,
         );
     }
+
+    /**
+     * @param  list<ModuleResult>  $results
+     * @return array{active: int, suppressed: int, resolved: int, resolved_fingerprints: list<string>}
+     */
+    public function report(Baseline $baseline, array $results): array
+    {
+        $current = [];
+
+        foreach ($results as $result) {
+            foreach ($result->issues->all() as $issue) {
+                if ($issue->severity === Severity::INFO) {
+                    continue;
+                }
+
+                $current[] = IssueFingerprint::for($issue);
+            }
+        }
+
+        $current = array_values(array_unique($current));
+        $active = array_values(array_diff($current, $baseline->fingerprints));
+        $suppressed = array_values(array_intersect($current, $baseline->fingerprints));
+        $resolved = array_values(array_diff($baseline->fingerprints, $current));
+        sort($resolved);
+
+        return [
+            'active' => count($active),
+            'suppressed' => count($suppressed),
+            'resolved' => count($resolved),
+            'resolved_fingerprints' => $resolved,
+        ];
+    }
 }

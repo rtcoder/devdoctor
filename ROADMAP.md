@@ -237,3 +237,4 @@ After the first complete version:
 - `v1.32.0`: Machine-readable documentation metadata and command catalog for tooling and docs UI integrations. Complete.
 - `v1.33.0`: CLI discoverability with `commands` and `explain --module` for terminal-native command and issue-code lookup. Complete.
 - `v1.34.0`: CI policy profiles for local, default CI, strict CI, and security-focused runs. Complete.
+- `v1.35.0`: Baseline reports for active, suppressed, and resolved fingerprints. Complete.

@@ -9,6 +9,7 @@ enum IssueCode: string
     case DD_CI_BASELINE_EXISTS = 'DD_CI_BASELINE_EXISTS';
     case DD_CI_BASELINE_INVALID = 'DD_CI_BASELINE_INVALID';
     case DD_CI_BASELINE_MISSING = 'DD_CI_BASELINE_MISSING';
+    case DD_CI_BASELINE_REPORT = 'DD_CI_BASELINE_REPORT';
     case DD_CI_UNKNOWN_MODULE = 'DD_CI_UNKNOWN_MODULE';
     case DD_CI_UNKNOWN_PROFILE = 'DD_CI_UNKNOWN_PROFILE';
     case DD_CACHE_DIRECTORY_LARGE = 'DD_CACHE_DIRECTORY_LARGE';
@@ -246,6 +247,7 @@ enum IssueCode: string
             self::DD_CI_BASELINE_MISSING => 'Create the baseline file with --write-baseline or correct the provided path.',
             self::DD_CI_BASELINE_INVALID => 'Regenerate the baseline file with --write-baseline.',
             self::DD_CI_BASELINE_EXISTS => 'Review the existing baseline before replacing it with --force.',
+            self::DD_CI_BASELINE_REPORT => 'Use --write-baseline with --force after review to refresh resolved fingerprints.',
             self::DD_CACHE_DIRECTORY_LARGE => 'Review whether the cache can be pruned by the framework or package manager.',
             self::DD_CACHE_DIRECTORY_NOT_WRITABLE => 'Adjust ownership or permissions so the current user can write this runtime cache directory.',
             self::DD_CACHE_LARAVEL_ARTIFACT => 'Rebuild Laravel cache artifacts after changing configuration, routes, events, or packages.',

@@ -28,7 +28,7 @@
             <p>Messages can become clearer over time, but issue codes are the stable contract. Use these identifiers in CI policy, baselines, SARIF consumers, and custom dashboards.</p>
         </div>
         <div class="metric-row">
-            <div class="metric"><strong>230</strong><span>codes</span></div>
+            <div class="metric"><strong>231</strong><span>codes</span></div>
             <div class="metric"><strong>31</strong><span>modules</span></div>
             <div class="metric"><strong>v1</strong><span>schema</span></div>
         </div>
@@ -44,7 +44,7 @@
             <input type="search" id="issue-code-search" placeholder="DD_ENV, docker, lock..." autocomplete="off">
         </label>
         <a href="#module-cache" data-module-link="cache"><span>cache</span><strong>5</strong></a>
-        <a href="#module-ci" data-module-link="ci"><span>ci</span><strong>5</strong></a>
+        <a href="#module-ci" data-module-link="ci"><span>ci</span><strong>6</strong></a>
         <a href="#module-composer" data-module-link="composer"><span>composer</span><strong>12</strong></a>
         <a href="#module-cpp" data-module-link="cpp"><span>cpp</span><strong>8</strong></a>
         <a href="#module-db" data-module-link="db"><span>db</span><strong>9</strong></a>
@@ -76,7 +76,7 @@
         <a href="#module-web" data-module-link="web"><span>web</span><strong>7</strong></a>
     </aside>
     <section class="code-groups" aria-live="polite">
-        <p class="catalog-result-count" id="issue-code-result-count">230 codes shown</p>
+        <p class="catalog-result-count" id="issue-code-result-count">231 codes shown</p>
         <article class="code-group" id="module-cache" data-code-group data-module="cache">
             <div class="group-heading"><h2>cache</h2><span>5 codes</span></div>
             <div class="code-grid">
@@ -108,7 +108,7 @@
             </div>
         </article>
         <article class="code-group" id="module-ci" data-code-group data-module="ci">
-            <div class="group-heading"><h2>ci</h2><span>5 codes</span></div>
+            <div class="group-heading"><h2>ci</h2><span>6 codes</span></div>
             <div class="code-grid">
                 <section class="code-card" id="dd-ci-baseline-exists" data-code-card data-code="DD_CI_BASELINE_EXISTS" data-module="ci" data-description="The baseline output file already exists.">
                     <div class="code-top"><code>DD_CI_BASELINE_EXISTS</code><button class="copy-code" type="button" data-copy-code="DD_CI_BASELINE_EXISTS">Copy</button><span class="status-pill">active</span></div>
@@ -124,6 +124,11 @@
                     <div class="code-top"><code>DD_CI_BASELINE_MISSING</code><button class="copy-code" type="button" data-copy-code="DD_CI_BASELINE_MISSING">Copy</button><span class="status-pill">active</span></div>
                     <p>The requested baseline file is missing.</p>
                     <dl><div><dt>Module</dt><dd>ci</dd></div><div><dt>Introduced</dt><dd>0.11.1</dd></div></dl>
+                </section>
+                <section class="code-card" id="dd-ci-baseline-report" data-code-card data-code="DD_CI_BASELINE_REPORT" data-module="ci" data-description="A baseline report summarizes active, suppressed, and resolved fingerprints.">
+                    <div class="code-top"><code>DD_CI_BASELINE_REPORT</code><button class="copy-code" type="button" data-copy-code="DD_CI_BASELINE_REPORT">Copy</button><span class="status-pill">active</span></div>
+                    <p>A baseline report summarizes active, suppressed, and resolved fingerprints.</p>
+                    <dl><div><dt>Module</dt><dd>ci</dd></div><div><dt>Introduced</dt><dd>1.35.0</dd></div></dl>
                 </section>
                 <section class="code-card" id="dd-ci-unknown-module" data-code-card data-code="DD_CI_UNKNOWN_MODULE" data-module="ci" data-description="An unknown CI module was requested.">
                     <div class="code-top"><code>DD_CI_UNKNOWN_MODULE</code><button class="copy-code" type="button" data-copy-code="DD_CI_UNKNOWN_MODULE">Copy</button><span class="status-pill">active</span></div>

@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, Node/frontend, Flutter/Dart, native mobile, monorepos, Python, Ruby/Rails, Go, Rust, Java/JVM, Terraform/IaC, Kubernetes/Helm, .NET, C/C++, generic web, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.34.0`
+Current version: `1.35.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.34.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.35.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -286,6 +286,8 @@ The `presets` command detects supported project stacks from files and declared d
 
 `v1.34.0` adds CI policy profiles: `local`, `ci`, `strict-ci`, and `security`, with documented defaults for warning handling, strict mode, and module selection.
 
+`v1.35.0` adds `--baseline-report` for CI baselines, showing active, suppressed, and resolved fingerprint counts without hiding findings.
+
 Preset detection is informational and can be included in CI explicitly:
 
 ```bash
@@ -401,9 +403,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.34.0
+- uses: rtcoder/devdoctor@v1.35.0
   with:
-    version: v1.34.0
+    version: v1.35.0
     format: sarif
 ```
 
@@ -416,9 +418,10 @@ Baselines let an existing project acknowledge current warnings and errors while 
 ```bash
 php devdoctor ci --write-baseline=devdoctor-baseline.json
 php devdoctor ci --baseline=devdoctor-baseline.json
+php devdoctor ci --baseline=devdoctor-baseline.json --baseline-report
 ```
 
-Baseline fingerprints use issue code, module, normalized file path, and key. They do not depend on messages or line numbers. Suppressed findings remain visible in table, JSON, and SARIF output, but they do not affect status or exit code. Only warnings and errors are written. Use `--force` to intentionally replace an existing baseline.
+Baseline fingerprints use issue code, module, normalized file path, and key. They do not depend on messages or line numbers. Suppressed findings remain visible in table, JSON, and SARIF output, but they do not affect status or exit code. Only warnings and errors are written. Use `--baseline-report` to show active, suppressed, and resolved fingerprint counts. Use `--force` to intentionally replace an existing baseline after review.
 
 ## Configuration
 
@@ -564,7 +567,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.34.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.35.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version

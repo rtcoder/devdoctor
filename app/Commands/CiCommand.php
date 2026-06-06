@@ -39,6 +39,7 @@ final class CiCommand extends Command
         {--no-fail-on-warnings : Return zero when diagnostics only contain warnings}
         {--config=devdoctor.yml : DevDoctor config file name}
         {--baseline= : Baseline file to apply}
+        {--baseline-report : Include active, suppressed, and resolved baseline fingerprint counts}
         {--write-baseline= : Write warning and error fingerprints to a baseline file}
         {--force : Allow replacing an existing baseline file}';
 
@@ -242,13 +243,35 @@ final class CiCommand extends Command
             return $this->baselineError(IssueCode::DD_CI_BASELINE_MISSING, 'Baseline file does not exist: '.$baselineFile, ExitCode::MISSING_DEPENDENCY);
         }
 
+        $manager = app(BaselineManager::class);
+
         try {
-            $baseline = app(BaselineManager::class)->load($baselinePath);
+            $baseline = $manager->load($baselinePath);
         } catch (InvalidBaseline $exception) {
             return $this->baselineError(IssueCode::DD_CI_BASELINE_INVALID, $exception->getMessage(), ExitCode::INVALID_CONFIG);
         }
 
-        return app(BaselineManager::class)->apply($baseline, $results);
+        $report = $manager->report($baseline, $results);
+        $results = $manager->apply($baseline, $results);
+
+        if ((bool) $this->option('baseline-report')) {
+            $results[] = new ModuleResult(ModuleName::CI, new IssueCollection([
+                new Issue(
+                    code: IssueCode::DD_CI_BASELINE_REPORT,
+                    severity: Severity::INFO,
+                    message: sprintf(
+                        'Baseline report: %d active, %d suppressed, %d resolved fingerprints.',
+                        $report['active'],
+                        $report['suppressed'],
+                        $report['resolved'],
+                    ),
+                    module: ModuleName::CI,
+                    context: $report,
+                ),
+            ]));
+        }
+
+        return $results;
     }
 
     /**

@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.35.0 - 2026-06-06
+
+- Added `--baseline-report` for CI baseline runs.
+- Added `DD_CI_BASELINE_REPORT` with active, suppressed, and resolved fingerprint counts.
+- Documented baseline reports in README and docs.
+
 ## v1.34.0 - 2026-06-06
 
 - Added CI policy profiles: `local`, `ci`, `strict-ci`, and `security`.

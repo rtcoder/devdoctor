@@ -4,6 +4,7 @@
         {"code": "DD_CI_BASELINE_EXISTS", "module": "ci", "description": "The baseline output file already exists.", "introduced": "0.11.1", "status": "active"},
         {"code": "DD_CI_BASELINE_INVALID", "module": "ci", "description": "The baseline file is invalid.", "introduced": "0.11.1", "status": "active"},
         {"code": "DD_CI_BASELINE_MISSING", "module": "ci", "description": "The requested baseline file is missing.", "introduced": "0.11.1", "status": "active"},
+        {"code": "DD_CI_BASELINE_REPORT", "module": "ci", "description": "A baseline report summarizes active, suppressed, and resolved fingerprints.", "introduced": "1.35.0", "status": "active"},
         {"code": "DD_CI_UNKNOWN_MODULE", "module": "ci", "description": "An unknown CI module was requested.", "introduced": "0.8.0", "status": "active"},
         {"code": "DD_CI_UNKNOWN_PROFILE", "module": "ci", "description": "An unknown CI policy profile was requested.", "introduced": "1.34.0", "status": "active"},
         {"code": "DD_CACHE_DIRECTORY_LARGE", "module": "cache", "description": "A supported cache directory exceeds the configured size threshold.", "introduced": "1.7.0", "status": "active"},

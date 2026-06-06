@@ -25,8 +25,22 @@
 php devdoctor ci --write-baseline=devdoctor-baseline.json --force</code></pre>
 
     <h2>Use a Baseline</h2>
-    <pre><code>php devdoctor ci --baseline=devdoctor-baseline.json</code></pre>
+    <pre><code>php devdoctor ci --baseline=devdoctor-baseline.json
+php devdoctor ci --baseline=devdoctor-baseline.json --baseline-report</code></pre>
     <p>Suppressed issues stay visible in table, JSON, and SARIF, but do not affect status or exit code. Missing baseline files return exit code <code>4</code>; invalid baselines return exit code <code>3</code>.</p>
+
+    <section class="feature-band">
+        <div>
+            <p class="eyebrow">Baseline report</p>
+            <h2>See what is active, suppressed, or already resolved.</h2>
+            <p><code>--baseline-report</code> adds an informational CI issue with counts for active fingerprints, suppressed fingerprints, and resolved fingerprints that exist in the baseline but no longer appear in the current run.</p>
+        </div>
+        <div class="metric-row">
+            <div class="metric"><strong>active</strong><span>new or unsuppressed</span></div>
+            <div class="metric"><strong>suppressed</strong><span>matched baseline</span></div>
+            <div class="metric"><strong>resolved</strong><span>stale baseline</span></div>
+        </div>
+    </section>
 </main>
 <footer class="site-footer"><span>DevDoctor documentation</span><a href="index.html">Home</a><a href="changelog.html">Changelog</a><a href="release-verification.html">Release verification</a></footer>
 </body>

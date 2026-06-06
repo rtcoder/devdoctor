@@ -17,6 +17,7 @@ The human-readable catalog is available at [`docs/issue-codes.html`](issue-codes
 - `DD_CI_BASELINE_EXISTS` - The baseline output file already exists. Introduced in `0.11.1`; status `active`.
 - `DD_CI_BASELINE_INVALID` - The baseline file is invalid. Introduced in `0.11.1`; status `active`.
 - `DD_CI_BASELINE_MISSING` - The requested baseline file is missing. Introduced in `0.11.1`; status `active`.
+- `DD_CI_BASELINE_REPORT` - A baseline report summarizes active, suppressed, and resolved fingerprints. Introduced in `1.35.0`; status `active`.
 - `DD_CI_UNKNOWN_MODULE` - An unknown CI module was requested. Introduced in `0.8.0`; status `active`.
 - `DD_CI_UNKNOWN_PROFILE` - An unknown CI policy profile was requested. Introduced in `1.34.0`; status `active`.
 
