@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.30.0 - 2026-06-06
+
+- Added `scripts/build-docs.php` to generate human-readable issue code documentation from `schemas/v1/issue-codes.json`.
+- Added issue code filtering, copy buttons, and active category highlighting.
+- Added practical documentation scenarios for Laravel, frontend, monorepo, and CI baseline rollout.
+
 ## v1.29.1 - 2026-06-06
 
 - Redesigned the issue codes documentation with a left-side category panel.

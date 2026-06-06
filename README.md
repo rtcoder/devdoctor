@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, Node/frontend, Flutter/Dart, native mobile, monorepos, Python, Ruby/Rails, Go, Rust, Java/JVM, Terraform/IaC, Kubernetes/Helm, .NET, C/C++, generic web, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.29.1`
+Current version: `1.30.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.29.1 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.30.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -272,7 +272,9 @@ The `presets` command detects supported project stacks from files and declared d
 
 `v1.28.0` ships `devdoctor monorepo` with static diagnostics for workspace tooling. It checks mixed orchestration tools, missing workspace lockfiles, and risky root scripts without running monorepo commands.
 
-`v1.29.1` ships utility commands: `inventory`, `explain`, `policy`, and `support-bundle`. They help inspect detected stacks, understand issue codes, review DevDoctor safety policy, and print redacted support context without writing files.
+`v1.29.0` ships utility commands: `inventory`, `explain`, `policy`, and `support-bundle`. They help inspect detected stacks, understand issue codes, review DevDoctor safety policy, and print redacted support context without writing files.
+
+`v1.30.0` ships documentation automation and a richer documentation site. The issue code catalog is generated from `schemas/v1/issue-codes.json`, includes filtering and copy controls, and the docs include scenario guides for Laravel, frontend, monorepo, and CI baseline rollout.
 
 Preset detection is informational and can be included in CI explicitly:
 
@@ -377,9 +379,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.29.1
+- uses: rtcoder/devdoctor@v1.30.0
   with:
-    version: v1.29.1
+    version: v1.30.0
     format: sarif
 ```
 
@@ -466,7 +468,14 @@ The wizard detects supported env files and project presets, previews the YAML, a
 
 ## Documentation
 
-Full static documentation lives in [docs/](docs/index.html), including installation, command reference, config, output formats, baseline, safety, contracts, [issue codes](docs/issue-codes.html), release verification, [changelog](docs/changelog.html), and pinned CI examples for GitHub Actions, GitLab CI, and Bitbucket Pipelines.
+Full static documentation lives in [docs/](docs/index.html), including installation, command reference, config, scenarios, output formats, baseline, safety, contracts, [issue codes](docs/issue-codes.html), release verification, [changelog](docs/changelog.html), and pinned CI examples for GitHub Actions, GitLab CI, and Bitbucket Pipelines.
+
+Regenerate the human-readable issue code catalog after changing `schemas/v1/issue-codes.json`:
+
+```bash
+php scripts/build-docs.php
+php scripts/build-docs.php --check
+```
 
 ## Safety
 
@@ -533,7 +542,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.29.1 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.30.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version

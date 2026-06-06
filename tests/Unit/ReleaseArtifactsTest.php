@@ -97,7 +97,10 @@ it('ships static documentation and pinned CI examples', function () {
         'docs/installation.html',
         'docs/commands.html',
         'docs/config.html',
+        'docs/scenarios.html',
         'docs/output-formats.html',
+        'docs/issue-codes.html',
+        'docs/issue-codes.js',
         'docs/baseline.html',
         'docs/safety.html',
         'docs/contracts.html',
@@ -110,9 +113,14 @@ it('ships static documentation and pinned CI examples', function () {
         expect(is_file($root.'/'.$path))->toBeTrue($path);
     }
 
-    expect(file_get_contents($root.'/docs/examples/github-actions.yml'))->toContain('v1.29.1')
-        ->and(file_get_contents($root.'/docs/examples/gitlab-ci.yml'))->toContain('v1.29.1')
-        ->and(file_get_contents($root.'/docs/examples/bitbucket-pipelines.yml'))->toContain('v1.29.1')
+    $docsCheck = (new ProcessRunner)->run(['php', 'scripts/build-docs.php', '--check'], $root, 30);
+
+    expect($docsCheck->successful())->toBeTrue($docsCheck->stderr)
+        ->and(file_get_contents($root.'/docs/issue-codes.html'))->toContain('id="issue-code-search"')
+        ->and(file_get_contents($root.'/docs/issue-codes.html'))->toContain('data-copy-code')
+        ->and(file_get_contents($root.'/docs/examples/github-actions.yml'))->toContain('v1.30.0')
+        ->and(file_get_contents($root.'/docs/examples/gitlab-ci.yml'))->toContain('v1.30.0')
+        ->and(file_get_contents($root.'/docs/examples/bitbucket-pipelines.yml'))->toContain('v1.30.0')
         ->and(file_get_contents($root.'/README.md'))->toContain('devdoctor-linux-x64')
         ->and(file_get_contents($root.'/docs/installation.html'))->toContain('Standalone Release Binary')
         ->and(file_get_contents($root.'/docs/release-verification.html'))->toContain('devdoctor.sha256');

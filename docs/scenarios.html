@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Scenarios - DevDoctor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="topbar">
+        <a class="brand" href="index.html" aria-label="DevDoctor documentation home"><span class="brand-mark">DD</span><span>DevDoctor</span></a>
+        <nav class="primary-nav" aria-label="Primary documentation"><a href="installation.html">Install</a><a href="commands.html">Commands</a><a href="config.html">Config</a><a href="scenarios.html">Scenarios</a><a href="issue-codes.html">Issue Codes</a><a href="output-formats.html">Outputs</a><a href="ci.html">CI</a><a href="safety.html">Safety</a><a href="changelog.html">Changelog</a></nav>
+    </div>
+    <div class="hero">
+        <p class="eyebrow">Practical workflows</p>
+        <h1>Scenarios</h1>
+        <p class="lead">Use these paths when you want to roll DevDoctor into a real project without guessing which commands matter first.</p>
+    </div>
+</header>
+<main>
+    <section class="feature-band">
+        <div>
+            <p class="eyebrow">Recommended start</p>
+            <h2>Detect the stack, run the focused module, then promote stable checks into CI.</h2>
+            <p>DevDoctor can inspect many ecosystems, but adoption is easier when you start with the modules that match the current repository.</p>
+        </div>
+        <div class="metric-row">
+            <div class="metric"><strong>1</strong><span>detect presets</span></div>
+            <div class="metric"><strong>2</strong><span>fix local issues</span></div>
+            <div class="metric"><strong>3</strong><span>gate in CI</span></div>
+        </div>
+    </section>
+
+    <section class="grid">
+        <article class="tile accent-left">
+            <h3>Laravel App</h3>
+            <p>Check environment drift, PHP platform requirements, Composer state, Laravel runtime directories, queue/database config, and repository hygiene.</p>
+            <pre><code>php devdoctor presets
+php devdoctor env --strict
+php devdoctor php
+php devdoctor laravel
+php devdoctor composer
+php devdoctor db
+php devdoctor queue
+php devdoctor ci --modules=env,php,laravel,composer,db,queue,git,docker</code></pre>
+        </article>
+        <article class="tile accent-left">
+            <h3>Node / Frontend App</h3>
+            <p>Catch package manager drift, missing lockfiles, stale lockfiles, risky scripts, frontend preset readiness, and web asset/config problems.</p>
+            <pre><code>php devdoctor presets
+php devdoctor node
+php devdoctor frontend
+php devdoctor web
+php devdoctor security
+php devdoctor ci --modules=node,frontend,web,git,docker</code></pre>
+        </article>
+        <article class="tile accent-left">
+            <h3>Monorepo</h3>
+            <p>Use presets and inventory first, then run monorepo and ecosystem checks explicitly before letting CI auto-select matching modules.</p>
+            <pre><code>php devdoctor inventory --format=json
+php devdoctor monorepo
+php devdoctor deps
+php devdoctor ci --modules=monorepo,node,frontend,composer,git,docker</code></pre>
+        </article>
+        <article class="tile accent-left">
+            <h3>CI Rollout With Baseline</h3>
+            <p>Generate a baseline for existing warning/error fingerprints, keep findings visible, and fail only on new unsuppressed issues.</p>
+            <pre><code>php devdoctor ci --format=json
+php devdoctor ci --write-baseline=devdoctor-baseline.json
+git add devdoctor-baseline.json
+php devdoctor ci --baseline=devdoctor-baseline.json --format=sarif</code></pre>
+        </article>
+    </section>
+</main>
+<footer class="site-footer"><span>DevDoctor documentation</span><a href="index.html">Home</a><a href="issue-codes.html">Issue codes</a><a href="release-verification.html">Release verification</a></footer>
+</body>
+</html>
