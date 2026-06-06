@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.31.0 - 2026-06-06
+
+- Added active documentation navigation and breadcrumbs.
+- Added copy buttons for command snippets in the static documentation.
+- Expanded scenario guides for Python, Kubernetes/Helm, Terraform/IaC, Symfony, and mobile projects.
+
 ## v1.30.0 - 2026-06-06
 
 - Added `scripts/build-docs.php` to generate human-readable issue code documentation from `schemas/v1/issue-codes.json`.

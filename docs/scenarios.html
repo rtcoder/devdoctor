@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Scenarios - DevDoctor</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="docs.js" defer></script>
 </head>
 <body>
 <header class="site-header">
@@ -70,6 +71,46 @@ php devdoctor ci --modules=monorepo,node,frontend,composer,git,docker</code></pr
 php devdoctor ci --write-baseline=devdoctor-baseline.json
 git add devdoctor-baseline.json
 php devdoctor ci --baseline=devdoctor-baseline.json --format=sarif</code></pre>
+        </article>
+        <article class="tile accent-left">
+            <h3>Python Service</h3>
+            <p>Inspect Python dependency manager drift, suspicious sources, virtual environment markers, and container or Git hygiene without installing packages.</p>
+            <pre><code>php devdoctor presets
+php devdoctor python
+php devdoctor docker
+php devdoctor git --scan-sensitive
+php devdoctor ci --modules=python,git,docker</code></pre>
+        </article>
+        <article class="tile accent-left">
+            <h3>Kubernetes / Helm</h3>
+            <p>Review chart locks, values files, mutable images, privileged containers, hostPath mounts, and service exposure before cluster deployment.</p>
+            <pre><code>php devdoctor kube
+php devdoctor security
+php devdoctor ci --modules=kube,security,git --format=sarif</code></pre>
+        </article>
+        <article class="tile accent-left">
+            <h3>Terraform / IaC</h3>
+            <p>Check provider locks, broad constraints, backend secrets, secret-like defaults, and unpinned remote modules without running init or plan.</p>
+            <pre><code>php devdoctor iac
+php devdoctor git --scan-sensitive
+php devdoctor ci --modules=iac,git</code></pre>
+        </article>
+        <article class="tile accent-left">
+            <h3>Symfony App</h3>
+            <p>Combine Composer, env, PHP, Symfony runtime, and security diagnostics while keeping Laravel-specific checks out of the workflow.</p>
+            <pre><code>php devdoctor presets
+php devdoctor symfony
+php devdoctor composer
+php devdoctor php
+php devdoctor ci --modules=env,php,symfony,composer,git,docker</code></pre>
+        </article>
+        <article class="tile accent-left">
+            <h3>Mobile App</h3>
+            <p>Inspect Flutter/Dart or native mobile markers, platform lockfiles, debug flags, and repository hygiene before CI builds run.</p>
+            <pre><code>php devdoctor inventory
+php devdoctor flutter
+php devdoctor mobile
+php devdoctor ci --modules=flutter,mobile,git</code></pre>
         </article>
     </section>
 </main>

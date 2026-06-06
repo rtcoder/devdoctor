@@ -119,6 +119,7 @@ function renderIssueCodesHtml(array $catalog): string
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Issue Codes - DevDoctor</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="docs.js" defer></script>
     <script src="issue-codes.js" defer></script>
 </head>
 <body>

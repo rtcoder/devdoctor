@@ -98,6 +98,7 @@ it('ships static documentation and pinned CI examples', function () {
         'docs/commands.html',
         'docs/config.html',
         'docs/scenarios.html',
+        'docs/docs.js',
         'docs/output-formats.html',
         'docs/issue-codes.html',
         'docs/issue-codes.js',
@@ -118,9 +119,11 @@ it('ships static documentation and pinned CI examples', function () {
     expect($docsCheck->successful())->toBeTrue($docsCheck->stderr)
         ->and(file_get_contents($root.'/docs/issue-codes.html'))->toContain('id="issue-code-search"')
         ->and(file_get_contents($root.'/docs/issue-codes.html'))->toContain('data-copy-code')
-        ->and(file_get_contents($root.'/docs/examples/github-actions.yml'))->toContain('v1.30.0')
-        ->and(file_get_contents($root.'/docs/examples/gitlab-ci.yml'))->toContain('v1.30.0')
-        ->and(file_get_contents($root.'/docs/examples/bitbucket-pipelines.yml'))->toContain('v1.30.0')
+        ->and(file_get_contents($root.'/docs/docs.js'))->toContain('copy-snippet')
+        ->and(file_get_contents($root.'/docs/scenarios.html'))->toContain('Kubernetes / Helm')
+        ->and(file_get_contents($root.'/docs/examples/github-actions.yml'))->toContain('v1.31.0')
+        ->and(file_get_contents($root.'/docs/examples/gitlab-ci.yml'))->toContain('v1.31.0')
+        ->and(file_get_contents($root.'/docs/examples/bitbucket-pipelines.yml'))->toContain('v1.31.0')
         ->and(file_get_contents($root.'/README.md'))->toContain('devdoctor-linux-x64')
         ->and(file_get_contents($root.'/docs/installation.html'))->toContain('Standalone Release Binary')
         ->and(file_get_contents($root.'/docs/release-verification.html'))->toContain('devdoctor.sha256');

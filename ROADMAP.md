@@ -233,3 +233,4 @@ After the first complete version:
 - `v1.29.0`: Utility commands for inventory, issue-code explanation, policy display, and redacted support bundles. Complete.
 - `v1.29.1`: Documentation layout polish with a left-side issue code category panel. Complete.
 - `v1.30.0`: Documentation automation, issue code search/copy controls, and scenario guides. Complete.
+- `v1.31.0`: Documentation navigation polish with active nav, breadcrumbs, copy command buttons, and expanded scenario guides. Complete.
