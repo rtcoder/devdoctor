@@ -231,3 +231,4 @@ After the first complete version:
 - `v1.27.0`: Native mobile diagnostics for Android/iOS markers, Gradle wrappers, Android debug flags, CocoaPods lockfiles, and iOS debug entitlements. Complete.
 - `v1.28.0`: Monorepo diagnostics for Nx, Turbo, Lerna, pnpm workspaces, Rush, Bazel, Pants, workspace lockfiles, and risky root scripts. Complete.
 - `v1.29.0`: Utility commands for inventory, issue-code explanation, policy display, and redacted support bundles. Complete.
+- `v1.29.1`: Documentation layout polish with a left-side issue code category panel. Complete.

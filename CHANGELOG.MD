@@ -4,6 +4,11 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.29.1 - 2026-06-06
+
+- Redesigned the issue codes documentation with a left-side category panel.
+- Improved desktop and mobile navigation for the human-readable issue code catalog.
+
 ## v1.29.0 - 2026-06-06
 
 - Added utility commands: `inventory`, `explain`, `policy`, and `support-bundle`.
