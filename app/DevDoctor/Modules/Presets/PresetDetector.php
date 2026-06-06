@@ -80,6 +80,7 @@ final readonly class PresetDetector
         array_push($matches, ...$this->dotnetMatches($files));
         array_push($matches, ...$this->webMatches($files, $frontendEvidence));
         array_push($matches, ...$this->iacMatches($files));
+        array_push($matches, ...$this->kubeMatches($files));
 
         $composeFile = $files->firstExisting([
             'docker-compose.yml',
@@ -150,6 +151,39 @@ final readonly class PresetDetector
         }
 
         return $matches;
+    }
+
+    /**
+     * @return list<PresetMatch>
+     */
+    private function kubeMatches(ProjectFiles $files): array
+    {
+        $matches = [];
+        $chart = $files->firstExisting(['Chart.yaml', 'Chart.yml']);
+        $kubeEvidence = $chart
+            ?? $files->firstExisting(['helmfile.yaml', 'helmfile.yml', 'kustomization.yaml', 'kustomization.yml', 'values.yaml', 'values.yml'])
+            ?? $this->firstKubernetesManifest($files);
+
+        if ($kubeEvidence !== null) {
+            $matches[] = new PresetMatch(ProjectPreset::KUBERNETES, $kubeEvidence);
+        }
+
+        if ($chart !== null || $files->firstExisting(['Chart.lock', 'helmfile.yaml', 'helmfile.yml', 'values.yaml', 'values.yml']) !== null) {
+            $matches[] = new PresetMatch(ProjectPreset::HELM, $chart ?? 'values.yaml');
+        }
+
+        return $matches;
+    }
+
+    private function firstKubernetesManifest(ProjectFiles $files): ?string
+    {
+        foreach ([...$files->glob('*.yaml'), ...$files->glob('*.yml'), ...$files->glob('k8s/*.yaml'), ...$files->glob('k8s/*.yml'), ...$files->glob('manifests/*.yaml'), ...$files->glob('manifests/*.yml')] as $file) {
+            if ($files->contains($file, 'apiVersion:') && $files->contains($file, 'kind:')) {
+                return $file;
+            }
+        }
+
+        return null;
     }
 
     /**

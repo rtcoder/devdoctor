@@ -32,6 +32,8 @@ use DevDoctor\Modules\Iac\IacAnalyzer;
 use DevDoctor\Modules\Iac\IacOptions;
 use DevDoctor\Modules\Java\JavaAnalyzer;
 use DevDoctor\Modules\Java\JavaOptions;
+use DevDoctor\Modules\Kube\KubeAnalyzer;
+use DevDoctor\Modules\Kube\KubeOptions;
 use DevDoctor\Modules\Laravel\LaravelAnalyzer;
 use DevDoctor\Modules\Laravel\LaravelOptions;
 use DevDoctor\Modules\Node\NodeAnalyzer;
@@ -76,6 +78,7 @@ final class DiagnosticModuleRunner
             ModuleName::RUST,
             ModuleName::JAVA,
             ModuleName::IAC,
+            ModuleName::KUBE,
             ModuleName::DOTNET,
             ModuleName::CPP,
             ModuleName::WEB,
@@ -141,6 +144,10 @@ final class DiagnosticModuleRunner
                 strict: $options->strict,
             ))),
             ModuleName::IAC->value => new ModuleResult(ModuleName::IAC, app(IacAnalyzer::class)->analyze(new IacOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
+            ModuleName::KUBE->value => new ModuleResult(ModuleName::KUBE, app(KubeAnalyzer::class)->analyze(new KubeOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),

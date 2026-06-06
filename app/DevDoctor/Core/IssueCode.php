@@ -128,6 +128,14 @@ enum IssueCode: string
     case DD_IAC_REMOTE_MODULE_UNPINNED = 'DD_IAC_REMOTE_MODULE_UNPINNED';
     case DD_IAC_SECRET_DEFAULT = 'DD_IAC_SECRET_DEFAULT';
     case DD_IAC_WILDCARD_PROVIDER_VERSION = 'DD_IAC_WILDCARD_PROVIDER_VERSION';
+    case DD_KUBE_HELM_LOCK_MISSING = 'DD_KUBE_HELM_LOCK_MISSING';
+    case DD_KUBE_HOST_PATH_MOUNT = 'DD_KUBE_HOST_PATH_MOUNT';
+    case DD_KUBE_MUTABLE_IMAGE_TAG = 'DD_KUBE_MUTABLE_IMAGE_TAG';
+    case DD_KUBE_NODEPORT_SERVICE = 'DD_KUBE_NODEPORT_SERVICE';
+    case DD_KUBE_NOT_PROJECT = 'DD_KUBE_NOT_PROJECT';
+    case DD_KUBE_PRIVILEGED_CONTAINER = 'DD_KUBE_PRIVILEGED_CONTAINER';
+    case DD_KUBE_READY = 'DD_KUBE_READY';
+    case DD_KUBE_VALUES_SECRET = 'DD_KUBE_VALUES_SECRET';
     case DD_DOTNET_LOCK_MISSING = 'DD_DOTNET_LOCK_MISSING';
     case DD_DOTNET_MIXED_SOLUTION_STATE = 'DD_DOTNET_MIXED_SOLUTION_STATE';
     case DD_DOTNET_NOT_PROJECT = 'DD_DOTNET_NOT_PROJECT';
@@ -326,6 +334,12 @@ enum IssueCode: string
             self::DD_IAC_REMOTE_MODULE_UNPINNED => 'Pin remote modules to an immutable ref or version.',
             self::DD_IAC_SECRET_DEFAULT => 'Remove secret-like defaults from variable declarations.',
             self::DD_IAC_WILDCARD_PROVIDER_VERSION => 'Pin provider versions to a bounded constraint.',
+            self::DD_KUBE_HELM_LOCK_MISSING => 'Regenerate Chart.lock intentionally after reviewing chart dependency changes.',
+            self::DD_KUBE_HOST_PATH_MOUNT => 'Avoid hostPath mounts unless the workload explicitly needs host filesystem access.',
+            self::DD_KUBE_MUTABLE_IMAGE_TAG => 'Pin images to immutable tags or digests before deployment.',
+            self::DD_KUBE_NODEPORT_SERVICE => 'Confirm NodePort exposure is intentional for the target cluster.',
+            self::DD_KUBE_PRIVILEGED_CONTAINER => 'Remove privileged mode or document why host-level container privileges are required.',
+            self::DD_KUBE_VALUES_SECRET => 'Move real secret values into Kubernetes Secrets, sealed secrets, or external secret tooling.',
             self::DD_DOTNET_LOCK_MISSING => 'Generate and commit packages.lock.json intentionally when restore lock mode is enabled.',
             self::DD_DOTNET_MIXED_SOLUTION_STATE => 'Keep one canonical solution file or document why multiple solutions are maintained.',
             self::DD_DOTNET_RISKY_NUGET_SOURCE => 'Use HTTPS package sources or document the trusted internal feed explicitly.',

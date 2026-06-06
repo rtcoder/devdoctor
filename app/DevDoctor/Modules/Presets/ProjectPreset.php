@@ -64,6 +64,10 @@ enum ProjectPreset: string
 
     case TERRAFORM = 'terraform';
 
+    case KUBERNETES = 'kubernetes';
+
+    case HELM = 'helm';
+
     case DOCKER_COMPOSE = 'docker-compose';
 
     public function label(): string
@@ -98,6 +102,8 @@ enum ProjectPreset: string
             self::WEB => 'Generic web',
             self::IAC => 'Infrastructure as Code',
             self::TERRAFORM => 'Terraform/OpenTofu',
+            self::KUBERNETES => 'Kubernetes',
+            self::HELM => 'Helm',
             self::DOCKER_COMPOSE => 'Docker Compose',
         };
     }

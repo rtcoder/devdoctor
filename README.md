@@ -2,9 +2,9 @@
 
 Developer diagnostics for humans.
 
-DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, Node/frontend, Python, Ruby/Rails, Go, Rust, Java/JVM, Terraform/IaC, .NET, C/C++, generic web, and CI problems before they turn into manual debugging sessions.
+DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, Node/frontend, Python, Ruby/Rails, Go, Rust, Java/JVM, Terraform/IaC, Kubernetes/Helm, .NET, C/C++, generic web, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.24.1`
+Current version: `1.25.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.24.1 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.25.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -64,6 +64,7 @@ go         Check Go module and workspace health
 rust       Check Rust Cargo manifest and workspace health
 java       Check Java/JVM Maven, Gradle, Ant, and Spring health
 iac        Check Terraform, OpenTofu, and Terragrunt manifests, locks, modules, and secret hygiene
+kube       Check Kubernetes manifests and Helm charts, locks, images, services, and secret hygiene
 dotnet     Check .NET solution, project, SDK, lockfile, and NuGet health
 cpp        Check C/C++ build files, dependency managers, and portability risks
 web        Check generic web entry files, assets, public config, and server hints
@@ -124,6 +125,7 @@ php devdoctor go
 php devdoctor rust
 php devdoctor java
 php devdoctor iac
+php devdoctor kube
 php devdoctor dotnet
 php devdoctor cpp
 php devdoctor web
@@ -197,6 +199,7 @@ Platform-specific commands are only suggested. DevDoctor never terminates a proc
 - Rust diagnostics inspect `Cargo.toml`, `Cargo.lock`, workspaces, `rust-toolchain.toml`, local path/git dependencies, and release profile settings without running Cargo.
 - Java diagnostics inspect Maven, Gradle, Ant, wrappers, Java version declarations, risky build scripts, and Spring production debug flags without running builds or dependency resolution.
 - IaC diagnostics inspect Terraform, OpenTofu, and Terragrunt files, provider lockfiles, provider version constraints, remote module refs, backend/provider secrets, and secret-like variable defaults without running `init`, `plan`, or network access.
+- Kubernetes diagnostics inspect manifests, Helm charts, values files, image tags, service exposure, hostPath mounts, and privileged containers without running `kubectl`, `helm`, or cluster queries.
 - .NET diagnostics inspect `.sln`, project files, `global.json`, `NuGet.config`, `packages.lock.json`, target frameworks, and restore lock mode without running `dotnet restore`, `build`, or `test`.
 - C/C++ diagnostics inspect CMake, Make, Meson, Autotools, vcpkg, Conan, compile command metadata, in-source build artifacts, compiler flags, generator assumptions, and shell portability risks without compiling code.
 - Generic web diagnostics inspect static entry files, obvious asset references, public config files, web server config hints, and conflicting local port declarations without running a build.
@@ -205,7 +208,7 @@ Platform-specific commands are only suggested. DevDoctor never terminates a proc
 - Database diagnostics inspect `DB_CONNECTION`, required database keys, valid ports, SQLite file paths, and optional read-only PDO connectivity with `--connect`.
 - Queue diagnostics inspect `QUEUE_CONNECTION`, common async driver requirements, and production environments that still use the synchronous queue driver.
 - Security diagnostics inspect env example secrets, hard-coded secret patterns, risky Composer and package scripts, Docker privileged mode, Docker socket mounts, and `.env` ignore gaps.
-- Health aggregates local project diagnostics across `presets`, `env`, `cache`, `http`, `php`, `node`, `laravel`, `composer`, `db`, `queue`, `git`, `docker`, and `security`; it adds `frontend`, `python`, `ruby`, `go`, `rust`, `java`, `iac`, `dotnet`, `cpp`, `web`, and `symfony` automatically when matching presets are detected. Add `--include-ports` to include common local port checks.
+- Health aggregates local project diagnostics across `presets`, `env`, `cache`, `http`, `php`, `node`, `laravel`, `composer`, `db`, `queue`, `git`, `docker`, and `security`; it adds `frontend`, `python`, `ruby`, `go`, `rust`, `java`, `iac`, `kube`, `dotnet`, `cpp`, `web`, and `symfony` automatically when matching presets are detected. Add `--include-ports` to include common local port checks.
 - Composer reports `DD_COMPOSER_LOCK_OUTDATED` when `composer.lock` is older than `composer.json`.
 - Process execution uses argument arrays and supports project paths containing spaces.
 
@@ -231,13 +234,16 @@ The `presets` command detects supported project stacks from files and declared d
 | Java/JVM | Maven, Gradle, or Ant build files |
 | Maven / Gradle / Ant / Spring | wrapper/build files or Spring Boot references |
 | IaC / Terraform | `*.tf`, `*.tfvars`, `.terraform.lock.hcl`, `tofu.lock.hcl`, or `terragrunt.hcl` |
+| Kubernetes / Helm | Kubernetes manifests, `Chart.yaml`, `Chart.lock`, `helmfile.yaml`, `kustomization.yaml`, or `values.yaml` |
 | C/C++ | CMake, Make, Meson, Autotools, vcpkg, or Conan files |
 | CMake | `CMakeLists.txt` |
 | .NET | solution/project files, `global.json`, or `NuGet.config` |
 | Generic web | static entry files, web server config, or frontend evidence |
 | Docker Compose | A supported Compose file |
 
-`v1.24.1` ships `devdoctor iac` with static diagnostics for Terraform, OpenTofu, and Terragrunt manifests, provider lockfiles, broad provider constraints, unpinned remote modules, and secret-like IaC values.
+`v1.24.0` ships `devdoctor iac` with static diagnostics for Terraform, OpenTofu, and Terragrunt manifests, provider lockfiles, broad provider constraints, unpinned remote modules, and secret-like IaC values.
+
+`v1.25.0` ships `devdoctor kube` with static diagnostics for Kubernetes manifests and Helm charts. It checks Helm dependency locks, literal secrets in values files, mutable image tags, privileged containers, hostPath mounts, and NodePort service exposure without running `kubectl` or `helm`.
 
 Preset detection is informational and can be included in CI explicitly:
 
@@ -324,7 +330,7 @@ Unknown health modules return exit code `3`.
 
 ## CI
 
-The CI aggregator runs `env`, `php`, `node`, `laravel`, `composer`, `git`, and `docker` by default. It adds `frontend`, `python`, `ruby`, `go`, `rust`, `java`, `iac`, `dotnet`, `cpp`, `web`, and `symfony` automatically when matching presets are detected. `ports` and `security` are excluded by default because they can depend on local machine state or intentionally present local files.
+The CI aggregator runs `env`, `php`, `node`, `laravel`, `composer`, `git`, and `docker` by default. It adds `frontend`, `python`, `ruby`, `go`, `rust`, `java`, `iac`, `kube`, `dotnet`, `cpp`, `web`, and `symfony` automatically when matching presets are detected. `ports` and `security` are excluded by default because they can depend on local machine state or intentionally present local files.
 
 ```bash
 php devdoctor ci --format=json
@@ -342,9 +348,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.24.1
+- uses: rtcoder/devdoctor@v1.25.0
   with:
-    version: v1.24.1
+    version: v1.25.0
     format: sarif
 ```
 
@@ -498,7 +504,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.24.1 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.25.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version

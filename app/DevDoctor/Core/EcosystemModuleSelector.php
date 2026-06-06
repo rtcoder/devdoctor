@@ -52,6 +52,10 @@ final readonly class EcosystemModuleSelector
             $modules[] = ModuleName::IAC->value;
         }
 
+        if ($this->hasAny($presets, [ProjectPreset::KUBERNETES, ProjectPreset::HELM])) {
+            $modules[] = ModuleName::KUBE->value;
+        }
+
         if ($this->hasAny($presets, [ProjectPreset::DOTNET])) {
             $modules[] = ModuleName::DOTNET->value;
         }

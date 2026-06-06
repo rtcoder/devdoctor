@@ -159,6 +159,15 @@ it('runs iac diagnostics with json output', function () {
         ->expectsOutputToContain('DD_IAC_NOT_PROJECT');
 });
 
+it('runs kube diagnostics with json output', function () {
+    $path = sys_get_temp_dir().'/devdoctor-kube-command-'.bin2hex(random_bytes(4));
+    mkdir($path);
+
+    $this->artisan('kube', ['--path' => $path, '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('DD_KUBE_NOT_PROJECT');
+});
+
 it('runs dotnet diagnostics with json output', function () {
     $path = sys_get_temp_dir().'/devdoctor-dotnet-command-'.bin2hex(random_bytes(4));
     mkdir($path);
@@ -409,12 +418,14 @@ it('runs default ci modules without ports', function () {
     file_put_contents($path.'/config/master.key', "key\n");
     file_put_contents($path.'/main.tf', "terraform {\n  required_providers {\n    aws = { version = \"~> 5.0\" }\n  }\n}\n");
     file_put_contents($path.'/.terraform.lock.hcl', "provider \"registry.terraform.io/hashicorp/aws\" {}\n");
+    mkdir($path.'/k8s', recursive: true);
+    file_put_contents($path.'/k8s/deployment.yaml', "apiVersion: apps/v1\nkind: Deployment\nspec:\n  template:\n    spec:\n      containers:\n        - image: ghcr.io/example/app:1.2.3\n");
 
     $exitCode = Artisan::call('ci', ['--path' => $path, '--format' => 'json']);
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect(in_array($exitCode, [1, 2], true))->toBeTrue()
-        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'ruby', 'go', 'rust', 'java', 'iac', 'dotnet', 'cpp', 'web', 'symfony']);
+        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'ruby', 'go', 'rust', 'java', 'iac', 'kube', 'dotnet', 'cpp', 'web', 'symfony']);
 });
 
 it('supports ci module selection exclude and unknown module handling', function () {

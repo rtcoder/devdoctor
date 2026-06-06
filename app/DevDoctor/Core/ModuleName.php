@@ -19,6 +19,7 @@ enum ModuleName: string
     case HTTP = 'http';
     case IAC = 'iac';
     case JAVA = 'java';
+    case KUBE = 'kube';
     case LARAVEL = 'laravel';
     case NODE = 'node';
     case PHP = 'php';
