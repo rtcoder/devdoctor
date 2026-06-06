@@ -28,6 +28,10 @@ final readonly class EcosystemModuleSelector
             $modules[] = ModuleName::FRONTEND->value;
         }
 
+        if ($this->hasAny($presets, [ProjectPreset::FLUTTER, ProjectPreset::DART])) {
+            $modules[] = ModuleName::FLUTTER->value;
+        }
+
         if ($this->hasAny($presets, [ProjectPreset::PYTHON, ProjectPreset::PIP, ProjectPreset::POETRY, ProjectPreset::PIPENV, ProjectPreset::UV, ProjectPreset::CONDA])) {
             $modules[] = ModuleName::PYTHON->value;
         }

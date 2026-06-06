@@ -22,6 +22,10 @@ enum ProjectPreset: string
 
     case ASTRO = 'astro';
 
+    case FLUTTER = 'flutter';
+
+    case DART = 'dart';
+
     case PYTHON = 'python';
 
     case PIP = 'pip';
@@ -81,6 +85,8 @@ enum ProjectPreset: string
             self::NEXTJS => 'Next.js',
             self::NUXT => 'Nuxt',
             self::ASTRO => 'Astro',
+            self::FLUTTER => 'Flutter',
+            self::DART => 'Dart',
             self::PYTHON => 'Python',
             self::PIP => 'pip',
             self::POETRY => 'Poetry',

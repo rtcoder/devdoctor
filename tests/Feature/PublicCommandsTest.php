@@ -105,6 +105,15 @@ it('runs frontend diagnostics with json output', function () {
         ->expectsOutputToContain('DD_FRONTEND_NOT_PROJECT');
 });
 
+it('runs flutter diagnostics with json output', function () {
+    $path = sys_get_temp_dir().'/devdoctor-flutter-command-'.bin2hex(random_bytes(4));
+    mkdir($path);
+
+    $this->artisan('flutter', ['--path' => $path, '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('DD_FLUTTER_NOT_PROJECT');
+});
+
 it('runs python diagnostics with json output', function () {
     $path = sys_get_temp_dir().'/devdoctor-python-command-'.bin2hex(random_bytes(4));
     mkdir($path);
@@ -420,12 +429,17 @@ it('runs default ci modules without ports', function () {
     file_put_contents($path.'/.terraform.lock.hcl', "provider \"registry.terraform.io/hashicorp/aws\" {}\n");
     mkdir($path.'/k8s', recursive: true);
     file_put_contents($path.'/k8s/deployment.yaml', "apiVersion: apps/v1\nkind: Deployment\nspec:\n  template:\n    spec:\n      containers:\n        - image: ghcr.io/example/app:1.2.3\n");
+    file_put_contents($path.'/pubspec.yaml', "name: demo\nenvironment:\n  sdk: ^3.8.0\ndependencies:\n  flutter:\n    sdk: flutter\n");
+    file_put_contents($path.'/pubspec.lock', "packages: {}\n");
+    file_put_contents($path.'/.metadata', "version:\n");
+    mkdir($path.'/android/app', recursive: true);
+    file_put_contents($path.'/android/app/build.gradle', "plugins {}\n");
 
     $exitCode = Artisan::call('ci', ['--path' => $path, '--format' => 'json']);
     $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
 
     expect(in_array($exitCode, [1, 2], true))->toBeTrue()
-        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'python', 'ruby', 'go', 'rust', 'java', 'iac', 'kube', 'dotnet', 'cpp', 'web', 'symfony']);
+        ->and(array_column($output['modules'], 'name'))->toBe(['env', 'php', 'node', 'laravel', 'composer', 'git', 'docker', 'frontend', 'flutter', 'python', 'ruby', 'go', 'rust', 'java', 'iac', 'kube', 'dotnet', 'cpp', 'web', 'symfony']);
 });
 
 it('supports ci module selection exclude and unknown module handling', function () {

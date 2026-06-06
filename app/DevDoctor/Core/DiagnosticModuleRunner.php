@@ -20,6 +20,8 @@ use DevDoctor\Modules\Dotnet\DotnetAnalyzer;
 use DevDoctor\Modules\Dotnet\DotnetOptions;
 use DevDoctor\Modules\Env\EnvAnalysisOptions;
 use DevDoctor\Modules\Env\EnvAnalyzer;
+use DevDoctor\Modules\Flutter\FlutterAnalyzer;
+use DevDoctor\Modules\Flutter\FlutterOptions;
 use DevDoctor\Modules\Frontend\FrontendAnalyzer;
 use DevDoctor\Modules\Frontend\FrontendOptions;
 use DevDoctor\Modules\Git\GitAnalyzer;
@@ -72,6 +74,7 @@ final class DiagnosticModuleRunner
             ModuleName::PHP,
             ModuleName::NODE,
             ModuleName::FRONTEND,
+            ModuleName::FLUTTER,
             ModuleName::PYTHON,
             ModuleName::RUBY,
             ModuleName::GO,
@@ -120,6 +123,10 @@ final class DiagnosticModuleRunner
                 strict: $options->strict,
             ))),
             ModuleName::FRONTEND->value => new ModuleResult(ModuleName::FRONTEND, app(FrontendAnalyzer::class)->analyze(new FrontendOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
+            ModuleName::FLUTTER->value => new ModuleResult(ModuleName::FLUTTER, app(FlutterAnalyzer::class)->analyze(new FlutterOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),

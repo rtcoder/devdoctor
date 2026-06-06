@@ -13,6 +13,7 @@ enum ModuleName: string
     case DOCKER = 'docker';
     case ENV = 'env';
     case FRONTEND = 'frontend';
+    case FLUTTER = 'flutter';
     case GIT = 'git';
     case GO = 'go';
     case HEALTH = 'health';

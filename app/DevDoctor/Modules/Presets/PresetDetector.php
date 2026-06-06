@@ -71,6 +71,7 @@ final readonly class PresetDetector
             $matches[] = new PresetMatch(ProjectPreset::ASTRO, 'package.json');
         }
 
+        array_push($matches, ...$this->flutterMatches($files));
         array_push($matches, ...$this->pythonMatches($files));
         array_push($matches, ...$this->rubyMatches($files));
         array_push($matches, ...$this->goMatches($files));
@@ -131,6 +132,27 @@ final readonly class PresetDetector
         }
 
         return false;
+    }
+
+    /**
+     * @return list<PresetMatch>
+     */
+    private function flutterMatches(ProjectFiles $files): array
+    {
+        $matches = [];
+        $evidence = $files->firstExisting(['pubspec.yaml', 'pubspec.lock', '.metadata']);
+
+        if ($evidence === null) {
+            return [];
+        }
+
+        $matches[] = new PresetMatch(ProjectPreset::DART, $evidence);
+
+        if ($files->exists('.metadata') || $files->contains('pubspec.yaml', 'sdk: flutter')) {
+            $matches[] = new PresetMatch(ProjectPreset::FLUTTER, $files->exists('.metadata') ? '.metadata' : 'pubspec.yaml');
+        }
+
+        return $matches;
     }
 
     /**

@@ -227,3 +227,4 @@ After the first complete version:
 - `v1.23.0`: Ruby/Rails diagnostics for `Gemfile`, `Gemfile.lock`, Ruby versions, Rails credentials, database credential hygiene, and risky gem sources. Complete.
 - `v1.24.0`: Terraform/IaC diagnostics for Terraform, OpenTofu, and Terragrunt manifests, provider locks, broad provider constraints, unpinned remote modules, and secret-like IaC values. Complete.
 - `v1.25.0`: Kubernetes/Helm diagnostics for manifest hygiene, Helm locks, mutable images, privileged containers, hostPath mounts, NodePort exposure, and values secret hygiene. Complete.
+- `v1.26.0`: Flutter/Dart diagnostics for pubspec lockfiles, Dart SDK constraints, local path/Git dependencies, and Flutter platform markers. Complete.
