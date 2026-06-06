@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, Node/frontend, Flutter/Dart, native mobile, monorepos, Python, Ruby/Rails, Go, Rust, Java/JVM, Terraform/IaC, Kubernetes/Helm, .NET, C/C++, generic web, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.28.0`
+Current version: `1.29.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.28.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.29.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -80,6 +80,10 @@ health     Run a broad local project health check
 doctor     Alias for health
 ci         Run CI-safe DevDoctor diagnostics
 presets    Detect supported project framework and tooling presets
+inventory  Show detected presets and available modules
+explain    Explain DevDoctor issue codes and hints
+policy     Show DevDoctor safety and compatibility policy
+support-bundle Print a redacted support bundle without writing files
 init       Generate an initial devdoctor.yml configuration
 ```
 
@@ -140,6 +144,10 @@ php devdoctor symfony
 php devdoctor security
 php devdoctor composer
 php devdoctor deps
+php devdoctor inventory --format=json
+php devdoctor explain DD_ENV_FILE_MISSING --format=json
+php devdoctor policy --format=json
+php devdoctor support-bundle
 php devdoctor db
 php devdoctor db --connect
 php devdoctor queue
@@ -202,6 +210,7 @@ Platform-specific commands are only suggested. DevDoctor never terminates a proc
 - Flutter diagnostics inspect `pubspec.yaml`, `pubspec.lock`, Dart SDK constraints, local path/Git dependency sources, and Flutter platform markers without running `flutter pub get` or builds.
 - Mobile diagnostics inspect native Android/iOS markers, Gradle wrappers, Android debug flags, CocoaPods locks, and iOS debug entitlements without running Gradle, Xcode, or CocoaPods.
 - Monorepo diagnostics inspect Nx, Turbo, Lerna, pnpm workspaces, Rush, Bazel, Pants, workspace lockfiles, and root package scripts without running orchestrators or package managers.
+- Utility commands expose project inventory, issue-code explanations, safety policy, and redacted support bundles without modifying project files.
 - Python diagnostics inspect `pyproject.toml`, `requirements*.txt`, `Pipfile`, `poetry.lock`, `uv.lock`, and Conda files without installing packages.
 - Ruby diagnostics inspect `Gemfile`, `Gemfile.lock`, `.ruby-version`, Rails credentials, `config/database.yml`, and risky gem sources without running Bundler or Rails.
 - Go diagnostics inspect `go.mod`, `go.sum`, `go.work`, local `replace` directives, toolchain declarations, and vendor metadata without running `go mod tidy` or downloading modules.
@@ -262,6 +271,8 @@ The `presets` command detects supported project stacks from files and declared d
 `v1.27.0` ships `devdoctor mobile` with static diagnostics for native Android and iOS projects. It checks Gradle wrapper presence, Android debuggable manifests, CocoaPods lockfiles, and iOS debug entitlements without running platform build tools.
 
 `v1.28.0` ships `devdoctor monorepo` with static diagnostics for workspace tooling. It checks mixed orchestration tools, missing workspace lockfiles, and risky root scripts without running monorepo commands.
+
+`v1.29.0` ships utility commands: `inventory`, `explain`, `policy`, and `support-bundle`. They help inspect detected stacks, understand issue codes, review DevDoctor safety policy, and print redacted support context without writing files.
 
 Preset detection is informational and can be included in CI explicitly:
 
@@ -366,9 +377,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.28.0
+- uses: rtcoder/devdoctor@v1.29.0
   with:
-    version: v1.28.0
+    version: v1.29.0
     format: sarif
 ```
 
@@ -522,7 +533,7 @@ The release workflow can update `rtcoder/homebrew-tap` after each tag when the r
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.28.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.29.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version
