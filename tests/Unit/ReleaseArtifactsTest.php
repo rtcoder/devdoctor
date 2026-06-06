@@ -121,6 +121,8 @@ it('ships static documentation and pinned CI examples', function () {
     expect($docsCheck->successful())->toBeTrue($docsCheck->stderr)
         ->and(file_get_contents($root.'/docs/issue-codes.html'))->toContain('id="issue-code-search"')
         ->and(file_get_contents($root.'/docs/issue-codes.html'))->toContain('data-copy-code')
+        ->and(file_get_contents($root.'/docs/issue-codes.js'))->toContain('hash-highlighted')
+        ->and(file_get_contents($root.'/docs/styles.css'))->toContain('.code-card:target')
         ->and(file_get_contents($root.'/docs/docs.js'))->toContain('copy-snippet')
         ->and(file_get_contents($root.'/docs/manifest.json'))->toContain('"commands": "commands.json"')
         ->and(file_get_contents($root.'/docs/commands.json'))->toContain('"name": "ci"')

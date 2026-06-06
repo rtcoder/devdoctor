@@ -3,6 +3,7 @@ const resultCount = document.querySelector('#issue-code-result-count');
 const cards = Array.from(document.querySelectorAll('[data-code-card]'));
 const groups = Array.from(document.querySelectorAll('[data-code-group]'));
 const moduleLinks = Array.from(document.querySelectorAll('[data-module-link]'));
+let highlightedCard = null;
 
 function normalize(value) {
     return value.toLowerCase().trim();
@@ -63,6 +64,25 @@ function activateModuleLink() {
     }
 }
 
+function activateHashHighlight() {
+    if (highlightedCard) {
+        highlightedCard.classList.remove('hash-highlighted');
+    }
+
+    const hash = window.location.hash.slice(1);
+    highlightedCard = hash === '' ? null : document.getElementById(hash);
+
+    if (! highlightedCard?.matches('[data-code-card]')) {
+        highlightedCard = null;
+
+        return;
+    }
+
+    highlightedCard.hidden = false;
+    highlightedCard.closest('[data-code-group]')?.removeAttribute('hidden');
+    highlightedCard.classList.add('hash-highlighted');
+}
+
 searchInput?.addEventListener('input', updateFilter);
 document.addEventListener('click', event => {
     const button = event.target instanceof HTMLElement ? event.target.closest('[data-copy-code]') : null;
@@ -72,6 +92,8 @@ document.addEventListener('click', event => {
     }
 });
 document.addEventListener('scroll', activateModuleLink, { passive: true });
+window.addEventListener('hashchange', activateHashHighlight);
 
 updateFilter();
+activateHashHighlight();
 activateModuleLink();

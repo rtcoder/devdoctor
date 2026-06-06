@@ -507,6 +507,18 @@ tr:last-child td {
     padding: 15px;
 }
 
+.code-card:target,
+.code-card.hash-highlighted {
+    border-color: rgba(245, 158, 11, 0.7);
+    background: #fff8e6;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18), 0 16px 34px rgba(90, 66, 18, 0.12);
+}
+
+.code-card:target .code-top code,
+.code-card.hash-highlighted .code-top code {
+    color: #92400e;
+}
+
 .code-top {
     display: flex;
     align-items: start;
