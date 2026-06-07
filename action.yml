@@ -1,12 +1,16 @@
 name: DevDoctor
-description: Run DevDoctor CI diagnostics from a verified release PHAR.
+description: Read-only multi-stack diagnostics for CI environments.
+
+branding:
+  icon: activity
+  color: teal
 
 inputs:
   version:
-    description: Explicit DevDoctor release tag, for example v0.12.0.
+    description: Explicit DevDoctor release tag to download, for example v1.38.0. Latest is never used implicitly.
     required: true
   modules:
-    description: Comma-separated modules to run.
+    description: Comma-separated DevDoctor modules to run in CI.
     required: false
     default: env,php,node,laravel,composer,git,docker
   format:
@@ -14,11 +18,11 @@ inputs:
     required: false
     default: table
   path:
-    description: Project path to inspect.
+    description: Repository-relative project path to inspect.
     required: false
     default: .
   extra-args:
-    description: Additional arguments passed to devdoctor ci.
+    description: Additional arguments passed to devdoctor ci, such as --profile=strict-ci.
     required: false
     default: ""
 

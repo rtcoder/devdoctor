@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.38.0 - 2026-06-07
+
+- Prepared the composite GitHub Action metadata for GitHub Marketplace publishing.
+- Added Marketplace branding and clearer Action input descriptions.
+- Updated pinned GitHub Action and CI examples to `v1.38.0`.
+
 ## v1.37.0 - 2026-06-07
 
 - Added interactive update notices for table output when a newer DevDoctor release is available.

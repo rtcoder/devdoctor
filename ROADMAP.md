@@ -240,3 +240,4 @@ After the first complete version:
 - `v1.35.0`: Baseline reports for active, suppressed, and resolved fingerprints. Complete.
 - `v1.36.0`: Manual Homebrew tap update workflow and command documentation filtering polish. Complete.
 - `v1.37.0`: Interactive update notices and `devdoctor self-update` command. Complete.
+- `v1.38.0`: GitHub Marketplace metadata polish for the composite Action. Complete.
