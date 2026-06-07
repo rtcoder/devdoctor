@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.36.0 - 2026-06-07
+
+- Added a manual `Update Homebrew Tap` workflow for publishing the Homebrew formula for an existing release.
+- The workflow resolves `devdoctor.phar.sha256` from the selected GitHub Release and reuses the tap update script.
+- Improved the static command reference with a command subtree, copyable command islands, and stricter filtering.
+
 ## v1.35.0 - 2026-06-06
 
 - Added `--baseline-report` for CI baseline runs.

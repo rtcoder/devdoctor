@@ -1,0 +1,55 @@
+name: Update Homebrew Tap
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "DevDoctor version to publish to Homebrew, for example 1.36.0 or v1.36.0"
+        required: true
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+
+jobs:
+  update-homebrew-tap:
+    name: Update Homebrew formula
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Verify token
+        shell: bash
+        run: |
+          test -n "${HOMEBREW_TAP_TOKEN}"
+
+      - name: Resolve release checksum
+        id: checksum
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          version="${INPUT_VERSION#v}"
+          tag="v${version}"
+          gh release download "${tag}" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --pattern devdoctor.phar.sha256 \
+            --dir "${RUNNER_TEMP}/devdoctor-release"
+
+          sha256="$(cut -d ' ' -f 1 "${RUNNER_TEMP}/devdoctor-release/devdoctor.phar.sha256")"
+          test -n "${sha256}"
+
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
+          echo "sha256=${sha256}" >> "${GITHUB_OUTPUT}"
+
+      - name: Update tap
+        shell: bash
+        run: |
+          bash .github/scripts/update-homebrew-tap.sh \
+            "${{ steps.checksum.outputs.version }}" \
+            "${{ steps.checksum.outputs.sha256 }}"

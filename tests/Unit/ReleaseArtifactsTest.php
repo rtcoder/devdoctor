@@ -71,13 +71,19 @@ it('ships release workflow and composite action metadata', function () {
     $root = dirname(__DIR__, 2);
     $action = Yaml::parseFile($root.'/action.yml');
     $release = Yaml::parseFile($root.'/.github/workflows/release.yml');
+    $homebrew = Yaml::parseFile($root.'/.github/workflows/update-homebrew-tap.yml');
     $pages = Yaml::parseFile($root.'/.github/workflows/pages.yml');
     $releaseWorkflow = (string) file_get_contents($root.'/.github/workflows/release.yml');
+    $homebrewWorkflow = (string) file_get_contents($root.'/.github/workflows/update-homebrew-tap.yml');
 
     expect($action['runs']['using'])->toBe('composite')
         ->and($action['inputs'])->toHaveKey('version')
         ->and($release['permissions']['contents'])->toBe('write')
         ->and($release['permissions']['id-token'])->toBe('write')
+        ->and($homebrew['permissions']['contents'])->toBe('read')
+        ->and($homebrewWorkflow)->toContain('workflow_dispatch')
+        ->and($homebrewWorkflow)->toContain('devdoctor.phar.sha256')
+        ->and($homebrewWorkflow)->toContain('update-homebrew-tap.sh')
         ->and($pages['permissions']['pages'])->toBe('write')
         ->and(file_get_contents($root.'/.github/scripts/update-homebrew-tap.sh'))->toContain('rtcoder/homebrew-tap')
         ->and($releaseWorkflow)->toContain('./vendor/bin/phpacker build')
@@ -144,9 +150,9 @@ it('ships static documentation and pinned CI examples', function () {
         ->and(file_get_contents($root.'/docs/commands.js'))->toContain('is-filtered-out')
         ->and(file_get_contents($root.'/docs/styles.css'))->toContain('.command-card[hidden]')
         ->and(file_get_contents($root.'/docs/scenarios.html'))->toContain('Kubernetes / Helm')
-        ->and(file_get_contents($root.'/docs/examples/github-actions.yml'))->toContain('v1.35.0')
-        ->and(file_get_contents($root.'/docs/examples/gitlab-ci.yml'))->toContain('v1.35.0')
-        ->and(file_get_contents($root.'/docs/examples/bitbucket-pipelines.yml'))->toContain('v1.35.0')
+        ->and(file_get_contents($root.'/docs/examples/github-actions.yml'))->toContain('v1.36.0')
+        ->and(file_get_contents($root.'/docs/examples/gitlab-ci.yml'))->toContain('v1.36.0')
+        ->and(file_get_contents($root.'/docs/examples/bitbucket-pipelines.yml'))->toContain('v1.36.0')
         ->and(file_get_contents($root.'/README.md'))->toContain('devdoctor-linux-x64')
         ->and(file_get_contents($root.'/docs/installation.html'))->toContain('Standalone Release Binary')
         ->and(file_get_contents($root.'/docs/release-verification.html'))->toContain('devdoctor.sha256');
