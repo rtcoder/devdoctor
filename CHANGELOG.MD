@@ -4,6 +4,11 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.38.1 - 2026-06-07
+
+- Renamed the Marketplace Action to `DevDoctor CI Diagnostics`.
+- Kept Action branding and pinned CI examples aligned with the patch release.
+
 ## v1.38.0 - 2026-06-07
 
 - Prepared the composite GitHub Action metadata for GitHub Marketplace publishing.

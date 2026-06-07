@@ -1,4 +1,4 @@
-name: DevDoctor
+name: DevDoctor CI Diagnostics
 description: Read-only multi-stack diagnostics for CI environments.
 
 branding:
@@ -7,7 +7,7 @@ branding:
 
 inputs:
   version:
-    description: Explicit DevDoctor release tag to download, for example v1.38.0. Latest is never used implicitly.
+    description: Explicit DevDoctor release tag to download, for example v1.38.1. Latest is never used implicitly.
     required: true
   modules:
     description: Comma-separated DevDoctor modules to run in CI.
