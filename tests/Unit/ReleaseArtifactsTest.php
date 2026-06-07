@@ -96,6 +96,7 @@ it('ships static documentation and pinned CI examples', function () {
         'docs/index.html',
         'docs/installation.html',
         'docs/commands.html',
+        'docs/commands.js',
         'docs/config.html',
         'docs/scenarios.html',
         'docs/docs.js',
@@ -127,6 +128,21 @@ it('ships static documentation and pinned CI examples', function () {
         ->and(file_get_contents($root.'/docs/manifest.json'))->toContain('"commands": "commands.json"')
         ->and(file_get_contents($root.'/docs/commands.json'))->toContain('"name": "ci"')
         ->and(file_get_contents($root.'/docs/commands.html'))->toContain('docs/commands.json')
+        ->and(file_get_contents($root.'/docs/commands.html'))->toContain('data-command-card')
+        ->and(file_get_contents($root.'/docs/commands.html'))->toContain('data-command-index-link')
+        ->and(file_get_contents($root.'/docs/commands.html'))->toContain('command-index-children')
+        ->and(file_get_contents($root.'/docs/commands.html'))->toContain('data-command-group-count')
+        ->and(file_get_contents($root.'/docs/commands.html'))->toContain('data-command-type-count')
+        ->and(file_get_contents($root.'/docs/commands.html'))->toContain('href="#command-ports"')
+        ->and(file_get_contents($root.'/docs/commands.html'))->toContain('data-search="ports diagnostic"')
+        ->and(file_get_contents($root.'/docs/commands.html'))->toContain('baselines')
+        ->and(file_get_contents($root.'/docs/commands.html'))->toContain('data-copy-command')
+        ->and(file_get_contents($root.'/docs/commands.html'))->not->toContain('<table>')
+        ->and(file_get_contents($root.'/docs/commands.html'))->not->toContain('<span>ports</span><strong>ports</strong>')
+        ->and(file_get_contents($root.'/docs/commands.js'))->toContain('copyCommand')
+        ->and(file_get_contents($root.'/docs/commands.js'))->toContain('visibleCommands')
+        ->and(file_get_contents($root.'/docs/commands.js'))->toContain('is-filtered-out')
+        ->and(file_get_contents($root.'/docs/styles.css'))->toContain('.command-card[hidden]')
         ->and(file_get_contents($root.'/docs/scenarios.html'))->toContain('Kubernetes / Helm')
         ->and(file_get_contents($root.'/docs/examples/github-actions.yml'))->toContain('v1.35.0')
         ->and(file_get_contents($root.'/docs/examples/gitlab-ci.yml'))->toContain('v1.35.0')

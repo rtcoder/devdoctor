@@ -261,7 +261,8 @@ section {
 
 .tile,
 .release,
-.code-card {
+.code-card,
+.command-card {
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 16px;
@@ -365,10 +366,10 @@ tr:last-child td {
 
 .module-index {
     position: sticky;
-    top: 96px;
+    top: 26px;
     display: grid;
     gap: 8px;
-    max-height: calc(100vh - 118px);
+    max-height: calc(100vh - 52px);
     overflow: auto;
     padding: 14px;
     background: rgba(255, 255, 255, 0.92);
@@ -453,6 +454,33 @@ tr:last-child td {
     background: #e7f4f1;
 }
 
+.command-index-section {
+    display: grid;
+    gap: 7px;
+}
+
+.command-index-parent {
+    font-weight: 800;
+}
+
+.command-index-children {
+    display: grid;
+    gap: 5px;
+    padding-left: 10px;
+    border-left: 2px solid #dbe7ed;
+}
+
+.module-index .command-index-children a {
+    padding: 7px 8px;
+    background: #ffffff;
+    font-size: 0.86rem;
+}
+
+.module-index .command-index-children a.active {
+    border-color: rgba(245, 158, 11, 0.58);
+    background: #fff8e6;
+}
+
 .module-index strong {
     display: inline-grid;
     min-width: 26px;
@@ -501,10 +529,109 @@ tr:last-child td {
     gap: 12px;
 }
 
+.command-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    gap: 14px;
+}
+
+.command-card[hidden],
+.command-group[hidden],
+.command-index-section[hidden],
+.command-index-children a[hidden],
+.is-filtered-out {
+    display: none !important;
+}
+
 .code-card {
     display: grid;
     gap: 12px;
     padding: 15px;
+}
+
+.command-card {
+    display: grid;
+    grid-template-rows: auto auto auto 1fr;
+    gap: 14px;
+    padding: 17px;
+}
+
+.command-card-top {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.command-card h3 {
+    margin: 2px 0 0;
+    font-size: 1.1rem;
+}
+
+.command-card h3 code {
+    overflow-wrap: anywhere;
+    background: transparent;
+    padding: 0;
+    color: #0d3144;
+}
+
+.command-kicker {
+    margin: 0;
+    color: var(--accent);
+    font-size: 0.74rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.command-card p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.command-card dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0;
+}
+
+.command-card dl div {
+    padding: 9px;
+    background: #f4f7fa;
+    border-radius: 10px;
+}
+
+.command-card dt {
+    color: var(--muted);
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.command-card dd {
+    margin: 2px 0 0;
+    font-weight: 700;
+}
+
+.command-example {
+    align-self: end;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    min-height: 46px;
+    padding: 10px;
+    background: var(--code);
+    border: 1px solid #1f3143;
+    border-radius: 13px;
+}
+
+.command-example code {
+    overflow-wrap: anywhere;
+    background: transparent;
+    padding: 0;
+    color: #eef6f8;
 }
 
 .code-card:target,
@@ -666,7 +793,6 @@ tr:last-child td {
     }
 
     .module-index {
-        position: static;
         display: flex;
         max-height: none;
         overflow-x: auto;
@@ -702,6 +828,11 @@ tr:last-child td {
     }
 
     .code-card dl {
+        grid-template-columns: 1fr;
+    }
+
+    .command-card dl,
+    .command-example {
         grid-template-columns: 1fr;
     }
 }

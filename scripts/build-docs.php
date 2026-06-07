@@ -23,6 +23,11 @@ function codeId(string $code): string
     return strtolower(str_replace('_', '-', $code));
 }
 
+function commandId(string $command): string
+{
+    return 'command-'.preg_replace('/[^a-z0-9]+/', '-', strtolower($command));
+}
+
 /**
  * @param  array<string, mixed>  $data
  */
@@ -103,7 +108,7 @@ function commandCatalog(): array
             ['name' => 'docker', 'module' => 'docker', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check Compose files, daemon state, ports, and containers.', 'example' => 'php devdoctor docker --compose-file=docker-compose.yml'],
             ['name' => 'health', 'module' => 'health', 'type' => 'aggregate', 'read_only' => true, 'summary' => 'Run a broad local project health check, with ports available through --include-ports.', 'example' => 'php devdoctor health --format=json'],
             ['name' => 'doctor', 'module' => 'health', 'type' => 'aggregate', 'read_only' => true, 'summary' => 'Alias for health with the same broad local project checks.', 'example' => 'php devdoctor doctor --summary-only'],
-            ['name' => 'ci', 'module' => 'ci', 'type' => 'aggregate', 'read_only' => true, 'summary' => 'Run CI-safe diagnostics and aggregate exit codes, with optional policy profiles.', 'example' => 'php devdoctor ci --profile=strict-ci'],
+            ['name' => 'ci', 'module' => 'ci', 'type' => 'aggregate', 'read_only' => true, 'summary' => 'Run CI-safe diagnostics, baselines, and aggregate exit codes, with optional policy profiles.', 'example' => 'php devdoctor ci --profile=strict-ci', 'keywords' => ['baseline', 'baselines']],
             ['name' => 'presets', 'module' => 'presets', 'type' => 'utility', 'read_only' => true, 'summary' => 'Detect supported project presets across ecosystems.', 'example' => 'php devdoctor presets --format=json'],
             ['name' => 'inventory', 'module' => 'inventory', 'type' => 'utility', 'read_only' => true, 'summary' => 'Show detected presets, available modules, and auto-selected modules.', 'example' => 'php devdoctor inventory --format=json'],
             ['name' => 'commands', 'module' => 'commands', 'type' => 'utility', 'read_only' => true, 'summary' => 'List DevDoctor commands and their documentation metadata.', 'example' => 'php devdoctor commands --format=json'],
@@ -113,6 +118,156 @@ function commandCatalog(): array
             ['name' => 'init', 'module' => 'config', 'type' => 'writer', 'read_only' => false, 'summary' => 'Preview and optionally write devdoctor.yml after confirmation.', 'example' => 'php devdoctor init --dry-run'],
         ],
     ];
+}
+
+/**
+ * @param  array<int, array{name:string,module:string,type:string,read_only:bool,summary:string,example:string}>  $commands
+ * @return array<string, array<int, array{name:string,module:string,type:string,read_only:bool,summary:string,example:string}>>
+ */
+function groupCommands(array $commands): array
+{
+    $groups = [
+        'diagnostic' => [],
+        'aggregate' => [],
+        'utility' => [],
+        'writer' => [],
+    ];
+
+    foreach ($commands as $command) {
+        $groups[$command['type']][] = $command;
+    }
+
+    return array_filter($groups);
+}
+
+function commandTypeLabel(string $type): string
+{
+    return match ($type) {
+        'diagnostic' => 'Diagnostics',
+        'aggregate' => 'Aggregates',
+        'utility' => 'Utilities',
+        'writer' => 'Writers',
+        default => ucfirst($type),
+    };
+}
+
+/**
+ * @param  array{name:string,module:string,type:string,read_only:bool,summary:string,example:string,keywords?:array<int, string>}  $command
+ */
+function commandSearchText(array $command): string
+{
+    $parts = [
+        $command['name'],
+        $command['module'],
+        $command['type'],
+        ...($command['keywords'] ?? []),
+    ];
+
+    return implode(' ', array_unique(array_filter($parts)));
+}
+
+/**
+ * @param  array<string, mixed>  $catalog
+ */
+function renderCommandsHtml(array $catalog): string
+{
+    /** @var array<int, array{name:string,module:string,type:string,read_only:bool,summary:string,example:string,keywords?:array<int, string>}> $commands */
+    $commands = $catalog['commands'] ?? [];
+    $groups = groupCommands($commands);
+
+    $typeLinks = '';
+    foreach ($groups as $type => $items) {
+        $commandLinks = '';
+
+        foreach ($items as $command) {
+            $commandLinks .= '                <a href="#'.commandId($command['name']).'" data-command-index-link data-command="'.h($command['name']).'" data-search="'.h(commandSearchText($command)).'"><span>'.h($command['name']).'</span></a>
+';
+        }
+
+        $typeLinks .= '        <div class="command-index-section" data-command-index-section data-command-type="'.h($type).'">
+            <a class="command-index-parent" href="#'.h($type).'-commands" data-command-type-link="'.h($type).'"><span>'.h(commandTypeLabel($type)).'</span><strong data-command-type-count data-total="'.count($items).'">'.count($items).'</strong></a>
+            <div class="command-index-children">
+'.$commandLinks.'            </div>
+        </div>
+';
+    }
+
+    $sections = '';
+    foreach ($groups as $type => $items) {
+        $cards = '';
+
+        foreach ($items as $command) {
+            $cards .= '                <section class="command-card" id="'.commandId($command['name']).'" data-command-card data-command="'.h($command['name']).'" data-module="'.h($command['module']).'" data-type="'.h($type).'" data-summary="'.h($command['summary']).'" data-search="'.h(commandSearchText($command)).'">
+                    <div class="command-card-top">
+                        <div>
+                            <p class="command-kicker">'.h(commandTypeLabel($type)).'</p>
+                            <h3><code>devdoctor '.h($command['name']).'</code></h3>
+                        </div>
+                        <span class="status-pill">'.($command['read_only'] ? 'read-only' : 'writes file').'</span>
+                    </div>
+                    <p>'.h($command['summary']).'</p>
+                    <dl><div><dt>Module</dt><dd>'.h($command['module']).'</dd></div><div><dt>Type</dt><dd>'.h($type).'</dd></div></dl>
+                    <div class="command-example">
+                        <code>'.h($command['example']).'</code>
+                        <button class="copy-code" type="button" data-copy-command="'.h($command['example']).'">Copy</button>
+                    </div>
+                </section>
+';
+        }
+
+        $sections .= '        <article class="command-group" id="'.h($type).'-commands" data-command-group data-command-type="'.h($type).'">
+            <div class="group-heading"><h2>'.h(commandTypeLabel($type)).'</h2><span data-command-group-count data-total="'.count($items).'">'.count($items).' commands</span></div>
+            <div class="command-grid">
+'.$cards.'            </div>
+        </article>
+';
+    }
+
+    return '<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Commands - DevDoctor</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="docs.js" defer></script>
+    <script src="commands.js" defer></script>
+</head>
+<body>
+'.siteHeader('Commands', 'Browse DevDoctor commands by category, scan what each one checks, and copy the exact command you need.', 'Command reference').'
+<main>
+    <section class="feature-band">
+        <div>
+            <p class="eyebrow">Machine-readable reference</p>
+            <h2>Command metadata ships with the documentation.</h2>
+            <p>The static docs include <a href="commands.json"><code>docs/commands.json</code></a> for tooling that wants command names, modules, read-only status, examples, and high-level categories without scraping HTML.</p>
+        </div>
+        <div class="metric-row">
+            <div class="metric"><strong>'.count($commands).'</strong><span>commands</span></div>
+            <div class="metric"><strong>'.count($groups).'</strong><span>categories</span></div>
+            <div class="metric"><strong>v1</strong><span>metadata</span></div>
+        </div>
+    </section>
+    <div class="catalog-layout">
+    <aside class="module-index" aria-label="Command categories">
+        <div class="module-index-heading">
+            <span>Categories</span>
+            <strong>'.count($groups).'</strong>
+        </div>
+        <label class="search-box">
+            <span>Filter commands</span>
+            <input type="search" id="command-search" placeholder="ports, docker, baseline..." autocomplete="off">
+        </label>
+'.$typeLinks.'    </aside>
+    <section class="code-groups" aria-live="polite">
+        <p class="catalog-result-count" id="command-result-count">'.count($commands).' commands shown</p>
+'.$sections.'    </section>
+    </div>
+</main>
+'.siteFooter('<a href="commands.json">Machine-readable commands</a><a href="issue-codes.html">Issue codes</a>').'
+</body>
+</html>
+';
 }
 
 /**
@@ -300,10 +455,12 @@ function writeOrCheck(array $outputs, bool $checkOnly): int
 }
 
 $catalog = json_decode((string) file_get_contents($root.'/schemas/v1/issue-codes.json'), true, flags: JSON_THROW_ON_ERROR);
+$commands = commandCatalog();
 
 exit(writeOrCheck([
+    $root.'/docs/commands.html' => renderCommandsHtml($commands),
     $root.'/docs/issue-codes.html' => renderIssueCodesHtml($catalog),
     $root.'/docs/issue-codes.md' => renderIssueCodesMarkdown($catalog),
     $root.'/docs/manifest.json' => prettyJson(docsManifest()),
-    $root.'/docs/commands.json' => prettyJson(commandCatalog()),
+    $root.'/docs/commands.json' => prettyJson($commands),
 ], $checkOnly));

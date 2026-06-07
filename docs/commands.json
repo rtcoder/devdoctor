@@ -254,8 +254,12 @@
             "module": "ci",
             "type": "aggregate",
             "read_only": true,
-            "summary": "Run CI-safe diagnostics and aggregate exit codes, with optional policy profiles.",
-            "example": "php devdoctor ci --profile=strict-ci"
+            "summary": "Run CI-safe diagnostics, baselines, and aggregate exit codes, with optional policy profiles.",
+            "example": "php devdoctor ci --profile=strict-ci",
+            "keywords": [
+                "baseline",
+                "baselines"
+            ]
         },
         {
             "name": "presets",
