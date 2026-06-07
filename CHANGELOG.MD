@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.39.0 - 2026-06-07
+
+- Added a repository-level `bump-version` helper for release version updates.
+- The helper updates Composer metadata, Action examples, CI docs, release examples, and pinned test expectations from one command.
+- The helper refreshes `composer.lock` by default and supports `--no-lock` for dry text-only version rewrites.
+
 ## v1.38.2 - 2026-06-07
 
 - Changed the GitHub Marketplace Action branding color from `teal` to `blue`.

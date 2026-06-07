@@ -1,0 +1,177 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+$root = __DIR__;
+$args = array_values(array_filter(array_slice($argv, 1), static fn (string $arg): bool => $arg !== ''));
+$skipLock = in_array('--no-lock', $args, true);
+$args = array_values(array_filter($args, static fn (string $arg): bool => $arg !== '--no-lock'));
+
+if (count($args) !== 1) {
+    fwrite(STDERR, "Usage: bump-version [--no-lock] <new-version>\n");
+    fwrite(STDERR, "Example: bump-version 1.39.0\n");
+
+    exit(2);
+}
+
+$newVersion = normalizeVersion($args[0]);
+$composerPath = $root.'/composer.json';
+$composer = readJson($composerPath);
+$oldVersion = $composer['extra']['devdoctor']['version'] ?? null;
+
+if (! is_string($oldVersion) || $oldVersion === '') {
+    fwrite(STDERR, "Could not read extra.devdoctor.version from composer.json.\n");
+
+    exit(2);
+}
+
+if ($oldVersion === $newVersion) {
+    fwrite(STDERR, "Version is already {$newVersion}.\n");
+
+    exit(0);
+}
+
+$updates = [
+    'composer.json' => [
+        ['/"version":\s*"'.preg_quote($oldVersion, '/').'"/', '"version": "'.$newVersion.'"'],
+    ],
+    'action.yml' => [
+        ['/v'.preg_quote($oldVersion, '/').'/', 'v'.$newVersion],
+    ],
+    '.github/workflows/update-homebrew-tap.yml' => [
+        ['/'.preg_quote($oldVersion, '/').'/', $newVersion],
+        ['/v'.preg_quote($oldVersion, '/').'/', 'v'.$newVersion],
+    ],
+    'README.md' => [
+        ['/Current version: `'.preg_quote($oldVersion, '/').'`/', 'Current version: `'.$newVersion.'`'],
+        ['/--build-version='.preg_quote($oldVersion, '/').'/', '--build-version='.$newVersion],
+        ['/rtcoder\/devdoctor@v'.preg_quote($oldVersion, '/').'/', 'rtcoder/devdoctor@v'.$newVersion],
+        ['/version: v'.preg_quote($oldVersion, '/').'/', 'version: v'.$newVersion],
+        ['/example `'.preg_quote($oldVersion, '/').'` or `v'.preg_quote($oldVersion, '/').'`/', 'example `'.$newVersion.'` or `v'.$newVersion.'`'],
+    ],
+    'docs/installation.html' => [
+        ['/--build-version='.preg_quote($oldVersion, '/').'/', '--build-version='.$newVersion],
+        ['/rtcoder\/devdoctor@v'.preg_quote($oldVersion, '/').'/', 'rtcoder/devdoctor@v'.$newVersion],
+        ['/version: v'.preg_quote($oldVersion, '/').'/', 'version: v'.$newVersion],
+    ],
+    'docs/ci.html' => [
+        ['/rtcoder\/devdoctor@v'.preg_quote($oldVersion, '/').'/', 'rtcoder/devdoctor@v'.$newVersion],
+        ['/version: v'.preg_quote($oldVersion, '/').'/', 'version: v'.$newVersion],
+    ],
+    'docs/examples/github-actions.yml' => [
+        ['/v'.preg_quote($oldVersion, '/').'/', 'v'.$newVersion],
+    ],
+    'docs/examples/gitlab-ci.yml' => [
+        ['/v'.preg_quote($oldVersion, '/').'/', 'v'.$newVersion],
+    ],
+    'docs/examples/bitbucket-pipelines.yml' => [
+        ['/v'.preg_quote($oldVersion, '/').'/', 'v'.$newVersion],
+    ],
+    'tests/Unit/ReleaseArtifactsTest.php' => [
+        ['/v'.preg_quote($oldVersion, '/').'/', 'v'.$newVersion],
+    ],
+];
+
+$changed = [];
+
+foreach ($updates as $relativePath => $patterns) {
+    $path = $root.'/'.$relativePath;
+
+    if (! is_file($path)) {
+        fwrite(STDERR, "Expected file is missing: {$relativePath}\n");
+
+        exit(2);
+    }
+
+    $contents = (string) file_get_contents($path);
+    $updated = $contents;
+
+    foreach ($patterns as [$pattern, $replacement]) {
+        $updated = preg_replace($pattern, $replacement, $updated);
+    }
+
+    if (! is_string($updated)) {
+        fwrite(STDERR, "Failed while updating {$relativePath}.\n");
+
+        exit(2);
+    }
+
+    if ($updated !== $contents) {
+        file_put_contents($path, $updated);
+        $changed[] = $relativePath;
+    }
+}
+
+if (! $skipLock) {
+    $exitCode = runComposerLockRefresh($root);
+
+    if ($exitCode !== 0) {
+        fwrite(STDERR, "composer update --lock failed with exit code {$exitCode}.\n");
+
+        exit($exitCode);
+    }
+
+    $changed[] = 'composer.lock';
+}
+
+$changed = array_values(array_unique($changed));
+
+echo "Bumped DevDoctor from {$oldVersion} to {$newVersion}.\n";
+
+if ($changed !== []) {
+    echo "Updated files:\n";
+
+    foreach ($changed as $path) {
+        echo "- {$path}\n";
+    }
+}
+
+echo "Remember to add release notes in CHANGELOG.MD, README.md, ROADMAP.md, and docs/changelog.html.\n";
+
+/**
+ * @return array<string, mixed>
+ */
+function readJson(string $path): array
+{
+    $data = json_decode((string) file_get_contents($path), true, flags: JSON_THROW_ON_ERROR);
+
+    if (! is_array($data)) {
+        throw new RuntimeException("Invalid JSON object in {$path}.");
+    }
+
+    return $data;
+}
+
+function normalizeVersion(string $version): string
+{
+    $version = ltrim(trim($version), 'v');
+
+    if (! preg_match('/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/', $version)) {
+        fwrite(STDERR, "Invalid version '{$version}'. Expected semantic version like 1.39.0.\n");
+
+        exit(2);
+    }
+
+    return $version;
+}
+
+function runComposerLockRefresh(string $root): int
+{
+    $command = ['composer', 'update', '--lock', '--no-interaction', '--no-scripts'];
+    $descriptorSpec = [
+        0 => ['file', 'php://stdin', 'r'],
+        1 => ['file', 'php://stdout', 'w'],
+        2 => ['file', 'php://stderr', 'w'],
+    ];
+
+    $process = proc_open($command, $descriptorSpec, $pipes, $root);
+
+    if (! is_resource($process)) {
+        fwrite(STDERR, "Could not start Composer.\n");
+
+        return 1;
+    }
+
+    return proc_close($process);
+}
