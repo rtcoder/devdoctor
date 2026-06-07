@@ -286,6 +286,14 @@
             "example": "php devdoctor commands --format=json"
         },
         {
+            "name": "version",
+            "module": "version",
+            "type": "utility",
+            "read_only": true,
+            "summary": "Show the current DevDoctor version for humans or automation.",
+            "example": "php devdoctor version --format=json"
+        },
+        {
             "name": "explain",
             "module": "explain",
             "type": "utility",

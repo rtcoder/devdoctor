@@ -244,3 +244,4 @@ After the first complete version:
 - `v1.38.1`: Unique GitHub Marketplace Action name for publishing. Complete.
 - `v1.38.2`: GitHub Marketplace Action branding color update. Complete.
 - `v1.39.0`: Repository `bump-version` helper for release version pin updates. Complete.
+- `v1.40.0`: Public `devdoctor version` command with table and JSON output. Complete.

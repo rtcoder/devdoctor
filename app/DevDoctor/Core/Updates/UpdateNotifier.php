@@ -53,7 +53,7 @@ final class UpdateNotifier
 
         $command = $input->getFirstArgument();
 
-        if (in_array($command, [null, '', 'self-update', 'test', 'app:build', 'list', 'help'], true)) {
+        if (in_array($command, [null, '', 'version', 'self-update', 'test', 'app:build', 'list', 'help'], true)) {
             return false;
         }
 

@@ -84,6 +84,21 @@ it('prints self update instructions as json', function () {
     }
 });
 
+it('prints the current version as table and json', function () {
+    $exitCode = Artisan::call('version');
+
+    expect($exitCode)->toBe(0)
+        ->and(Artisan::output())->toContain('DevDoctor ');
+
+    $exitCode = Artisan::call('version', ['--format' => 'json']);
+    $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
+
+    expect($exitCode)->toBe(0)
+        ->and($output['tool'])->toBe('devdoctor')
+        ->and($output['schema_version'])->toBe('1.0')
+        ->and($output['version'])->toBeString();
+});
+
 it('prints inventory with detected presets', function () {
     $path = sys_get_temp_dir().'/devdoctor-inventory-'.bin2hex(random_bytes(4));
     mkdir($path);

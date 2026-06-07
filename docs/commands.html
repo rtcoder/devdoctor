@@ -28,7 +28,7 @@
             <p>The static docs include <a href="commands.json"><code>docs/commands.json</code></a> for tooling that wants command names, modules, read-only status, examples, and high-level categories without scraping HTML.</p>
         </div>
         <div class="metric-row">
-            <div class="metric"><strong>40</strong><span>commands</span></div>
+            <div class="metric"><strong>41</strong><span>commands</span></div>
             <div class="metric"><strong>4</strong><span>categories</span></div>
             <div class="metric"><strong>v1</strong><span>metadata</span></div>
         </div>
@@ -86,11 +86,12 @@
             </div>
         </div>
         <div class="command-index-section" data-command-index-section data-command-type="utility">
-            <a class="command-index-parent" href="#utility-commands" data-command-type-link="utility"><span>Utilities</span><strong data-command-type-count data-total="7">7</strong></a>
+            <a class="command-index-parent" href="#utility-commands" data-command-type-link="utility"><span>Utilities</span><strong data-command-type-count data-total="8">8</strong></a>
             <div class="command-index-children">
                 <a href="#command-presets" data-command-index-link data-command="presets" data-search="presets utility"><span>presets</span></a>
                 <a href="#command-inventory" data-command-index-link data-command="inventory" data-search="inventory utility"><span>inventory</span></a>
                 <a href="#command-commands" data-command-index-link data-command="commands" data-search="commands utility"><span>commands</span></a>
+                <a href="#command-version" data-command-index-link data-command="version" data-search="version utility"><span>version</span></a>
                 <a href="#command-explain" data-command-index-link data-command="explain" data-search="explain utility"><span>explain</span></a>
                 <a href="#command-policy" data-command-index-link data-command="policy" data-search="policy utility"><span>policy</span></a>
                 <a href="#command-support-bundle" data-command-index-link data-command="support-bundle" data-search="support-bundle utility"><span>support-bundle</span></a>
@@ -105,7 +106,7 @@
         </div>
     </aside>
     <section class="code-groups" aria-live="polite">
-        <p class="catalog-result-count" id="command-result-count">40 commands shown</p>
+        <p class="catalog-result-count" id="command-result-count">41 commands shown</p>
         <article class="command-group" id="diagnostic-commands" data-command-group data-command-type="diagnostic">
             <div class="group-heading"><h2>Diagnostics</h2><span data-command-group-count data-total="28">28 commands</span></div>
             <div class="command-grid">
@@ -597,7 +598,7 @@
             </div>
         </article>
         <article class="command-group" id="utility-commands" data-command-group data-command-type="utility">
-            <div class="group-heading"><h2>Utilities</h2><span data-command-group-count data-total="7">7 commands</span></div>
+            <div class="group-heading"><h2>Utilities</h2><span data-command-group-count data-total="8">8 commands</span></div>
             <div class="command-grid">
                 <section class="command-card" id="command-presets" data-command-card data-command="presets" data-module="presets" data-type="utility" data-summary="Detect supported project presets across ecosystems." data-search="presets utility">
                     <div class="command-card-top">
@@ -642,6 +643,21 @@
                     <div class="command-example">
                         <code>php devdoctor commands --format=json</code>
                         <button class="copy-code" type="button" data-copy-command="php devdoctor commands --format=json">Copy</button>
+                    </div>
+                </section>
+                <section class="command-card" id="command-version" data-command-card data-command="version" data-module="version" data-type="utility" data-summary="Show the current DevDoctor version for humans or automation." data-search="version utility">
+                    <div class="command-card-top">
+                        <div>
+                            <p class="command-kicker">Utilities</p>
+                            <h3><code>devdoctor version</code></h3>
+                        </div>
+                        <span class="status-pill">read-only</span>
+                    </div>
+                    <p>Show the current DevDoctor version for humans or automation.</p>
+                    <dl><div><dt>Module</dt><dd>version</dd></div><div><dt>Type</dt><dd>utility</dd></div></dl>
+                    <div class="command-example">
+                        <code>php devdoctor version --format=json</code>
+                        <button class="copy-code" type="button" data-copy-command="php devdoctor version --format=json">Copy</button>
                     </div>
                 </section>
                 <section class="command-card" id="command-explain" data-command-card data-command="explain" data-module="explain" data-type="utility" data-summary="Explain issue codes and their built-in hints." data-search="explain utility">

@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.40.0 - 2026-06-07
+
+- Added the public `devdoctor version` command.
+- The command supports table output for humans and JSON output for automation.
+- Added command catalog, documentation, and test coverage for the new command.
+
 ## v1.39.0 - 2026-06-07
 
 - Added a repository-level `bump-version` helper for release version updates.
