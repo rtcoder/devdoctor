@@ -310,6 +310,14 @@
             "example": "php devdoctor support-bundle"
         },
         {
+            "name": "self-update",
+            "module": "updates",
+            "type": "utility",
+            "read_only": false,
+            "summary": "Check for a newer DevDoctor release and show or run the safest update command.",
+            "example": "php devdoctor self-update"
+        },
+        {
             "name": "init",
             "module": "config",
             "type": "writer",

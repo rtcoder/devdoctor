@@ -28,7 +28,7 @@
             <p>The static docs include <a href="commands.json"><code>docs/commands.json</code></a> for tooling that wants command names, modules, read-only status, examples, and high-level categories without scraping HTML.</p>
         </div>
         <div class="metric-row">
-            <div class="metric"><strong>39</strong><span>commands</span></div>
+            <div class="metric"><strong>40</strong><span>commands</span></div>
             <div class="metric"><strong>4</strong><span>categories</span></div>
             <div class="metric"><strong>v1</strong><span>metadata</span></div>
         </div>
@@ -86,7 +86,7 @@
             </div>
         </div>
         <div class="command-index-section" data-command-index-section data-command-type="utility">
-            <a class="command-index-parent" href="#utility-commands" data-command-type-link="utility"><span>Utilities</span><strong data-command-type-count data-total="6">6</strong></a>
+            <a class="command-index-parent" href="#utility-commands" data-command-type-link="utility"><span>Utilities</span><strong data-command-type-count data-total="7">7</strong></a>
             <div class="command-index-children">
                 <a href="#command-presets" data-command-index-link data-command="presets" data-search="presets utility"><span>presets</span></a>
                 <a href="#command-inventory" data-command-index-link data-command="inventory" data-search="inventory utility"><span>inventory</span></a>
@@ -94,6 +94,7 @@
                 <a href="#command-explain" data-command-index-link data-command="explain" data-search="explain utility"><span>explain</span></a>
                 <a href="#command-policy" data-command-index-link data-command="policy" data-search="policy utility"><span>policy</span></a>
                 <a href="#command-support-bundle" data-command-index-link data-command="support-bundle" data-search="support-bundle utility"><span>support-bundle</span></a>
+                <a href="#command-self-update" data-command-index-link data-command="self-update" data-search="self-update updates utility"><span>self-update</span></a>
             </div>
         </div>
         <div class="command-index-section" data-command-index-section data-command-type="writer">
@@ -104,7 +105,7 @@
         </div>
     </aside>
     <section class="code-groups" aria-live="polite">
-        <p class="catalog-result-count" id="command-result-count">39 commands shown</p>
+        <p class="catalog-result-count" id="command-result-count">40 commands shown</p>
         <article class="command-group" id="diagnostic-commands" data-command-group data-command-type="diagnostic">
             <div class="group-heading"><h2>Diagnostics</h2><span data-command-group-count data-total="28">28 commands</span></div>
             <div class="command-grid">
@@ -596,7 +597,7 @@
             </div>
         </article>
         <article class="command-group" id="utility-commands" data-command-group data-command-type="utility">
-            <div class="group-heading"><h2>Utilities</h2><span data-command-group-count data-total="6">6 commands</span></div>
+            <div class="group-heading"><h2>Utilities</h2><span data-command-group-count data-total="7">7 commands</span></div>
             <div class="command-grid">
                 <section class="command-card" id="command-presets" data-command-card data-command="presets" data-module="presets" data-type="utility" data-summary="Detect supported project presets across ecosystems." data-search="presets utility">
                     <div class="command-card-top">
@@ -686,6 +687,21 @@
                     <div class="command-example">
                         <code>php devdoctor support-bundle</code>
                         <button class="copy-code" type="button" data-copy-command="php devdoctor support-bundle">Copy</button>
+                    </div>
+                </section>
+                <section class="command-card" id="command-self-update" data-command-card data-command="self-update" data-module="updates" data-type="utility" data-summary="Check for a newer DevDoctor release and show or run the safest update command." data-search="self-update updates utility">
+                    <div class="command-card-top">
+                        <div>
+                            <p class="command-kicker">Utilities</p>
+                            <h3><code>devdoctor self-update</code></h3>
+                        </div>
+                        <span class="status-pill">writes file</span>
+                    </div>
+                    <p>Check for a newer DevDoctor release and show or run the safest update command.</p>
+                    <dl><div><dt>Module</dt><dd>updates</dd></div><div><dt>Type</dt><dd>utility</dd></div></dl>
+                    <div class="command-example">
+                        <code>php devdoctor self-update</code>
+                        <button class="copy-code" type="button" data-copy-command="php devdoctor self-update">Copy</button>
                     </div>
                 </section>
             </div>

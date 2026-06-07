@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, Node/frontend, Flutter/Dart, native mobile, monorepos, Python, Ruby/Rails, Go, Rust, Java/JVM, Terraform/IaC, Kubernetes/Helm, .NET, C/C++, generic web, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.36.0`
+Current version: `1.37.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.36.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.37.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -85,6 +85,7 @@ commands   List DevDoctor commands and documentation metadata
 explain    Explain DevDoctor issue codes and hints
 policy     Show DevDoctor safety and compatibility policy
 support-bundle Print a redacted support bundle without writing files
+self-update Check for a newer DevDoctor release and show or run the safest update command
 init       Generate an initial devdoctor.yml configuration
 ```
 
@@ -150,6 +151,7 @@ php devdoctor commands --format=json
 php devdoctor explain DD_ENV_FILE_MISSING --format=json
 php devdoctor policy --format=json
 php devdoctor support-bundle
+php devdoctor self-update
 php devdoctor db
 php devdoctor db --connect
 php devdoctor queue
@@ -290,6 +292,8 @@ The `presets` command detects supported project stacks from files and declared d
 
 `v1.36.0` adds a manual `Update Homebrew Tap` workflow for publishing or repairing the Homebrew formula for an existing release after `HOMEBREW_TAP_TOKEN` is configured.
 
+`v1.37.0` adds update checks for interactive table output and `devdoctor self-update`, which reports the current version, the latest release, and the safest update command for the detected installation method.
+
 Preset detection is informational and can be included in CI explicitly:
 
 ```bash
@@ -405,9 +409,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.36.0
+- uses: rtcoder/devdoctor@v1.37.0
   with:
-    version: v1.36.0
+    version: v1.37.0
     format: sarif
 ```
 
@@ -563,7 +567,7 @@ brew install devdoctor
 
 The release workflow can update `rtcoder/homebrew-tap` after each tag when the repository secret `HOMEBREW_TAP_TOKEN` is configured with write access to the tap.
 
-If the token was added after a release, run the `Update Homebrew Tap` workflow manually from GitHub Actions and pass the release version, for example `1.36.0` or `v1.36.0`. The workflow downloads `devdoctor.phar.sha256` from the GitHub Release and updates `Formula/devdoctor.rb` in `rtcoder/homebrew-tap`.
+If the token was added after a release, run the `Update Homebrew Tap` workflow manually from GitHub Actions and pass the release version, for example `1.37.0` or `v1.37.0`. The workflow downloads `devdoctor.phar.sha256` from the GitHub Release and updates `Formula/devdoctor.rb` in `rtcoder/homebrew-tap`.
 
 ## Development
 
@@ -571,7 +575,7 @@ If the token was added after a release, run the `Update Homebrew Tap` workflow m
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.36.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.37.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version

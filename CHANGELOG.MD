@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.37.0 - 2026-06-07
+
+- Added interactive update notices for table output when a newer DevDoctor release is available.
+- Added `devdoctor self-update` to show the current version, latest release, and safest update command.
+- Kept JSON, SARIF, CI, and piped output free from update notice noise.
+
 ## v1.36.0 - 2026-06-07
 
 - Added a manual `Update Homebrew Tap` workflow for publishing the Homebrew formula for an existing release.

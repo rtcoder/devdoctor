@@ -38,6 +38,52 @@ it('prints command catalog as json', function () {
         ->and($output['commands'][0]['read_only'])->toBeTrue();
 });
 
+it('prints update notices for table output without touching json output', function () {
+    putenv('DEVDOCTOR_FORCE_UPDATE_CHECK=1');
+    putenv('DEVDOCTOR_LATEST_VERSION=9.9.9');
+    putenv('DEVDOCTOR_UPDATE_COMMAND=brew upgrade rtcoder/tap/devdoctor');
+
+    try {
+        $exitCode = Artisan::call('commands', ['--module' => 'env']);
+        $tableOutput = Artisan::output();
+
+        expect($exitCode)->toBe(0)
+            ->and($tableOutput)->toContain('Update available:')
+            ->and($tableOutput)->toContain('latest is 9.9.9')
+            ->and($tableOutput)->toContain('Update with:');
+
+        $exitCode = Artisan::call('commands', ['--module' => 'env', '--format' => 'json']);
+        $jsonOutput = Artisan::output();
+        $output = json_decode($jsonOutput, true, flags: JSON_THROW_ON_ERROR);
+
+        expect($exitCode)->toBe(0)
+            ->and($output['commands'][0]['name'])->toBe('env')
+            ->and($jsonOutput)->not->toContain('Update available:');
+    } finally {
+        putenv('DEVDOCTOR_FORCE_UPDATE_CHECK');
+        putenv('DEVDOCTOR_LATEST_VERSION');
+        putenv('DEVDOCTOR_UPDATE_COMMAND');
+    }
+});
+
+it('prints self update instructions as json', function () {
+    putenv('DEVDOCTOR_LATEST_VERSION=9.9.9');
+    putenv('DEVDOCTOR_UPDATE_COMMAND=brew upgrade rtcoder/tap/devdoctor');
+
+    try {
+        $exitCode = Artisan::call('self-update', ['--format' => 'json']);
+        $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
+
+        expect($exitCode)->toBe(0)
+            ->and($output['update_available'])->toBeTrue()
+            ->and($output['latest_version'])->toBe('9.9.9')
+            ->and($output['suggested_command'])->toBe('brew upgrade rtcoder/tap/devdoctor');
+    } finally {
+        putenv('DEVDOCTOR_LATEST_VERSION');
+        putenv('DEVDOCTOR_UPDATE_COMMAND');
+    }
+});
+
 it('prints inventory with detected presets', function () {
     $path = sys_get_temp_dir().'/devdoctor-inventory-'.bin2hex(random_bytes(4));
     mkdir($path);

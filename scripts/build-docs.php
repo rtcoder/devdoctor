@@ -115,6 +115,7 @@ function commandCatalog(): array
             ['name' => 'explain', 'module' => 'explain', 'type' => 'utility', 'read_only' => true, 'summary' => 'Explain issue codes and their built-in hints.', 'example' => 'php devdoctor explain DD_ENV_FILE_MISSING --format=json'],
             ['name' => 'policy', 'module' => 'policy', 'type' => 'utility', 'read_only' => true, 'summary' => 'Show DevDoctor safety and compatibility policy.', 'example' => 'php devdoctor policy --format=json'],
             ['name' => 'support-bundle', 'module' => 'support-bundle', 'type' => 'utility', 'read_only' => true, 'summary' => 'Print redacted support context without writing files.', 'example' => 'php devdoctor support-bundle'],
+            ['name' => 'self-update', 'module' => 'updates', 'type' => 'utility', 'read_only' => false, 'summary' => 'Check for a newer DevDoctor release and show or run the safest update command.', 'example' => 'php devdoctor self-update'],
             ['name' => 'init', 'module' => 'config', 'type' => 'writer', 'read_only' => false, 'summary' => 'Preview and optionally write devdoctor.yml after confirmation.', 'example' => 'php devdoctor init --dry-run'],
         ],
     ];
