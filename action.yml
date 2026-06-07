@@ -3,11 +3,11 @@ description: Read-only multi-stack diagnostics for CI environments.
 
 branding:
   icon: activity
-  color: teal
+  color: blue
 
 inputs:
   version:
-    description: Explicit DevDoctor release tag to download, for example v1.38.1. Latest is never used implicitly.
+    description: Explicit DevDoctor release tag to download, for example v1.38.2. Latest is never used implicitly.
     required: true
   modules:
     description: Comma-separated DevDoctor modules to run in CI.

@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: rtcoder/devdoctor@v1.38.1
+      - uses: rtcoder/devdoctor@v1.38.2
         with:
-          version: v1.38.1
+          version: v1.38.2
           args: ci --format=sarif

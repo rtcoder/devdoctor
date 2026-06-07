@@ -242,3 +242,4 @@ After the first complete version:
 - `v1.37.0`: Interactive update notices and `devdoctor self-update` command. Complete.
 - `v1.38.0`: GitHub Marketplace metadata polish for the composite Action. Complete.
 - `v1.38.1`: Unique GitHub Marketplace Action name for publishing. Complete.
+- `v1.38.2`: GitHub Marketplace Action branding color update. Complete.
