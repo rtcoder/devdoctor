@@ -73,6 +73,14 @@ enum IssueCode: string
     case DD_LARAVEL_NOT_PROJECT = 'DD_LARAVEL_NOT_PROJECT';
     case DD_LARAVEL_PROD_DEBUG = 'DD_LARAVEL_PROD_DEBUG';
     case DD_LARAVEL_READY = 'DD_LARAVEL_READY';
+    case DD_MCP_CONFIG_INVALID = 'DD_MCP_CONFIG_INVALID';
+    case DD_MCP_NOT_CONFIGURED = 'DD_MCP_NOT_CONFIGURED';
+    case DD_MCP_READY = 'DD_MCP_READY';
+    case DD_MCP_REMOTE_URL_MISSING = 'DD_MCP_REMOTE_URL_MISSING';
+    case DD_MCP_SERVER_INVALID = 'DD_MCP_SERVER_INVALID';
+    case DD_MCP_SERVERS_MISSING = 'DD_MCP_SERVERS_MISSING';
+    case DD_MCP_STDIO_COMMAND_MISSING = 'DD_MCP_STDIO_COMMAND_MISSING';
+    case DD_MCP_TRANSPORT_UNKNOWN = 'DD_MCP_TRANSPORT_UNKNOWN';
     case DD_SYMFONY_ENV_MISSING = 'DD_SYMFONY_ENV_MISSING';
     case DD_SYMFONY_NOT_PROJECT = 'DD_SYMFONY_NOT_PROJECT';
     case DD_SYMFONY_PROD_DEBUG = 'DD_SYMFONY_PROD_DEBUG';
@@ -318,6 +326,12 @@ enum IssueCode: string
             self::DD_LARAVEL_DIRECTORY_NOT_WRITABLE => 'Adjust ownership or permissions so the current user can write Laravel runtime files.',
             self::DD_LARAVEL_ENV_MISSING => 'Create .env from .env.example and fill required Laravel values.',
             self::DD_LARAVEL_PROD_DEBUG => 'Disable APP_DEBUG before using production environment settings.',
+            self::DD_MCP_CONFIG_INVALID => 'Fix the JSON syntax before relying on MCP server configuration.',
+            self::DD_MCP_REMOTE_URL_MISSING => 'Add the remote MCP server URL or switch the server to stdio with a command.',
+            self::DD_MCP_SERVER_INVALID => 'Use a named MCP server object with a supported transport, command, or URL.',
+            self::DD_MCP_SERVERS_MISSING => 'Define MCP servers under mcpServers or servers.',
+            self::DD_MCP_STDIO_COMMAND_MISSING => 'Add the command used to start the stdio MCP server.',
+            self::DD_MCP_TRANSPORT_UNKNOWN => 'Use stdio, sse, or http as the MCP server transport.',
             self::DD_SYMFONY_ENV_MISSING => 'Create .env from .env.example or document the environment source used by Symfony.',
             self::DD_SYMFONY_PROD_DEBUG => 'Disable APP_DEBUG before using prod environment settings.',
             self::DD_SYMFONY_RECIPE_DRIFT => 'Review Symfony Flex recipes and ensure expected config files are committed.',

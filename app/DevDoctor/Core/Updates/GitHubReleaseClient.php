@@ -8,7 +8,7 @@ use Throwable;
 
 final class GitHubReleaseClient implements ReleaseClientInterface
 {
-    private const LATEST_RELEASE_URL = 'https://api.github.com/repos/rtcoder/devdoctor/releases/latest';
+    private const string LATEST_RELEASE_URL = 'https://api.github.com/repos/rtcoder/devdoctor/releases/latest';
 
     public function latest(): ?ReleaseInfo
     {

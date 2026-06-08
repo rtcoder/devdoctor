@@ -20,7 +20,7 @@ final readonly class DatabaseAnalyzer
     /**
      * @var array<string, list<string>>
      */
-    private const REQUIRED_KEYS = [
+    private const array REQUIRED_KEYS = [
         'mysql' => ['DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME'],
         'pgsql' => ['DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME'],
         'postgres' => ['DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME'],
@@ -31,7 +31,7 @@ final readonly class DatabaseAnalyzer
     /**
      * @var array<string, string>
      */
-    private const PDO_DRIVERS = [
+    private const array PDO_DRIVERS = [
         'mysql' => 'mysql',
         'pgsql' => 'pgsql',
         'postgres' => 'pgsql',

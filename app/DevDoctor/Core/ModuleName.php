@@ -22,6 +22,7 @@ enum ModuleName: string
     case JAVA = 'java';
     case KUBE = 'kube';
     case LARAVEL = 'laravel';
+    case MCP = 'mcp';
     case MOBILE = 'mobile';
     case MONOREPO = 'monorepo';
     case NODE = 'node';

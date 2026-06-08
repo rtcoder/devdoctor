@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "DevDoctor version to publish to Homebrew, for example 1.41.1 or v1.41.1"
+        description: "DevDoctor version to publish to Homebrew, for example 1.42.0 or v1.42.0"
         required: true
 
 permissions:

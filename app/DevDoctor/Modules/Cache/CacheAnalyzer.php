@@ -16,7 +16,7 @@ final readonly class CacheAnalyzer
     /**
      * @var list<string>
      */
-    private const CACHE_DIRECTORIES = [
+    private const array CACHE_DIRECTORIES = [
         'bootstrap/cache',
         'storage/framework/cache',
         'storage/framework/views',
@@ -30,7 +30,7 @@ final readonly class CacheAnalyzer
     /**
      * @var list<string>
      */
-    private const LARAVEL_ARTIFACTS = [
+    private const array LARAVEL_ARTIFACTS = [
         'bootstrap/cache/config.php',
         'bootstrap/cache/events.php',
         'bootstrap/cache/packages.php',

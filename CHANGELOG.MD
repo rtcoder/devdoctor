@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.42.0 - 2026-06-08
+
+- Added `devdoctor mcp` for read-only Model Context Protocol configuration diagnostics.
+- Added typed MCP DTOs and transport enum support for `stdio`, `sse`, and `http` server definitions.
+- Added MCP preset detection, command catalog metadata, issue code catalog entries, and fixture-based tests without starting MCP servers or making network calls.
+
 ## v1.41.1 - 2026-06-08
 
 - Fixed the release artifact test for Windows by avoiding POSIX executable-bit checks on `bump-version`.

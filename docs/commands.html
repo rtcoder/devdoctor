@@ -28,7 +28,7 @@
             <p>The static docs include <a href="commands.json"><code>docs/commands.json</code></a> for tooling that wants command names, modules, read-only status, examples, and high-level categories without scraping HTML.</p>
         </div>
         <div class="metric-row">
-            <div class="metric"><strong>41</strong><span>commands</span></div>
+            <div class="metric"><strong>42</strong><span>commands</span></div>
             <div class="metric"><strong>4</strong><span>categories</span></div>
             <div class="metric"><strong>v1</strong><span>metadata</span></div>
         </div>
@@ -44,7 +44,7 @@
             <input type="search" id="command-search" placeholder="ports, docker, baseline..." autocomplete="off">
         </label>
         <div class="command-index-section" data-command-index-section data-command-type="diagnostic">
-            <a class="command-index-parent" href="#diagnostic-commands" data-command-type-link="diagnostic"><span>Diagnostics</span><strong data-command-type-count data-total="28">28</strong></a>
+            <a class="command-index-parent" href="#diagnostic-commands" data-command-type-link="diagnostic"><span>Diagnostics</span><strong data-command-type-count data-total="29">29</strong></a>
             <div class="command-index-children">
                 <a href="#command-env" data-command-index-link data-command="env" data-search="env diagnostic"><span>env</span></a>
                 <a href="#command-cache" data-command-index-link data-command="cache" data-search="cache diagnostic"><span>cache</span></a>
@@ -61,6 +61,7 @@
                 <a href="#command-go" data-command-index-link data-command="go" data-search="go diagnostic"><span>go</span></a>
                 <a href="#command-rust" data-command-index-link data-command="rust" data-search="rust diagnostic"><span>rust</span></a>
                 <a href="#command-java" data-command-index-link data-command="java" data-search="java diagnostic"><span>java</span></a>
+                <a href="#command-mcp" data-command-index-link data-command="mcp" data-search="mcp diagnostic"><span>mcp</span></a>
                 <a href="#command-iac" data-command-index-link data-command="iac" data-search="iac diagnostic"><span>iac</span></a>
                 <a href="#command-kube" data-command-index-link data-command="kube" data-search="kube diagnostic"><span>kube</span></a>
                 <a href="#command-dotnet" data-command-index-link data-command="dotnet" data-search="dotnet diagnostic"><span>dotnet</span></a>
@@ -106,9 +107,9 @@
         </div>
     </aside>
     <section class="code-groups" aria-live="polite">
-        <p class="catalog-result-count" id="command-result-count">41 commands shown</p>
+        <p class="catalog-result-count" id="command-result-count">42 commands shown</p>
         <article class="command-group" id="diagnostic-commands" data-command-group data-command-type="diagnostic">
-            <div class="group-heading"><h2>Diagnostics</h2><span data-command-group-count data-total="28">28 commands</span></div>
+            <div class="group-heading"><h2>Diagnostics</h2><span data-command-group-count data-total="29">29 commands</span></div>
             <div class="command-grid">
                 <section class="command-card" id="command-env" data-command-card data-command="env" data-module="env" data-type="diagnostic" data-summary="Check dotenv files and configured env rules." data-search="env diagnostic">
                     <div class="command-card-top">
@@ -333,6 +334,21 @@
                     <div class="command-example">
                         <code>php devdoctor java</code>
                         <button class="copy-code" type="button" data-copy-command="php devdoctor java">Copy</button>
+                    </div>
+                </section>
+                <section class="command-card" id="command-mcp" data-command-card data-command="mcp" data-module="mcp" data-type="diagnostic" data-summary="Check MCP server configuration files for agent tooling without starting servers." data-search="mcp diagnostic">
+                    <div class="command-card-top">
+                        <div>
+                            <p class="command-kicker">Diagnostics</p>
+                            <h3><code>devdoctor mcp</code></h3>
+                        </div>
+                        <span class="status-pill">read-only</span>
+                    </div>
+                    <p>Check MCP server configuration files for agent tooling without starting servers.</p>
+                    <dl><div><dt>Module</dt><dd>mcp</dd></div><div><dt>Type</dt><dd>diagnostic</dd></div></dl>
+                    <div class="command-example">
+                        <code>php devdoctor mcp --config=.mcp.json</code>
+                        <button class="copy-code" type="button" data-copy-command="php devdoctor mcp --config=.mcp.json">Copy</button>
                     </div>
                 </section>
                 <section class="command-card" id="command-iac" data-command-card data-command="iac" data-module="iac" data-type="diagnostic" data-summary="Check Terraform, OpenTofu, and Terragrunt manifests, lockfiles, module refs, and secret hygiene." data-search="iac diagnostic">

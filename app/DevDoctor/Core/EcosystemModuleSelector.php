@@ -60,6 +60,10 @@ final readonly class EcosystemModuleSelector
             $modules[] = ModuleName::JAVA->value;
         }
 
+        if ($this->hasAny($presets, [ProjectPreset::MCP])) {
+            $modules[] = ModuleName::MCP->value;
+        }
+
         if ($this->hasAny($presets, [ProjectPreset::IAC, ProjectPreset::TERRAFORM])) {
             $modules[] = ModuleName::IAC->value;
         }

@@ -8,6 +8,8 @@ enum ProjectPreset: string
 {
     case LARAVEL = 'laravel';
 
+    case MCP = 'mcp';
+
     case SYMFONY = 'symfony';
 
     case NODE = 'node';
@@ -86,6 +88,7 @@ enum ProjectPreset: string
     {
         return match ($this) {
             self::LARAVEL => 'Laravel',
+            self::MCP => 'MCP',
             self::SYMFONY => 'Symfony',
             self::NODE => 'Node.js',
             self::FRONTEND => 'Frontend',

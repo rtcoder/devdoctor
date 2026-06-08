@@ -28,8 +28,8 @@
             <p>Messages can become clearer over time, but issue codes are the stable contract. Use these identifiers in CI policy, baselines, SARIF consumers, and custom dashboards.</p>
         </div>
         <div class="metric-row">
-            <div class="metric"><strong>231</strong><span>codes</span></div>
-            <div class="metric"><strong>31</strong><span>modules</span></div>
+            <div class="metric"><strong>239</strong><span>codes</span></div>
+            <div class="metric"><strong>32</strong><span>modules</span></div>
             <div class="metric"><strong>v1</strong><span>schema</span></div>
         </div>
     </section>
@@ -37,7 +37,7 @@
     <aside class="module-index" aria-label="Issue code modules">
         <div class="module-index-heading">
             <span>Categories</span>
-            <strong>31</strong>
+            <strong>32</strong>
         </div>
         <label class="search-box">
             <span>Filter codes</span>
@@ -61,6 +61,7 @@
         <a href="#module-java" data-module-link="java"><span>java</span><strong>7</strong></a>
         <a href="#module-kube" data-module-link="kube"><span>kube</span><strong>8</strong></a>
         <a href="#module-laravel" data-module-link="laravel"><span>laravel</span><strong>9</strong></a>
+        <a href="#module-mcp" data-module-link="mcp"><span>mcp</span><strong>8</strong></a>
         <a href="#module-mobile" data-module-link="mobile"><span>mobile</span><strong>6</strong></a>
         <a href="#module-monorepo" data-module-link="monorepo"><span>monorepo</span><strong>5</strong></a>
         <a href="#module-node" data-module-link="node"><span>node</span><strong>12</strong></a>
@@ -76,7 +77,7 @@
         <a href="#module-web" data-module-link="web"><span>web</span><strong>7</strong></a>
     </aside>
     <section class="code-groups" aria-live="polite">
-        <p class="catalog-result-count" id="issue-code-result-count">231 codes shown</p>
+        <p class="catalog-result-count" id="issue-code-result-count">239 codes shown</p>
         <article class="code-group" id="module-cache" data-code-group data-module="cache">
             <div class="group-heading"><h2>cache</h2><span>5 codes</span></div>
             <div class="code-grid">
@@ -864,6 +865,51 @@
                     <div class="code-top"><code>DD_LARAVEL_READY</code><button class="copy-code" type="button" data-copy-code="DD_LARAVEL_READY">Copy</button><span class="status-pill">active</span></div>
                     <p>Laravel diagnostics found no actionable issues.</p>
                     <dl><div><dt>Module</dt><dd>laravel</dd></div><div><dt>Introduced</dt><dd>1.3.0</dd></div></dl>
+                </section>
+            </div>
+        </article>
+        <article class="code-group" id="module-mcp" data-code-group data-module="mcp">
+            <div class="group-heading"><h2>mcp</h2><span>8 codes</span></div>
+            <div class="code-grid">
+                <section class="code-card" id="dd-mcp-config-invalid" data-code-card data-code="DD_MCP_CONFIG_INVALID" data-module="mcp" data-description="An MCP configuration file contains invalid JSON.">
+                    <div class="code-top"><code>DD_MCP_CONFIG_INVALID</code><button class="copy-code" type="button" data-copy-code="DD_MCP_CONFIG_INVALID">Copy</button><span class="status-pill">active</span></div>
+                    <p>An MCP configuration file contains invalid JSON.</p>
+                    <dl><div><dt>Module</dt><dd>mcp</dd></div><div><dt>Introduced</dt><dd>1.42.0</dd></div></dl>
+                </section>
+                <section class="code-card" id="dd-mcp-not-configured" data-code-card data-code="DD_MCP_NOT_CONFIGURED" data-module="mcp" data-description="No MCP configuration file was detected.">
+                    <div class="code-top"><code>DD_MCP_NOT_CONFIGURED</code><button class="copy-code" type="button" data-copy-code="DD_MCP_NOT_CONFIGURED">Copy</button><span class="status-pill">active</span></div>
+                    <p>No MCP configuration file was detected.</p>
+                    <dl><div><dt>Module</dt><dd>mcp</dd></div><div><dt>Introduced</dt><dd>1.42.0</dd></div></dl>
+                </section>
+                <section class="code-card" id="dd-mcp-ready" data-code-card data-code="DD_MCP_READY" data-module="mcp" data-description="MCP diagnostics found no actionable issues.">
+                    <div class="code-top"><code>DD_MCP_READY</code><button class="copy-code" type="button" data-copy-code="DD_MCP_READY">Copy</button><span class="status-pill">active</span></div>
+                    <p>MCP diagnostics found no actionable issues.</p>
+                    <dl><div><dt>Module</dt><dd>mcp</dd></div><div><dt>Introduced</dt><dd>1.42.0</dd></div></dl>
+                </section>
+                <section class="code-card" id="dd-mcp-remote-url-missing" data-code-card data-code="DD_MCP_REMOTE_URL_MISSING" data-module="mcp" data-description="An MCP remote server is missing a url.">
+                    <div class="code-top"><code>DD_MCP_REMOTE_URL_MISSING</code><button class="copy-code" type="button" data-copy-code="DD_MCP_REMOTE_URL_MISSING">Copy</button><span class="status-pill">active</span></div>
+                    <p>An MCP remote server is missing a url.</p>
+                    <dl><div><dt>Module</dt><dd>mcp</dd></div><div><dt>Introduced</dt><dd>1.42.0</dd></div></dl>
+                </section>
+                <section class="code-card" id="dd-mcp-server-invalid" data-code-card data-code="DD_MCP_SERVER_INVALID" data-module="mcp" data-description="An MCP server entry has an unsupported shape.">
+                    <div class="code-top"><code>DD_MCP_SERVER_INVALID</code><button class="copy-code" type="button" data-copy-code="DD_MCP_SERVER_INVALID">Copy</button><span class="status-pill">active</span></div>
+                    <p>An MCP server entry has an unsupported shape.</p>
+                    <dl><div><dt>Module</dt><dd>mcp</dd></div><div><dt>Introduced</dt><dd>1.42.0</dd></div></dl>
+                </section>
+                <section class="code-card" id="dd-mcp-servers-missing" data-code-card data-code="DD_MCP_SERVERS_MISSING" data-module="mcp" data-description="An MCP configuration file does not define mcpServers or servers.">
+                    <div class="code-top"><code>DD_MCP_SERVERS_MISSING</code><button class="copy-code" type="button" data-copy-code="DD_MCP_SERVERS_MISSING">Copy</button><span class="status-pill">active</span></div>
+                    <p>An MCP configuration file does not define mcpServers or servers.</p>
+                    <dl><div><dt>Module</dt><dd>mcp</dd></div><div><dt>Introduced</dt><dd>1.42.0</dd></div></dl>
+                </section>
+                <section class="code-card" id="dd-mcp-stdio-command-missing" data-code-card data-code="DD_MCP_STDIO_COMMAND_MISSING" data-module="mcp" data-description="An MCP stdio server is missing a command.">
+                    <div class="code-top"><code>DD_MCP_STDIO_COMMAND_MISSING</code><button class="copy-code" type="button" data-copy-code="DD_MCP_STDIO_COMMAND_MISSING">Copy</button><span class="status-pill">active</span></div>
+                    <p>An MCP stdio server is missing a command.</p>
+                    <dl><div><dt>Module</dt><dd>mcp</dd></div><div><dt>Introduced</dt><dd>1.42.0</dd></div></dl>
+                </section>
+                <section class="code-card" id="dd-mcp-transport-unknown" data-code-card data-code="DD_MCP_TRANSPORT_UNKNOWN" data-module="mcp" data-description="An MCP server uses an unsupported transport.">
+                    <div class="code-top"><code>DD_MCP_TRANSPORT_UNKNOWN</code><button class="copy-code" type="button" data-copy-code="DD_MCP_TRANSPORT_UNKNOWN">Copy</button><span class="status-pill">active</span></div>
+                    <p>An MCP server uses an unsupported transport.</p>
+                    <dl><div><dt>Module</dt><dd>mcp</dd></div><div><dt>Introduced</dt><dd>1.42.0</dd></div></dl>
                 </section>
             </div>
         </article>

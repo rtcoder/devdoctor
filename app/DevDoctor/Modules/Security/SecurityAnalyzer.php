@@ -19,7 +19,7 @@ use SplFileInfo;
 
 final readonly class SecurityAnalyzer
 {
-    private const IGNORED_DIRECTORIES = ['.git', 'vendor', 'node_modules', 'builds', 'storage'];
+    private const array IGNORED_DIRECTORIES = ['.git', 'vendor', 'node_modules', 'builds', 'storage'];
 
     public function __construct(
         private EnvParser $envParser = new EnvParser,

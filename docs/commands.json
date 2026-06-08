@@ -122,6 +122,14 @@
             "example": "php devdoctor java"
         },
         {
+            "name": "mcp",
+            "module": "mcp",
+            "type": "diagnostic",
+            "read_only": true,
+            "summary": "Check MCP server configuration files for agent tooling without starting servers.",
+            "example": "php devdoctor mcp --config=.mcp.json"
+        },
+        {
             "name": "iac",
             "module": "iac",
             "type": "diagnostic",

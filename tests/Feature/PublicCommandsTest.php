@@ -331,6 +331,15 @@ it('runs presets diagnostics with json output', function () {
         ->and(array_column($output['modules'][0]['issues'], 'key'))->toBe(['frontend', 'node', 'vite', 'web']);
 });
 
+it('runs mcp diagnostics with json output', function () {
+    $path = sys_get_temp_dir().'/devdoctor-mcp-command-'.bin2hex(random_bytes(4));
+    mkdir($path);
+
+    $this->artisan('mcp', ['--path' => $path, '--format' => 'json'])
+        ->assertExitCode(0)
+        ->expectsOutputToContain('DD_MCP_NOT_CONFIGURED');
+});
+
 it('prints config wizard output in dry run mode', function () {
     $path = sys_get_temp_dir().'/devdoctor-init-command-'.bin2hex(random_bytes(4));
     mkdir($path);

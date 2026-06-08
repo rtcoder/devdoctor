@@ -18,7 +18,7 @@ final readonly class QueueAnalyzer
     /**
      * @var array<string, list<string>>
      */
-    private const REQUIRED_KEYS = [
+    private const array REQUIRED_KEYS = [
         'database' => ['DB_CONNECTION'],
         'redis' => ['REDIS_HOST'],
         'sqs' => ['SQS_QUEUE'],
@@ -28,7 +28,7 @@ final readonly class QueueAnalyzer
     /**
      * @var list<string>
      */
-    private const SUPPORTED_CONNECTIONS = [
+    private const array SUPPORTED_CONNECTIONS = [
         'sync',
         'database',
         'redis',

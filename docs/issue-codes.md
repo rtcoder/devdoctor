@@ -198,6 +198,17 @@ The human-readable catalog is available at [`docs/issue-codes.html`](issue-codes
 - `DD_LARAVEL_PROD_DEBUG` - APP_DEBUG is enabled while APP_ENV is production. Introduced in `1.3.0`; status `active`.
 - `DD_LARAVEL_READY` - Laravel diagnostics found no actionable issues. Introduced in `1.3.0`; status `active`.
 
+## Mcp
+
+- `DD_MCP_CONFIG_INVALID` - An MCP configuration file contains invalid JSON. Introduced in `1.42.0`; status `active`.
+- `DD_MCP_NOT_CONFIGURED` - No MCP configuration file was detected. Introduced in `1.42.0`; status `active`.
+- `DD_MCP_READY` - MCP diagnostics found no actionable issues. Introduced in `1.42.0`; status `active`.
+- `DD_MCP_REMOTE_URL_MISSING` - An MCP remote server is missing a url. Introduced in `1.42.0`; status `active`.
+- `DD_MCP_SERVER_INVALID` - An MCP server entry has an unsupported shape. Introduced in `1.42.0`; status `active`.
+- `DD_MCP_SERVERS_MISSING` - An MCP configuration file does not define mcpServers or servers. Introduced in `1.42.0`; status `active`.
+- `DD_MCP_STDIO_COMMAND_MISSING` - An MCP stdio server is missing a command. Introduced in `1.42.0`; status `active`.
+- `DD_MCP_TRANSPORT_UNKNOWN` - An MCP server uses an unsupported transport. Introduced in `1.42.0`; status `active`.
+
 ## Mobile
 
 - `DD_MOBILE_ANDROID_DEBUGGABLE` - An Android manifest enables debuggable mode. Introduced in `1.27.0`; status `active`.

@@ -26,6 +26,14 @@
 
     <section class="release-list">
         <article class="release">
+            <h2>v1.42.0 <span class="meta">2026-06-08</span></h2>
+            <ul>
+                <li>Added <code>devdoctor mcp</code> for read-only Model Context Protocol configuration diagnostics.</li>
+                <li>Added typed MCP DTOs and transport enum support for <code>stdio</code>, <code>sse</code>, and <code>http</code> server definitions.</li>
+                <li>Added MCP preset detection, command catalog metadata, issue code catalog entries, and fixture-based tests without starting MCP servers or making network calls.</li>
+            </ul>
+        </article>
+        <article class="release">
             <h2>v1.41.1 <span class="meta">2026-06-08</span></h2>
             <ul>
                 <li>Fixed the release artifact test for Windows by avoiding POSIX executable-bit checks on <code>bump-version</code>.</li>

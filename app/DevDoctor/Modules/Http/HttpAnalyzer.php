@@ -18,7 +18,7 @@ final readonly class HttpAnalyzer
     /**
      * @var list<string>
      */
-    private const ENV_URL_KEYS = ['APP_URL', 'FRONTEND_URL', 'API_URL'];
+    private const array ENV_URL_KEYS = ['APP_URL', 'FRONTEND_URL', 'API_URL'];
 
     public function __construct(
         private EnvParser $parser = new EnvParser,

@@ -15,7 +15,7 @@ use DevDoctor\Modules\Presets\ProjectPreset;
 
 final readonly class FrontendAnalyzer
 {
-    private const FRONTEND_PRESETS = [
+    private const array FRONTEND_PRESETS = [
         ProjectPreset::FRONTEND,
         ProjectPreset::VITE,
         ProjectPreset::NEXTJS,
@@ -23,7 +23,7 @@ final readonly class FrontendAnalyzer
         ProjectPreset::ASTRO,
     ];
 
-    private const FRONTEND_DEPENDENCIES = [
+    private const array FRONTEND_DEPENDENCIES = [
         '@angular/core',
         '@sveltejs/kit',
         'astro',

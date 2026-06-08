@@ -14,7 +14,7 @@ use JsonException;
 
 final readonly class NodeAnalyzer
 {
-    private const LOCKFILES = [
+    private const array LOCKFILES = [
         'package-lock.json' => 'npm',
         'npm-shrinkwrap.json' => 'npm',
         'pnpm-lock.yaml' => 'pnpm',

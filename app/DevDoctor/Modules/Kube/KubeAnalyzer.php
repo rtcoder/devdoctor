@@ -16,7 +16,7 @@ final readonly class KubeAnalyzer
     /**
      * @var list<string>
      */
-    private const VALUES_FILES = [
+    private const array VALUES_FILES = [
         'values.yaml',
         'values.yml',
         'values.local.yaml',

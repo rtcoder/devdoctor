@@ -38,6 +38,8 @@ use DevDoctor\Modules\Kube\KubeAnalyzer;
 use DevDoctor\Modules\Kube\KubeOptions;
 use DevDoctor\Modules\Laravel\LaravelAnalyzer;
 use DevDoctor\Modules\Laravel\LaravelOptions;
+use DevDoctor\Modules\Mcp\McpAnalyzer;
+use DevDoctor\Modules\Mcp\McpOptions;
 use DevDoctor\Modules\Mobile\MobileAnalyzer;
 use DevDoctor\Modules\Mobile\MobileOptions;
 use DevDoctor\Modules\Monorepo\MonorepoAnalyzer;
@@ -88,6 +90,7 @@ final class DiagnosticModuleRunner
             ModuleName::JAVA,
             ModuleName::IAC,
             ModuleName::KUBE,
+            ModuleName::MCP,
             ModuleName::DOTNET,
             ModuleName::CPP,
             ModuleName::WEB,
@@ -169,6 +172,10 @@ final class DiagnosticModuleRunner
                 strict: $options->strict,
             ))),
             ModuleName::KUBE->value => new ModuleResult(ModuleName::KUBE, app(KubeAnalyzer::class)->analyze(new KubeOptions(
+                path: $options->path,
+                strict: $options->strict,
+            ))),
+            ModuleName::MCP->value => new ModuleResult(ModuleName::MCP, app(McpAnalyzer::class)->analyze(new McpOptions(
                 path: $options->path,
                 strict: $options->strict,
             ))),

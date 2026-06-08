@@ -8,7 +8,7 @@ use DevDoctor\Core\ProjectFiles;
 
 final readonly class PresetDetector
 {
-    private const FRONTEND_PACKAGES = [
+    private const array FRONTEND_PACKAGES = [
         '@angular/core',
         '@sveltejs/kit',
         'astro',
@@ -32,6 +32,12 @@ final readonly class PresetDetector
 
         if ($this->hasPackage($composer, 'laravel/framework') || $files->exists('artisan')) {
             $matches[] = new PresetMatch(ProjectPreset::LARAVEL, $this->hasPackage($composer, 'laravel/framework') ? 'composer.json' : 'artisan');
+        }
+
+        $mcpConfig = $files->firstExisting(['.mcp.json', 'mcp.json', '.cursor/mcp.json', '.vscode/mcp.json']);
+
+        if ($mcpConfig !== null) {
+            $matches[] = new PresetMatch(ProjectPreset::MCP, $mcpConfig);
         }
 
         if ($this->hasPackage($composer, 'symfony/framework-bundle') || $files->exists('bin/console')) {
