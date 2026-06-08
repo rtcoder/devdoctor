@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.45.0 - 2026-06-08
+
+- Added MCP supply-chain diagnostics for unpinned package runner targets such as `npx`, `pnpm`, `yarn`, `bunx`, and `uvx`.
+- Added MCP Docker image hygiene checks for implicit tags and `latest` image tags in `docker run` stdio server definitions.
+- Updated MCP docs, issue code catalog entries, and fixture-based tests for package and Docker pinning.
+
 ## v1.44.0 - 2026-06-08
 
 - Expanded MCP config discovery for Claude, Cline, Continue, Roo, and Windsurf project config files.

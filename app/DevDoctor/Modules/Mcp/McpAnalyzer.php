@@ -263,6 +263,7 @@ final readonly class McpAnalyzer
 
         $this->checkRemoteUrl($issues, $server, $options);
         $this->checkRiskyCommand($issues, $server, $options);
+        $this->checkSupplyChainPins($issues, $server, $options);
         $this->checkInlineSecrets($issues, $server, $options);
         $this->checkEnvReferences($issues, $server, $options, $knownEnvKeys);
     }
@@ -308,6 +309,47 @@ final readonly class McpAnalyzer
                 'args' => $server->command->args,
             ],
         ));
+    }
+
+    private function checkSupplyChainPins(IssueCollection $issues, McpServer $server, McpOptions $options): void
+    {
+        if ($server->command === null) {
+            return;
+        }
+
+        $package = $this->packageRunnerTarget($server->command);
+
+        if ($package !== null && ! $this->isPackagePinned($package)) {
+            $issues->add(new Issue(
+                code: IssueCode::DD_MCP_PACKAGE_UNPINNED,
+                severity: $options->strict ? Severity::ERROR : Severity::WARNING,
+                message: 'MCP stdio server uses a package runner without an explicit package version',
+                module: ModuleName::MCP,
+                file: $server->file,
+                key: $server->name,
+                context: [
+                    'command' => $server->command->command,
+                    'package' => $package,
+                ],
+            ));
+        }
+
+        $image = $this->dockerRunImage($server->command);
+
+        if ($image !== null && $this->isMutableDockerImage($image)) {
+            $issues->add(new Issue(
+                code: IssueCode::DD_MCP_DOCKER_IMAGE_MUTABLE,
+                severity: $options->strict ? Severity::ERROR : Severity::WARNING,
+                message: 'MCP stdio server uses a Docker image without an immutable or stable tag',
+                module: ModuleName::MCP,
+                file: $server->file,
+                key: $server->name,
+                context: [
+                    'command' => $server->command->command,
+                    'image' => $image,
+                ],
+            ));
+        }
     }
 
     private function checkInlineSecrets(IssueCollection $issues, McpServer $server, McpOptions $options): void
@@ -365,6 +407,111 @@ final readonly class McpAnalyzer
         return preg_match('/(curl|wget)\s+.+\|\s*(bash|sh|zsh|powershell|pwsh)/', $joined) === 1
             || str_contains($joined, 'invoke-expression')
             || preg_match('/(^|\s)iex(\s|$)/', $joined) === 1;
+    }
+
+    private function packageRunnerTarget(McpServerCommand $command): ?string
+    {
+        $executable = strtolower(basename($command->command, '.cmd'));
+
+        if (! in_array($executable, ['npx', 'pnpm', 'yarn', 'bunx', 'uvx'], true)) {
+            return null;
+        }
+
+        foreach ($command->args as $index => $argument) {
+            if ($argument === '' || str_starts_with($argument, '-')) {
+                if (in_array($argument, ['--package', '-p'], true)) {
+                    return $command->args[$index + 1] ?? null;
+                }
+
+                continue;
+            }
+
+            if (in_array($argument, ['dlx', 'exec'], true)) {
+                continue;
+            }
+
+            return $argument;
+        }
+
+        return null;
+    }
+
+    private function isPackagePinned(string $package): bool
+    {
+        if (str_contains($package, '==')) {
+            return ! str_ends_with($package, '==');
+        }
+
+        $version = null;
+
+        if (str_starts_with($package, '@')) {
+            $slash = strpos($package, '/');
+            $versionAt = $slash === false ? false : strpos($package, '@', $slash);
+            $version = $versionAt === false ? null : substr($package, $versionAt + 1);
+        } elseif (str_contains($package, '@')) {
+            $version = substr($package, strrpos($package, '@') + 1);
+        }
+
+        return is_string($version) && $version !== '' && strtolower($version) !== 'latest';
+    }
+
+    private function dockerRunImage(McpServerCommand $command): ?string
+    {
+        $executable = strtolower(basename($command->command, '.exe'));
+
+        if ($executable !== 'docker') {
+            return null;
+        }
+
+        $runIndex = array_search('run', $command->args, true);
+
+        if (! is_int($runIndex)) {
+            return null;
+        }
+
+        $optionsWithValues = ['--env', '-e', '--name', '--network', '--publish', '-p', '--volume', '-v', '--workdir', '-w', '--user', '-u'];
+
+        for ($index = $runIndex + 1; $index < count($command->args); $index++) {
+            $argument = $command->args[$index];
+
+            if ($argument === '' || $argument === '--rm' || $argument === '-i' || $argument === '-t' || $argument === '-it' || $argument === '--pull=always') {
+                continue;
+            }
+
+            if (str_starts_with($argument, '--') && str_contains($argument, '=')) {
+                continue;
+            }
+
+            if (in_array($argument, $optionsWithValues, true)) {
+                $index++;
+
+                continue;
+            }
+
+            if (str_starts_with($argument, '-')) {
+                continue;
+            }
+
+            return $argument;
+        }
+
+        return null;
+    }
+
+    private function isMutableDockerImage(string $image): bool
+    {
+        if (str_contains($image, '@sha256:')) {
+            return false;
+        }
+
+        $lastSlash = strrpos($image, '/');
+        $lastColon = strrpos($image, ':');
+
+        if ($lastColon === false || ($lastSlash !== false && $lastColon < $lastSlash)) {
+            return true;
+        }
+
+        return strtolower(substr($image, $lastColon + 1)) === 'latest';
     }
 
     /**

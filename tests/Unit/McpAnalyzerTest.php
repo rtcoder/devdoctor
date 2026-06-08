@@ -196,3 +196,45 @@ it('reports risky shell command execution', function () {
 
     expect($codes)->toContain('DD_MCP_COMMAND_RISKY');
 });
+
+it('reports unpinned package runner targets', function () {
+    $issues = (new McpAnalyzer)->analyze(new McpOptions(path: mcpFixture([
+        '.mcp.json' => json_encode([
+            'mcpServers' => [
+                'filesystem' => ['command' => 'npx', 'args' => ['-y', '@modelcontextprotocol/server-filesystem']],
+            ],
+        ], JSON_THROW_ON_ERROR),
+    ])));
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
+
+    expect($codes)->toContain('DD_MCP_PACKAGE_UNPINNED');
+});
+
+it('accepts pinned package runner targets', function () {
+    $issues = (new McpAnalyzer)->analyze(new McpOptions(path: mcpFixture([
+        '.mcp.json' => json_encode([
+            'mcpServers' => [
+                'filesystem' => ['command' => 'npx', 'args' => ['-y', '@modelcontextprotocol/server-filesystem@1.2.3']],
+                'python' => ['command' => 'uvx', 'args' => ['mcp-server==2.0.0']],
+            ],
+        ], JSON_THROW_ON_ERROR),
+    ])));
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
+
+    expect($codes)->not->toContain('DD_MCP_PACKAGE_UNPINNED')
+        ->and($codes)->toContain('DD_MCP_READY');
+});
+
+it('reports mutable docker image targets', function () {
+    $issues = (new McpAnalyzer)->analyze(new McpOptions(path: mcpFixture([
+        '.mcp.json' => json_encode([
+            'mcpServers' => [
+                'docker' => ['command' => 'docker', 'args' => ['run', '--rm', 'ghcr.io/acme/mcp:latest']],
+                'digest' => ['command' => 'docker', 'args' => ['run', 'ghcr.io/acme/mcp@sha256:'.str_repeat('a', 64)]],
+            ],
+        ], JSON_THROW_ON_ERROR),
+    ])));
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
+
+    expect($codes)->toContain('DD_MCP_DOCKER_IMAGE_MUTABLE');
+});

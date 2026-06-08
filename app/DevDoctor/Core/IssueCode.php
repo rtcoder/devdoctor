@@ -75,9 +75,11 @@ enum IssueCode: string
     case DD_LARAVEL_READY = 'DD_LARAVEL_READY';
     case DD_MCP_CONFIG_INVALID = 'DD_MCP_CONFIG_INVALID';
     case DD_MCP_COMMAND_RISKY = 'DD_MCP_COMMAND_RISKY';
+    case DD_MCP_DOCKER_IMAGE_MUTABLE = 'DD_MCP_DOCKER_IMAGE_MUTABLE';
     case DD_MCP_ENV_REFERENCE_MISSING = 'DD_MCP_ENV_REFERENCE_MISSING';
     case DD_MCP_ENV_SECRET_INLINE = 'DD_MCP_ENV_SECRET_INLINE';
     case DD_MCP_NOT_CONFIGURED = 'DD_MCP_NOT_CONFIGURED';
+    case DD_MCP_PACKAGE_UNPINNED = 'DD_MCP_PACKAGE_UNPINNED';
     case DD_MCP_READY = 'DD_MCP_READY';
     case DD_MCP_REMOTE_URL_INSECURE = 'DD_MCP_REMOTE_URL_INSECURE';
     case DD_MCP_REMOTE_URL_MISSING = 'DD_MCP_REMOTE_URL_MISSING';
@@ -332,8 +334,10 @@ enum IssueCode: string
             self::DD_LARAVEL_PROD_DEBUG => 'Disable APP_DEBUG before using production environment settings.',
             self::DD_MCP_CONFIG_INVALID => 'Fix the JSON syntax before relying on MCP server configuration.',
             self::DD_MCP_COMMAND_RISKY => 'Review the command and replace shell evaluation or remote script execution with a pinned executable.',
+            self::DD_MCP_DOCKER_IMAGE_MUTABLE => 'Pin Docker-based MCP servers to a stable image tag or digest instead of latest or an implicit tag.',
             self::DD_MCP_ENV_REFERENCE_MISSING => 'Declare the referenced environment key in .env or .env.example, or document the external secret source.',
             self::DD_MCP_ENV_SECRET_INLINE => 'Move the secret value to an environment variable and rotate it if the value was real.',
+            self::DD_MCP_PACKAGE_UNPINNED => 'Pin package-runner MCP servers to an explicit package version before sharing or using the config in CI.',
             self::DD_MCP_REMOTE_URL_INSECURE => 'Use HTTPS for remote MCP servers unless the URL is an intentional localhost endpoint.',
             self::DD_MCP_REMOTE_URL_MISSING => 'Add the remote MCP server URL or switch the server to stdio with a command.',
             self::DD_MCP_SERVER_INVALID => 'Use a named MCP server object with a supported transport, command, or URL.',
