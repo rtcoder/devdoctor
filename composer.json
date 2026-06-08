@@ -47,7 +47,7 @@
     },
     "extra": {
         "devdoctor": {
-            "version": "1.47.0"
+            "version": "1.48.0"
         }
     },
     "minimum-stability": "stable",

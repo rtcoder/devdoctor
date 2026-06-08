@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.48.0 - 2026-06-08
+
+- Expanded the command documentation page with every available command option parsed from CLI signatures.
+- Updated command metadata JSON to include arguments, options, defaults, repeatable flags, and raw signatures.
+- Reworked the command page layout so commands and copyable examples render one below another instead of compressed grid cards.
+
 ## v1.47.0 - 2026-06-08
 
 - Included MCP diagnostics in the `security` CI profile.

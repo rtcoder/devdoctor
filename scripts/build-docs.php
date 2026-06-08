@@ -74,7 +74,7 @@ function docsManifest(): array
  */
 function commandCatalog(): array
 {
-    return [
+    $catalog = [
         'schema_version' => '1.0',
         'commands' => [
             ['name' => 'env', 'module' => 'env', 'type' => 'diagnostic', 'read_only' => true, 'summary' => 'Check dotenv files and configured env rules.', 'example' => 'php devdoctor env --strict'],
@@ -121,11 +121,129 @@ function commandCatalog(): array
             ['name' => 'init', 'module' => 'config', 'type' => 'writer', 'read_only' => false, 'summary' => 'Preview and optionally write devdoctor.yml after confirmation.', 'example' => 'php devdoctor init --dry-run'],
         ],
     ];
+
+    return augmentCommandCatalog($catalog);
 }
 
 /**
- * @param  array<int, array{name:string,module:string,type:string,read_only:bool,summary:string,example:string}>  $commands
- * @return array<string, array<int, array{name:string,module:string,type:string,read_only:bool,summary:string,example:string}>>
+ * @param  array<string, mixed>  $catalog
+ * @return array<string, mixed>
+ */
+function augmentCommandCatalog(array $catalog): array
+{
+    $signatures = commandSignatures();
+
+    foreach ($catalog['commands'] as &$command) {
+        if (! is_array($command) || ! is_string($command['name'] ?? null)) {
+            continue;
+        }
+
+        $signature = $signatures[$command['name']] ?? null;
+
+        $command['examples'] = array_values(array_unique(array_filter([
+            $command['example'] ?? null,
+            ...($command['examples'] ?? []),
+        ], static fn (mixed $example): bool => is_string($example) && $example !== '')));
+
+        if ($signature === null) {
+            $command['arguments'] = $command['arguments'] ?? [];
+            $command['options'] = $command['options'] ?? [];
+
+            continue;
+        }
+
+        $command['arguments'] = $signature['arguments'];
+        $command['options'] = $signature['options'];
+        $command['signature'] = $signature['signature'];
+    }
+    unset($command);
+
+    return $catalog;
+}
+
+/**
+ * @return array<string, array{signature:string,arguments:list<array{name:string,display:string,description:string,required:bool}>,options:list<array{name:string,display:string,description:string,takes_value:bool,multiple:bool,default:string|null}>}>
+ */
+function commandSignatures(): array
+{
+    $signatures = [];
+
+    foreach (glob(dirname(__DIR__).'/app/Commands/*Command.php') ?: [] as $file) {
+        $contents = (string) file_get_contents($file);
+
+        if (preg_match('/protected \$signature = \'(.*?)\';/s', $contents, $matches) !== 1) {
+            continue;
+        }
+
+        $signature = trim($matches[1]);
+        $lines = preg_split('/\R/', $signature) ?: [];
+        $name = trim((string) ($lines[0] ?? ''));
+
+        if ($name === '') {
+            continue;
+        }
+
+        $signatures[$name] = parseCommandSignature($signature);
+    }
+
+    return $signatures;
+}
+
+/**
+ * @return array{signature:string,arguments:list<array{name:string,display:string,description:string,required:bool}>,options:list<array{name:string,display:string,description:string,takes_value:bool,multiple:bool,default:string|null}>}
+ */
+function parseCommandSignature(string $signature): array
+{
+    $arguments = [];
+    $options = [];
+
+    if (preg_match_all('/\{([^{}]+)\}/', $signature, $matches) > 0) {
+        foreach ($matches[1] as $token) {
+            $parts = explode(' : ', $token, 2);
+            $display = trim($parts[0]);
+            $description = trim($parts[1] ?? '');
+
+            if (str_starts_with($display, '--')) {
+                $name = ltrim(preg_split('/[=\s]/', $display)[0] ?? $display, '-');
+                $default = null;
+                $takesValue = str_contains($display, '=');
+                $multiple = str_contains($display, '=*');
+
+                if ($takesValue && preg_match('/=([^\s]+)/', $display, $defaultMatch) === 1 && $defaultMatch[1] !== '*') {
+                    $default = $defaultMatch[1];
+                }
+
+                $options[] = [
+                    'name' => $name,
+                    'display' => $display,
+                    'description' => $description,
+                    'takes_value' => $takesValue,
+                    'multiple' => $multiple,
+                    'default' => $default,
+                ];
+
+                continue;
+            }
+
+            $arguments[] = [
+                'name' => rtrim($display, '?'),
+                'display' => $display,
+                'description' => $description,
+                'required' => ! str_ends_with($display, '?'),
+            ];
+        }
+    }
+
+    return [
+        'signature' => $signature,
+        'arguments' => $arguments,
+        'options' => $options,
+    ];
+}
+
+/**
+ * @param  array<int, array{name:string,module:string,type:string,read_only:bool,summary:string,example:string,examples?:list<string>,arguments?:list<array{name:string,display:string,description:string,required:bool}>,options?:list<array{name:string,display:string,description:string,takes_value:bool,multiple:bool,default:string|null}>}>  $commands
+ * @return array<string, array<int, array{name:string,module:string,type:string,read_only:bool,summary:string,example:string,examples?:list<string>,arguments?:list<array{name:string,display:string,description:string,required:bool}>,options?:list<array{name:string,display:string,description:string,takes_value:bool,multiple:bool,default:string|null}>}>>
  */
 function groupCommands(array $commands): array
 {
@@ -166,7 +284,100 @@ function commandSearchText(array $command): string
         ...($command['keywords'] ?? []),
     ];
 
+    foreach ($command['arguments'] ?? [] as $argument) {
+        $parts[] = $argument['name'] ?? '';
+        $parts[] = $argument['description'] ?? '';
+    }
+
+    foreach ($command['options'] ?? [] as $option) {
+        $parts[] = $option['name'] ?? '';
+        $parts[] = $option['display'] ?? '';
+        $parts[] = $option['description'] ?? '';
+    }
+
     return implode(' ', array_unique(array_filter($parts)));
+}
+
+/**
+ * @param  list<string>  $examples
+ */
+function renderCommandExamples(array $examples): string
+{
+    $items = '';
+
+    foreach ($examples as $example) {
+        $items .= '                        <div class="command-example">
+                            <code>'.h($example).'</code>
+                            <button class="copy-code" type="button" data-copy-command="'.h($example).'">Copy</button>
+                        </div>
+';
+    }
+
+    return '                    <div class="command-examples">
+'.$items.'                    </div>
+';
+}
+
+/**
+ * @param  list<array{name:string,display:string,description:string,required:bool}>  $arguments
+ */
+function renderCommandArguments(array $arguments): string
+{
+    if ($arguments === []) {
+        return '';
+    }
+
+    $items = '';
+
+    foreach ($arguments as $argument) {
+        $items .= '                        <li><code>'.h($argument['display']).'</code><span>'.h($argument['description']).'</span></li>
+';
+    }
+
+    return '                    <div class="command-reference-block">
+                        <h4>Arguments</h4>
+                        <ul class="command-reference-list">
+'.$items.'                        </ul>
+                    </div>
+';
+}
+
+/**
+ * @param  list<array{name:string,display:string,description:string,takes_value:bool,multiple:bool,default:string|null}>  $options
+ */
+function renderCommandOptions(array $options): string
+{
+    if ($options === []) {
+        return '                    <div class="command-reference-block">
+                        <h4>Options</h4>
+                        <p class="command-empty">No command-specific options.</p>
+                    </div>
+';
+    }
+
+    $items = '';
+
+    foreach ($options as $option) {
+        $meta = [];
+
+        if ($option['default'] !== null) {
+            $meta[] = 'default: '.$option['default'];
+        }
+
+        if ($option['multiple']) {
+            $meta[] = 'repeatable';
+        }
+
+        $items .= '                        <li><code>'.h($option['display']).'</code><span>'.h($option['description']).($meta === [] ? '' : ' <em>'.h(implode(', ', $meta)).'</em>').'</span></li>
+';
+    }
+
+    return '                    <div class="command-reference-block">
+                        <h4>Options</h4>
+                        <ul class="command-reference-list">
+'.$items.'                        </ul>
+                    </div>
+';
 }
 
 /**
@@ -174,7 +385,7 @@ function commandSearchText(array $command): string
  */
 function renderCommandsHtml(array $catalog): string
 {
-    /** @var array<int, array{name:string,module:string,type:string,read_only:bool,summary:string,example:string,keywords?:array<int, string>}> $commands */
+    /** @var array<int, array{name:string,module:string,type:string,read_only:bool,summary:string,example:string,examples:list<string>,arguments:list<array{name:string,display:string,description:string,required:bool}>,options:list<array{name:string,display:string,description:string,takes_value:bool,multiple:bool,default:string|null}>,keywords?:array<int, string>}> $commands */
     $commands = $catalog['commands'] ?? [];
     $groups = groupCommands($commands);
 
@@ -200,6 +411,10 @@ function renderCommandsHtml(array $catalog): string
         $cards = '';
 
         foreach ($items as $command) {
+            $examples = $command['examples'] ?? [$command['example']];
+            $arguments = $command['arguments'] ?? [];
+            $options = $command['options'] ?? [];
+
             $cards .= '                <section class="command-card" id="'.commandId($command['name']).'" data-command-card data-command="'.h($command['name']).'" data-module="'.h($command['module']).'" data-type="'.h($type).'" data-summary="'.h($command['summary']).'" data-search="'.h(commandSearchText($command)).'">
                     <div class="command-card-top">
                         <div>
@@ -210,10 +425,7 @@ function renderCommandsHtml(array $catalog): string
                     </div>
                     <p>'.h($command['summary']).'</p>
                     <dl><div><dt>Module</dt><dd>'.h($command['module']).'</dd></div><div><dt>Type</dt><dd>'.h($type).'</dd></div></dl>
-                    <div class="command-example">
-                        <code>'.h($command['example']).'</code>
-                        <button class="copy-code" type="button" data-copy-command="'.h($command['example']).'">Copy</button>
-                    </div>
+'.renderCommandArguments($arguments).renderCommandOptions($options).renderCommandExamples($examples).'
                 </section>
 ';
         }

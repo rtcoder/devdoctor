@@ -7,7 +7,102 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check dotenv files and configured env rules.",
-            "example": "php devdoctor env --strict"
+            "example": "php devdoctor env --strict",
+            "examples": [
+                "php devdoctor env --strict"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "env-file",
+                    "display": "--env-file=.env",
+                    "description": "Env file name",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": ".env"
+                },
+                {
+                    "name": "example",
+                    "display": "--example=.env.example",
+                    "description": "Example env file name",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": ".env.example"
+                },
+                {
+                    "name": "config",
+                    "display": "--config=devdoctor.yml",
+                    "description": "DevDoctor config file name",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "devdoctor.yml"
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-secrets",
+                    "display": "--no-secrets",
+                    "description": "Disable secret scanning for this run",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "env\n        {--path=. : Project path to inspect}\n        {--env-file=.env : Env file name}\n        {--example=.env.example : Example env file name}\n        {--config=devdoctor.yml : DevDoctor config file name}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}\n        {--no-secrets : Disable secret scanning for this run}"
         },
         {
             "name": "cache",
@@ -15,7 +110,78 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check framework and tool cache directories, size, permissions, and Laravel artifacts.",
-            "example": "php devdoctor cache --max-size=512"
+            "example": "php devdoctor cache --max-size=512",
+            "examples": [
+                "php devdoctor cache --max-size=512"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "max-size",
+                    "display": "--max-size=512",
+                    "description": "Maximum expected cache directory size in MiB",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "512"
+                }
+            ],
+            "signature": "cache\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}\n        {--max-size=512 : Maximum expected cache directory size in MiB}"
         },
         {
             "name": "http",
@@ -23,7 +189,78 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check configured HTTP URLs without making network requests.",
-            "example": "php devdoctor http --url=https://example.test"
+            "example": "php devdoctor http --url=https://example.test",
+            "examples": [
+                "php devdoctor http --url=https://example.test"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "url",
+                    "display": "--url=*",
+                    "description": "Explicit URL target to validate",
+                    "takes_value": true,
+                    "multiple": true,
+                    "default": null
+                }
+            ],
+            "signature": "http\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}\n        {--url=* : Explicit URL target to validate}"
         },
         {
             "name": "ports",
@@ -31,7 +268,102 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check local development port conflicts.",
-            "example": "php devdoctor ports --common"
+            "example": "php devdoctor ports --common",
+            "examples": [
+                "php devdoctor ports --common"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "port",
+                    "display": "--port=*",
+                    "description": "Specific port to inspect",
+                    "takes_value": true,
+                    "multiple": true,
+                    "default": null
+                },
+                {
+                    "name": "ports",
+                    "display": "--ports=",
+                    "description": "Comma-separated ports to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "common",
+                    "display": "--common",
+                    "description": "Check built-in common development ports",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "include-docker",
+                    "display": "--include-docker",
+                    "description": "Attempt to correlate Docker port usage when available",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "ports\n        {--path=. : Project path to inspect}\n        {--port=* : Specific port to inspect}\n        {--ports= : Comma-separated ports to inspect}\n        {--common : Check built-in common development ports}\n        {--include-docker : Attempt to correlate Docker port usage when available}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "php",
@@ -39,7 +371,78 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check PHP runtime, composer platform requirements, memory, php.ini, and Xdebug in CI.",
-            "example": "php devdoctor php --ci"
+            "example": "php devdoctor php --ci",
+            "examples": [
+                "php devdoctor php --ci"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "minimum-memory",
+                    "display": "--minimum-memory=128",
+                    "description": "Minimum expected PHP memory_limit in megabytes",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "128"
+                }
+            ],
+            "signature": "php\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}\n        {--minimum-memory=128 : Minimum expected PHP memory_limit in megabytes}"
         },
         {
             "name": "node",
@@ -47,7 +450,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check Node.js project and package manager health.",
-            "example": "php devdoctor node"
+            "example": "php devdoctor node",
+            "examples": [
+                "php devdoctor node"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "node\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "frontend",
@@ -55,7 +521,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check frontend presets and build readiness for Vite, Next.js, Nuxt, Astro, and generic frontend projects.",
-            "example": "php devdoctor frontend"
+            "example": "php devdoctor frontend",
+            "examples": [
+                "php devdoctor frontend"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "frontend\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "flutter",
@@ -63,7 +592,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check Flutter and Dart pubspec, lockfiles, SDK constraints, dependency sources, and platform markers.",
-            "example": "php devdoctor flutter"
+            "example": "php devdoctor flutter",
+            "examples": [
+                "php devdoctor flutter"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "flutter\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "mobile",
@@ -71,7 +663,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check native Android and iOS project markers, wrappers, debug flags, and lockfiles.",
-            "example": "php devdoctor mobile"
+            "example": "php devdoctor mobile",
+            "examples": [
+                "php devdoctor mobile"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "mobile\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "monorepo",
@@ -79,7 +734,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check monorepo tooling, workspace lockfiles, and root package scripts.",
-            "example": "php devdoctor monorepo"
+            "example": "php devdoctor monorepo",
+            "examples": [
+                "php devdoctor monorepo"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "monorepo\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "python",
@@ -87,7 +805,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check Python manifests and dependency manager health for pip, Poetry, Pipenv, uv, and Conda.",
-            "example": "php devdoctor python"
+            "example": "php devdoctor python",
+            "examples": [
+                "php devdoctor python"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "python\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "ruby",
@@ -95,7 +876,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check Ruby and Rails manifests, lockfiles, versions, credentials, database config, and gem sources.",
-            "example": "php devdoctor ruby"
+            "example": "php devdoctor ruby",
+            "examples": [
+                "php devdoctor ruby"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "ruby\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "go",
@@ -103,7 +947,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check Go modules, sums, workspaces, local replace directives, toolchain directives, and vendor metadata.",
-            "example": "php devdoctor go"
+            "example": "php devdoctor go",
+            "examples": [
+                "php devdoctor go"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "go\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "rust",
@@ -111,7 +1018,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check Cargo manifests, lockfiles, workspaces, toolchains, dependency sources, and release profiles.",
-            "example": "php devdoctor rust"
+            "example": "php devdoctor rust",
+            "examples": [
+                "php devdoctor rust"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "rust\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "java",
@@ -119,7 +1089,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check Maven, Gradle, Ant, wrappers, Java versions, risky build scripts, and Spring profile red flags.",
-            "example": "php devdoctor java"
+            "example": "php devdoctor java",
+            "examples": [
+                "php devdoctor java"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "java\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "mcp",
@@ -127,7 +1160,102 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check MCP server configuration files across common agent clients, secret hygiene, remote URLs, env references, supply-chain pins, optional project policies, and risky commands without starting servers.",
-            "example": "php devdoctor mcp --disallow-remote --allow-command=node,npx"
+            "example": "php devdoctor mcp --disallow-remote --allow-command=node,npx",
+            "examples": [
+                "php devdoctor mcp --disallow-remote --allow-command=node,npx"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "config",
+                    "display": "--config=",
+                    "description": "Specific MCP config file to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "allow-command",
+                    "display": "--allow-command=",
+                    "description": "Comma-separated stdio command names allowed by project policy",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "deny-command",
+                    "display": "--deny-command=",
+                    "description": "Comma-separated stdio command names denied by project policy",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "disallow-remote",
+                    "display": "--disallow-remote",
+                    "description": "Report remote MCP servers as policy violations",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "mcp\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--config= : Specific MCP config file to inspect}\n        {--allow-command= : Comma-separated stdio command names allowed by project policy}\n        {--deny-command= : Comma-separated stdio command names denied by project policy}\n        {--disallow-remote : Report remote MCP servers as policy violations}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "iac",
@@ -135,7 +1263,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check Terraform, OpenTofu, and Terragrunt manifests, lockfiles, module refs, and secret hygiene.",
-            "example": "php devdoctor iac"
+            "example": "php devdoctor iac",
+            "examples": [
+                "php devdoctor iac"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "iac\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "kube",
@@ -143,7 +1334,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check Kubernetes manifests and Helm charts, locks, images, services, and secret hygiene.",
-            "example": "php devdoctor kube"
+            "example": "php devdoctor kube",
+            "examples": [
+                "php devdoctor kube"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "kube\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "dotnet",
@@ -151,7 +1405,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check .NET solutions, projects, SDK pinning, target frameworks, lock mode, and NuGet sources.",
-            "example": "php devdoctor dotnet"
+            "example": "php devdoctor dotnet",
+            "examples": [
+                "php devdoctor dotnet"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "dotnet\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "cpp",
@@ -159,7 +1476,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check C/C++ build files, dependency managers, compile commands, and portability risks.",
-            "example": "php devdoctor cpp"
+            "example": "php devdoctor cpp",
+            "examples": [
+                "php devdoctor cpp"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "cpp\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "web",
@@ -167,7 +1547,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check generic web entry files, asset references, public config, server hints, and port declarations.",
-            "example": "php devdoctor web"
+            "example": "php devdoctor web",
+            "examples": [
+                "php devdoctor web"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "web\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "laravel",
@@ -175,7 +1618,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check Laravel .env, APP_KEY, debug mode, APP_URL, runtime directories, and config cache.",
-            "example": "php devdoctor laravel"
+            "example": "php devdoctor laravel",
+            "examples": [
+                "php devdoctor laravel"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "laravel\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "symfony",
@@ -183,7 +1689,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check Symfony .env hygiene, APP_SECRET, runtime directories, recipe drift, and Composer scripts.",
-            "example": "php devdoctor symfony"
+            "example": "php devdoctor symfony",
+            "examples": [
+                "php devdoctor symfony"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "symfony\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "security",
@@ -191,7 +1760,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check env examples, hard-coded secrets, risky scripts, and risky Compose settings.",
-            "example": "php devdoctor security"
+            "example": "php devdoctor security",
+            "examples": [
+                "php devdoctor security"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "security\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "composer",
@@ -199,7 +1831,94 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check Composer project health without install/update.",
-            "example": "php devdoctor composer"
+            "example": "php devdoctor composer",
+            "examples": [
+                "php devdoctor composer"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-scripts",
+                    "display": "--no-scripts",
+                    "description": "Skip Composer script inspection",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-platform-check",
+                    "display": "--no-platform-check",
+                    "description": "Skip local platform checks",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-validate",
+                    "display": "--no-validate",
+                    "description": "Skip composer validate",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "composer\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}\n        {--no-scripts : Skip Composer script inspection}\n        {--no-platform-check : Skip local platform checks}\n        {--no-validate : Skip composer validate}"
         },
         {
             "name": "deps",
@@ -207,7 +1926,70 @@
             "type": "aggregate",
             "read_only": true,
             "summary": "Run Composer and Node dependency diagnostics together.",
-            "example": "php devdoctor deps --summary-only"
+            "example": "php devdoctor deps --summary-only",
+            "examples": [
+                "php devdoctor deps --summary-only"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "deps\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "db",
@@ -215,7 +1997,78 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check database environment configuration, with optional read-only PDO connection checks.",
-            "example": "php devdoctor db --connect"
+            "example": "php devdoctor db --connect",
+            "examples": [
+                "php devdoctor db --connect"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "connect",
+                    "display": "--connect",
+                    "description": "Attempt a read-only PDO connection check",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "db\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}\n        {--connect : Attempt a read-only PDO connection check}"
         },
         {
             "name": "queue",
@@ -223,7 +2076,70 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check queue environment configuration and production sync risks.",
-            "example": "php devdoctor queue --strict"
+            "example": "php devdoctor queue --strict",
+            "examples": [
+                "php devdoctor queue --strict"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "queue\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "git",
@@ -231,7 +2147,110 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check repository hygiene and sensitive files.",
-            "example": "php devdoctor git --require-clean"
+            "example": "php devdoctor git --require-clean",
+            "examples": [
+                "php devdoctor git --require-clean"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "require-clean",
+                    "display": "--require-clean",
+                    "description": "Return an error when the worktree is dirty",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "require-upstream",
+                    "display": "--require-upstream",
+                    "description": "Return an error when the current branch has no upstream",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "scan-sensitive",
+                    "display": "--scan-sensitive",
+                    "description": "Scan tracked and untracked sensitive files",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "scan-large-files",
+                    "display": "--scan-large-files",
+                    "description": "Scan untracked files above the configured size threshold",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "large-file-threshold",
+                    "display": "--large-file-threshold=10M",
+                    "description": "Size threshold for --scan-large-files",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "10M"
+                }
+            ],
+            "signature": "git\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}\n        {--require-clean : Return an error when the worktree is dirty}\n        {--require-upstream : Return an error when the current branch has no upstream}\n        {--scan-sensitive : Scan tracked and untracked sensitive files}\n        {--scan-large-files : Scan untracked files above the configured size threshold}\n        {--large-file-threshold=10M : Size threshold for --scan-large-files}"
         },
         {
             "name": "docker",
@@ -239,7 +2258,94 @@
             "type": "diagnostic",
             "read_only": true,
             "summary": "Check Compose files, daemon state, ports, and containers.",
-            "example": "php devdoctor docker --compose-file=docker-compose.yml"
+            "example": "php devdoctor docker --compose-file=docker-compose.yml",
+            "examples": [
+                "php devdoctor docker --compose-file=docker-compose.yml"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "compose-file",
+                    "display": "--compose-file=",
+                    "description": "Compose file to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-daemon",
+                    "display": "--no-daemon",
+                    "description": "Skip Docker daemon checks",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-containers",
+                    "display": "--no-containers",
+                    "description": "Skip Compose container status checks",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "docker\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}\n        {--compose-file= : Compose file to inspect}\n        {--no-daemon : Skip Docker daemon checks}\n        {--no-containers : Skip Compose container status checks}"
         },
         {
             "name": "health",
@@ -247,7 +2353,102 @@
             "type": "aggregate",
             "read_only": true,
             "summary": "Run a broad local project health check, with ports available through --include-ports.",
-            "example": "php devdoctor health --format=json"
+            "example": "php devdoctor health --format=json",
+            "examples": [
+                "php devdoctor health --format=json"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "modules",
+                    "display": "--modules=",
+                    "description": "Comma-separated modules to run",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "exclude",
+                    "display": "--exclude=",
+                    "description": "Comma-separated modules to exclude",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "config",
+                    "display": "--config=devdoctor.yml",
+                    "description": "DevDoctor config file name",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "devdoctor.yml"
+                },
+                {
+                    "name": "include-ports",
+                    "display": "--include-ports",
+                    "description": "Include common local port checks",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "health\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}\n        {--modules= : Comma-separated modules to run}\n        {--exclude= : Comma-separated modules to exclude}\n        {--config=devdoctor.yml : DevDoctor config file name}\n        {--include-ports : Include common local port checks}"
         },
         {
             "name": "doctor",
@@ -255,7 +2456,102 @@
             "type": "aggregate",
             "read_only": true,
             "summary": "Alias for health with the same broad local project checks.",
-            "example": "php devdoctor doctor --summary-only"
+            "example": "php devdoctor doctor --summary-only",
+            "examples": [
+                "php devdoctor doctor --summary-only"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "modules",
+                    "display": "--modules=",
+                    "description": "Comma-separated modules to run",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "exclude",
+                    "display": "--exclude=",
+                    "description": "Comma-separated modules to exclude",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "config",
+                    "display": "--config=devdoctor.yml",
+                    "description": "DevDoctor config file name",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "devdoctor.yml"
+                },
+                {
+                    "name": "include-ports",
+                    "display": "--include-ports",
+                    "description": "Include common local port checks",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "doctor\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}\n        {--modules= : Comma-separated modules to run}\n        {--exclude= : Comma-separated modules to exclude}\n        {--config=devdoctor.yml : DevDoctor config file name}\n        {--include-ports : Include common local port checks}"
         },
         {
             "name": "ci",
@@ -267,7 +2563,150 @@
             "keywords": [
                 "baseline",
                 "baselines"
-            ]
+            ],
+            "examples": [
+                "php devdoctor ci --profile=strict-ci"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "modules",
+                    "display": "--modules=",
+                    "description": "Comma-separated modules to run",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "exclude",
+                    "display": "--exclude=",
+                    "description": "Comma-separated modules to exclude",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "profile",
+                    "display": "--profile=",
+                    "description": "CI policy profile: local, ci, strict-ci, or security",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "fail-on-warnings",
+                    "display": "--fail-on-warnings",
+                    "description": "Return a non-zero exit code for warnings",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-fail-on-warnings",
+                    "display": "--no-fail-on-warnings",
+                    "description": "Return zero when diagnostics only contain warnings",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "config",
+                    "display": "--config=devdoctor.yml",
+                    "description": "DevDoctor config file name",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "devdoctor.yml"
+                },
+                {
+                    "name": "baseline",
+                    "display": "--baseline=",
+                    "description": "Baseline file to apply",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "baseline-report",
+                    "display": "--baseline-report",
+                    "description": "Include active, suppressed, and resolved baseline fingerprint counts",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "write-baseline",
+                    "display": "--write-baseline=",
+                    "description": "Write warning and error fingerprints to a baseline file",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "force",
+                    "display": "--force",
+                    "description": "Allow replacing an existing baseline file",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "ci\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}\n        {--modules= : Comma-separated modules to run}\n        {--exclude= : Comma-separated modules to exclude}\n        {--profile= : CI policy profile: local, ci, strict-ci, or security}\n        {--fail-on-warnings : Return a non-zero exit code for warnings}\n        {--no-fail-on-warnings : Return zero when diagnostics only contain warnings}\n        {--config=devdoctor.yml : DevDoctor config file name}\n        {--baseline= : Baseline file to apply}\n        {--baseline-report : Include active, suppressed, and resolved baseline fingerprint counts}\n        {--write-baseline= : Write warning and error fingerprints to a baseline file}\n        {--force : Allow replacing an existing baseline file}"
         },
         {
             "name": "presets",
@@ -275,7 +2714,70 @@
             "type": "utility",
             "read_only": true,
             "summary": "Detect supported project presets across ecosystems.",
-            "example": "php devdoctor presets --format=json"
+            "example": "php devdoctor presets --format=json",
+            "examples": [
+                "php devdoctor presets --format=json"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table, json, or sarif",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "strict",
+                    "display": "--strict",
+                    "description": "Treat warnings as errors where supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "only",
+                    "display": "--only=",
+                    "description": "Comma-separated severities to render: error, warning, info",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "summary-only",
+                    "display": "--summary-only",
+                    "description": "Render module summaries without issue details",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "no-hints",
+                    "display": "--no-hints",
+                    "description": "Hide hints and suggested fixes from output",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "presets\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table, json, or sarif}\n        {--ci : Use CI-safe behavior}\n        {--strict : Treat warnings as errors where supported}\n        {--only= : Comma-separated severities to render: error, warning, info}\n        {--summary-only : Render module summaries without issue details}\n        {--no-hints : Hide hints and suggested fixes from output}"
         },
         {
             "name": "inventory",
@@ -283,7 +2785,30 @@
             "type": "utility",
             "read_only": true,
             "summary": "Show detected presets, available modules, and auto-selected modules.",
-            "example": "php devdoctor inventory --format=json"
+            "example": "php devdoctor inventory --format=json",
+            "examples": [
+                "php devdoctor inventory --format=json"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table or json",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                }
+            ],
+            "signature": "inventory\n        {--path=. : Project path to inspect}\n        {--format=table : Output format: table or json}"
         },
         {
             "name": "commands",
@@ -291,7 +2816,38 @@
             "type": "utility",
             "read_only": true,
             "summary": "List DevDoctor commands and their documentation metadata.",
-            "example": "php devdoctor commands --format=json"
+            "example": "php devdoctor commands --format=json",
+            "examples": [
+                "php devdoctor commands --format=json"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table or json",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "module",
+                    "display": "--module=",
+                    "description": "Filter commands by module",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "type",
+                    "display": "--type=",
+                    "description": "Filter commands by type",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "commands\n        {--format=table : Output format: table or json}\n        {--module= : Filter commands by module}\n        {--type= : Filter commands by type}"
         },
         {
             "name": "version",
@@ -299,7 +2855,22 @@
             "type": "utility",
             "read_only": true,
             "summary": "Show the current DevDoctor version for humans or automation.",
-            "example": "php devdoctor version --format=json"
+            "example": "php devdoctor version --format=json",
+            "examples": [
+                "php devdoctor version --format=json"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table or json",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                }
+            ],
+            "signature": "version\n        {--format=table : Output format: table or json}"
         },
         {
             "name": "explain",
@@ -307,7 +2878,37 @@
             "type": "utility",
             "read_only": true,
             "summary": "Explain issue codes and their built-in hints.",
-            "example": "php devdoctor explain DD_ENV_FILE_MISSING --format=json"
+            "example": "php devdoctor explain DD_ENV_FILE_MISSING --format=json",
+            "examples": [
+                "php devdoctor explain DD_ENV_FILE_MISSING --format=json"
+            ],
+            "arguments": [
+                {
+                    "name": "code",
+                    "display": "code?",
+                    "description": "Issue code to explain",
+                    "required": false
+                }
+            ],
+            "options": [
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table or json",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                },
+                {
+                    "name": "module",
+                    "display": "--module=",
+                    "description": "Filter issue codes by module",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "explain\n        {code? : Issue code to explain}\n        {--format=table : Output format: table or json}\n        {--module= : Filter issue codes by module}"
         },
         {
             "name": "policy",
@@ -315,7 +2916,22 @@
             "type": "utility",
             "read_only": true,
             "summary": "Show DevDoctor safety and compatibility policy.",
-            "example": "php devdoctor policy --format=json"
+            "example": "php devdoctor policy --format=json",
+            "examples": [
+                "php devdoctor policy --format=json"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table or json",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                }
+            ],
+            "signature": "policy\n        {--format=table : Output format: table or json}"
         },
         {
             "name": "support-bundle",
@@ -323,7 +2939,30 @@
             "type": "utility",
             "read_only": true,
             "summary": "Print redacted support context without writing files.",
-            "example": "php devdoctor support-bundle"
+            "example": "php devdoctor support-bundle",
+            "examples": [
+                "php devdoctor support-bundle"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "format",
+                    "display": "--format=json",
+                    "description": "Output format: json",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "json"
+                }
+            ],
+            "signature": "support-bundle\n        {--path=. : Project path to inspect}\n        {--format=json : Output format: json}"
         },
         {
             "name": "self-update",
@@ -331,7 +2970,30 @@
             "type": "utility",
             "read_only": false,
             "summary": "Check for a newer DevDoctor release and show or run the safest update command.",
-            "example": "php devdoctor self-update"
+            "example": "php devdoctor self-update",
+            "examples": [
+                "php devdoctor self-update"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "run",
+                    "display": "--run",
+                    "description": "Execute the suggested package-manager update command when supported",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "format",
+                    "display": "--format=table",
+                    "description": "Output format: table or json",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "table"
+                }
+            ],
+            "signature": "self-update\n        {--run : Execute the suggested package-manager update command when supported}\n        {--format=table : Output format: table or json}"
         },
         {
             "name": "init",
@@ -339,7 +3001,54 @@
             "type": "writer",
             "read_only": false,
             "summary": "Preview and optionally write devdoctor.yml after confirmation.",
-            "example": "php devdoctor init --dry-run"
+            "example": "php devdoctor init --dry-run",
+            "examples": [
+                "php devdoctor init --dry-run"
+            ],
+            "arguments": [],
+            "options": [
+                {
+                    "name": "path",
+                    "display": "--path=.",
+                    "description": "Project path to inspect",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "."
+                },
+                {
+                    "name": "config",
+                    "display": "--config=devdoctor.yml",
+                    "description": "Config file name",
+                    "takes_value": true,
+                    "multiple": false,
+                    "default": "devdoctor.yml"
+                },
+                {
+                    "name": "dry-run",
+                    "display": "--dry-run",
+                    "description": "Print generated config without writing it",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "force",
+                    "display": "--force",
+                    "description": "Allow replacing an existing config file",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                },
+                {
+                    "name": "ci",
+                    "display": "--ci",
+                    "description": "Use CI-safe behavior",
+                    "takes_value": false,
+                    "multiple": false,
+                    "default": null
+                }
+            ],
+            "signature": "init\n        {--path=. : Project path to inspect}\n        {--config=devdoctor.yml : Config file name}\n        {--dry-run : Print generated config without writing it}\n        {--force : Allow replacing an existing config file}\n        {--ci : Use CI-safe behavior}"
         }
     ]
 }

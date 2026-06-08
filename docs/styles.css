@@ -531,8 +531,8 @@ tr:last-child td {
 
 .command-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-    gap: 14px;
+    grid-template-columns: 1fr;
+    gap: 18px;
 }
 
 .command-card[hidden],
@@ -551,9 +551,8 @@ tr:last-child td {
 
 .command-card {
     display: grid;
-    grid-template-rows: auto auto auto 1fr;
     gap: 14px;
-    padding: 17px;
+    padding: 18px;
 }
 
 .command-card-top {
@@ -615,7 +614,6 @@ tr:last-child td {
 }
 
 .command-example {
-    align-self: end;
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
@@ -632,6 +630,65 @@ tr:last-child td {
     background: transparent;
     padding: 0;
     color: #eef6f8;
+}
+
+.command-examples {
+    display: grid;
+    gap: 10px;
+}
+
+.command-reference-block {
+    display: grid;
+    gap: 8px;
+}
+
+.command-reference-block h4 {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.command-reference-list {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.command-reference-list li {
+    display: grid;
+    grid-template-columns: minmax(190px, 0.42fr) minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+    padding: 10px;
+    background: #f7fafc;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+}
+
+.command-reference-list code {
+    overflow-wrap: anywhere;
+    background: #eef5f7;
+    color: #0d3144;
+}
+
+.command-reference-list span {
+    color: var(--muted);
+}
+
+.command-reference-list em {
+    color: #0f766e;
+    font-style: normal;
+    font-weight: 800;
+}
+
+.command-empty {
+    margin: 0;
+    color: var(--muted);
 }
 
 .code-card:target,
@@ -832,7 +889,8 @@ tr:last-child td {
     }
 
     .command-card dl,
-    .command-example {
+    .command-example,
+    .command-reference-list li {
         grid-template-columns: 1fr;
     }
 }
