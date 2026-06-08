@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.47.0 - 2026-06-08
+
+- Included MCP diagnostics in the `security` CI profile.
+- Added test coverage proving MCP supply-chain findings affect security-profile CI exit codes.
+- Updated README and CI documentation so security-oriented runs explicitly cover agent configuration risks.
+
 ## v1.46.0 - 2026-06-08
 
 - Added MCP project policy flags: `--disallow-remote`, `--allow-command`, and `--deny-command`.

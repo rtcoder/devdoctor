@@ -575,6 +575,29 @@ it('supports ci policy profiles', function () {
     expect($strictExitCode)->toBe(2);
 });
 
+it('includes mcp diagnostics in the security ci profile', function () {
+    $path = sys_get_temp_dir().'/devdoctor-ci-security-mcp-'.bin2hex(random_bytes(4));
+    mkdir($path);
+    file_put_contents($path.'/.env', "APP_ENV=local\n");
+    file_put_contents($path.'/.env.example', "APP_ENV=local\n");
+    file_put_contents($path.'/.mcp.json', json_encode([
+        'mcpServers' => [
+            'filesystem' => ['command' => 'npx', 'args' => ['-y', '@modelcontextprotocol/server-filesystem']],
+        ],
+    ], JSON_THROW_ON_ERROR));
+
+    $exitCode = Artisan::call('ci', [
+        '--path' => $path,
+        '--profile' => 'security',
+        '--format' => 'json',
+    ]);
+    $output = json_decode(Artisan::output(), true, flags: JSON_THROW_ON_ERROR);
+
+    expect($exitCode)->toBe(2)
+        ->and(array_column($output['modules'], 'name'))->toContain('mcp')
+        ->and(json_encode($output, JSON_THROW_ON_ERROR))->toContain('DD_MCP_PACKAGE_UNPINNED');
+});
+
 it('reports unknown ci policy profiles', function () {
     $exitCode = Artisan::call('ci', ['--profile' => 'nope', '--format' => 'json']);
 

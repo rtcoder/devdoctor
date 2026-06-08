@@ -203,7 +203,7 @@ final class CiCommand extends Command
                 'add_detected' => true,
             ],
             'security' => [
-                'modules' => 'env,git,docker,security',
+                'modules' => 'env,git,docker,security,mcp',
                 'fail_on_warnings' => true,
                 'strict' => true,
                 'add_detected' => false,

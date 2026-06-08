@@ -21,12 +21,12 @@
 </header>
 <main>
     <h2>GitHub Actions</h2>
-    <p>Use the composite action when running on GitHub-hosted Linux, macOS, or Windows runners. The default module set is <code>env,php,node,laravel,composer,git,docker</code>; DevDoctor adds ecosystem modules such as <code>frontend</code>, <code>flutter</code>, <code>mobile</code>, <code>monorepo</code>, <code>python</code>, <code>ruby</code>, <code>go</code>, <code>rust</code>, <code>java</code>, <code>iac</code>, <code>kube</code>, <code>dotnet</code>, <code>cpp</code>, <code>web</code>, and <code>symfony</code> automatically when matching presets are detected.</p>
+    <p>Use the composite action when running on GitHub-hosted Linux, macOS, or Windows runners. The default module set is <code>env,php,node,laravel,composer,git,docker</code>; DevDoctor adds ecosystem modules such as <code>frontend</code>, <code>flutter</code>, <code>mobile</code>, <code>monorepo</code>, <code>python</code>, <code>ruby</code>, <code>go</code>, <code>rust</code>, <code>java</code>, <code>mcp</code>, <code>iac</code>, <code>kube</code>, <code>dotnet</code>, <code>cpp</code>, <code>web</code>, and <code>symfony</code> automatically when matching presets are detected.</p>
     <section class="feature-band">
         <div>
             <p class="eyebrow">Policy profiles</p>
             <h2>Pick local, CI, strict CI, or security defaults.</h2>
-            <p><code>devdoctor ci --profile=local</code> is warning-tolerant for local rollout, <code>--profile=ci</code> keeps the default CI set, <code>--profile=strict-ci</code> enables strict checks and security diagnostics, and <code>--profile=security</code> narrows the run to security-oriented modules.</p>
+            <p><code>devdoctor ci --profile=local</code> is warning-tolerant for local rollout, <code>--profile=ci</code> keeps the default CI set, <code>--profile=strict-ci</code> enables strict checks and security diagnostics, and <code>--profile=security</code> narrows the run to security-oriented modules including MCP agent config checks.</p>
         </div>
         <div class="metric-row">
             <div class="metric"><strong>local</strong><span>warnings ok</span></div>
@@ -49,9 +49,9 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
-      - uses: rtcoder/devdoctor@v1.46.0
+      - uses: rtcoder/devdoctor@v1.47.0
         with:
-          version: v1.46.0</code></pre>
+          version: v1.47.0</code></pre>
     <p>Full example: <a href="examples/github-actions.yml">docs/examples/github-actions.yml</a>.</p>
 
     <h2>GitLab CI</h2>

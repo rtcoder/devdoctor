@@ -3,8 +3,8 @@ devdoctor:
   before_script:
     - apt-get update
     - apt-get install -y git unzip
-    - php -r "copy('https://github.com/rtcoder/devdoctor/releases/download/v1.46.0/devdoctor.phar', 'devdoctor.phar');"
-    - php -r "copy('https://github.com/rtcoder/devdoctor/releases/download/v1.46.0/devdoctor.phar.sha256', 'devdoctor.phar.sha256');"
+    - php -r "copy('https://github.com/rtcoder/devdoctor/releases/download/v1.47.0/devdoctor.phar', 'devdoctor.phar');"
+    - php -r "copy('https://github.com/rtcoder/devdoctor/releases/download/v1.47.0/devdoctor.phar.sha256', 'devdoctor.phar.sha256');"
     - php -r "$expected=explode(' ', trim(file_get_contents('devdoctor.phar.sha256')))[0]; $actual=hash_file('sha256', 'devdoctor.phar'); if (!hash_equals($expected, $actual)) { fwrite(STDERR, 'Checksum mismatch'.PHP_EOL); exit(1); }"
     - chmod +x devdoctor.phar
   script:
