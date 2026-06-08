@@ -238,3 +238,38 @@ it('reports mutable docker image targets', function () {
 
     expect($codes)->toContain('DD_MCP_DOCKER_IMAGE_MUTABLE');
 });
+
+it('reports remote servers disallowed by policy', function () {
+    $issues = (new McpAnalyzer)->analyze(new McpOptions(
+        path: mcpFixture([
+            '.mcp.json' => json_encode([
+                'mcpServers' => [
+                    'docs' => ['transport' => 'http', 'url' => 'https://mcp.example.test'],
+                ],
+            ], JSON_THROW_ON_ERROR),
+        ]),
+        disallowRemote: true,
+    ));
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
+
+    expect($codes)->toContain('DD_MCP_REMOTE_DISALLOWED');
+});
+
+it('reports stdio commands outside project policy', function () {
+    $issues = (new McpAnalyzer)->analyze(new McpOptions(
+        path: mcpFixture([
+            '.mcp.json' => json_encode([
+                'mcpServers' => [
+                    'node' => ['command' => 'node', 'args' => ['server.js']],
+                    'php' => ['command' => 'php', 'args' => ['server.php']],
+                ],
+            ], JSON_THROW_ON_ERROR),
+        ]),
+        allowedCommands: ['node'],
+        deniedCommands: ['php'],
+    ));
+    $codes = array_map(static fn ($issue): string => $issue->code->value, $issues->all());
+
+    expect($codes)->toContain('DD_MCP_COMMAND_NOT_ALLOWED')
+        ->and($codes)->toContain('DD_MCP_COMMAND_DENIED');
+});

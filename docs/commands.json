@@ -126,8 +126,8 @@
             "module": "mcp",
             "type": "diagnostic",
             "read_only": true,
-            "summary": "Check MCP server configuration files across common agent clients, secret hygiene, remote URLs, env references, supply-chain pins, and risky commands without starting servers.",
-            "example": "php devdoctor mcp --config=.mcp.json"
+            "summary": "Check MCP server configuration files across common agent clients, secret hygiene, remote URLs, env references, supply-chain pins, optional project policies, and risky commands without starting servers.",
+            "example": "php devdoctor mcp --disallow-remote --allow-command=node,npx"
         },
         {
             "name": "iac",

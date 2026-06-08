@@ -28,7 +28,7 @@
             <p>Messages can become clearer over time, but issue codes are the stable contract. Use these identifiers in CI policy, baselines, SARIF consumers, and custom dashboards.</p>
         </div>
         <div class="metric-row">
-            <div class="metric"><strong>245</strong><span>codes</span></div>
+            <div class="metric"><strong>248</strong><span>codes</span></div>
             <div class="metric"><strong>32</strong><span>modules</span></div>
             <div class="metric"><strong>v1</strong><span>schema</span></div>
         </div>
@@ -61,7 +61,7 @@
         <a href="#module-java" data-module-link="java"><span>java</span><strong>7</strong></a>
         <a href="#module-kube" data-module-link="kube"><span>kube</span><strong>8</strong></a>
         <a href="#module-laravel" data-module-link="laravel"><span>laravel</span><strong>9</strong></a>
-        <a href="#module-mcp" data-module-link="mcp"><span>mcp</span><strong>14</strong></a>
+        <a href="#module-mcp" data-module-link="mcp"><span>mcp</span><strong>17</strong></a>
         <a href="#module-mobile" data-module-link="mobile"><span>mobile</span><strong>6</strong></a>
         <a href="#module-monorepo" data-module-link="monorepo"><span>monorepo</span><strong>5</strong></a>
         <a href="#module-node" data-module-link="node"><span>node</span><strong>12</strong></a>
@@ -77,7 +77,7 @@
         <a href="#module-web" data-module-link="web"><span>web</span><strong>7</strong></a>
     </aside>
     <section class="code-groups" aria-live="polite">
-        <p class="catalog-result-count" id="issue-code-result-count">245 codes shown</p>
+        <p class="catalog-result-count" id="issue-code-result-count">248 codes shown</p>
         <article class="code-group" id="module-cache" data-code-group data-module="cache">
             <div class="group-heading"><h2>cache</h2><span>5 codes</span></div>
             <div class="code-grid">
@@ -869,12 +869,22 @@
             </div>
         </article>
         <article class="code-group" id="module-mcp" data-code-group data-module="mcp">
-            <div class="group-heading"><h2>mcp</h2><span>14 codes</span></div>
+            <div class="group-heading"><h2>mcp</h2><span>17 codes</span></div>
             <div class="code-grid">
                 <section class="code-card" id="dd-mcp-command-risky" data-code-card data-code="DD_MCP_COMMAND_RISKY" data-module="mcp" data-description="An MCP stdio command appears to use shell evaluation or remote script execution.">
                     <div class="code-top"><code>DD_MCP_COMMAND_RISKY</code><button class="copy-code" type="button" data-copy-code="DD_MCP_COMMAND_RISKY">Copy</button><span class="status-pill">active</span></div>
                     <p>An MCP stdio command appears to use shell evaluation or remote script execution.</p>
                     <dl><div><dt>Module</dt><dd>mcp</dd></div><div><dt>Introduced</dt><dd>1.43.0</dd></div></dl>
+                </section>
+                <section class="code-card" id="dd-mcp-command-denied" data-code-card data-code="DD_MCP_COMMAND_DENIED" data-module="mcp" data-description="An MCP stdio command is denied by project policy.">
+                    <div class="code-top"><code>DD_MCP_COMMAND_DENIED</code><button class="copy-code" type="button" data-copy-code="DD_MCP_COMMAND_DENIED">Copy</button><span class="status-pill">active</span></div>
+                    <p>An MCP stdio command is denied by project policy.</p>
+                    <dl><div><dt>Module</dt><dd>mcp</dd></div><div><dt>Introduced</dt><dd>1.46.0</dd></div></dl>
+                </section>
+                <section class="code-card" id="dd-mcp-command-not-allowed" data-code-card data-code="DD_MCP_COMMAND_NOT_ALLOWED" data-module="mcp" data-description="An MCP stdio command is not in the project allow-list.">
+                    <div class="code-top"><code>DD_MCP_COMMAND_NOT_ALLOWED</code><button class="copy-code" type="button" data-copy-code="DD_MCP_COMMAND_NOT_ALLOWED">Copy</button><span class="status-pill">active</span></div>
+                    <p>An MCP stdio command is not in the project allow-list.</p>
+                    <dl><div><dt>Module</dt><dd>mcp</dd></div><div><dt>Introduced</dt><dd>1.46.0</dd></div></dl>
                 </section>
                 <section class="code-card" id="dd-mcp-config-invalid" data-code-card data-code="DD_MCP_CONFIG_INVALID" data-module="mcp" data-description="An MCP configuration file contains invalid JSON.">
                     <div class="code-top"><code>DD_MCP_CONFIG_INVALID</code><button class="copy-code" type="button" data-copy-code="DD_MCP_CONFIG_INVALID">Copy</button><span class="status-pill">active</span></div>
@@ -910,6 +920,11 @@
                     <div class="code-top"><code>DD_MCP_READY</code><button class="copy-code" type="button" data-copy-code="DD_MCP_READY">Copy</button><span class="status-pill">active</span></div>
                     <p>MCP diagnostics found no actionable issues.</p>
                     <dl><div><dt>Module</dt><dd>mcp</dd></div><div><dt>Introduced</dt><dd>1.42.0</dd></div></dl>
+                </section>
+                <section class="code-card" id="dd-mcp-remote-disallowed" data-code-card data-code="DD_MCP_REMOTE_DISALLOWED" data-module="mcp" data-description="An MCP remote server is disallowed by project policy.">
+                    <div class="code-top"><code>DD_MCP_REMOTE_DISALLOWED</code><button class="copy-code" type="button" data-copy-code="DD_MCP_REMOTE_DISALLOWED">Copy</button><span class="status-pill">active</span></div>
+                    <p>An MCP remote server is disallowed by project policy.</p>
+                    <dl><div><dt>Module</dt><dd>mcp</dd></div><div><dt>Introduced</dt><dd>1.46.0</dd></div></dl>
                 </section>
                 <section class="code-card" id="dd-mcp-remote-url-insecure" data-code-card data-code="DD_MCP_REMOTE_URL_INSECURE" data-module="mcp" data-description="An MCP remote server uses an insecure HTTP URL outside localhost.">
                     <div class="code-top"><code>DD_MCP_REMOTE_URL_INSECURE</code><button class="copy-code" type="button" data-copy-code="DD_MCP_REMOTE_URL_INSECURE">Copy</button><span class="status-pill">active</span></div>

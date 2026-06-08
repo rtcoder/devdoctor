@@ -340,6 +340,31 @@ it('runs mcp diagnostics with json output', function () {
         ->expectsOutputToContain('DD_MCP_NOT_CONFIGURED');
 });
 
+it('runs mcp diagnostics with project policy flags', function () {
+    $path = sys_get_temp_dir().'/devdoctor-mcp-policy-command-'.bin2hex(random_bytes(4));
+    mkdir($path);
+    file_put_contents($path.'/.mcp.json', json_encode([
+        'mcpServers' => [
+            'remote' => ['transport' => 'http', 'url' => 'https://mcp.example.test'],
+            'php' => ['command' => 'php', 'args' => ['server.php']],
+        ],
+    ], JSON_THROW_ON_ERROR));
+
+    $exitCode = Artisan::call('mcp', [
+        '--path' => $path,
+        '--format' => 'json',
+        '--allow-command' => 'node',
+        '--deny-command' => 'php',
+        '--disallow-remote' => true,
+    ]);
+    $output = Artisan::output();
+
+    expect($exitCode)->toBe(1)
+        ->and($output)->toContain('DD_MCP_REMOTE_DISALLOWED')
+        ->and($output)->toContain('DD_MCP_COMMAND_NOT_ALLOWED')
+        ->and($output)->toContain('DD_MCP_COMMAND_DENIED');
+});
+
 it('prints config wizard output in dry run mode', function () {
     $path = sys_get_temp_dir().'/devdoctor-init-command-'.bin2hex(random_bytes(4));
     mkdir($path);

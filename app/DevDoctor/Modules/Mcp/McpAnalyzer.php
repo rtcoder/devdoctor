@@ -261,11 +261,57 @@ final readonly class McpAnalyzer
             ));
         }
 
+        $this->checkPolicy($issues, $server, $options);
         $this->checkRemoteUrl($issues, $server, $options);
         $this->checkRiskyCommand($issues, $server, $options);
         $this->checkSupplyChainPins($issues, $server, $options);
         $this->checkInlineSecrets($issues, $server, $options);
         $this->checkEnvReferences($issues, $server, $options, $knownEnvKeys);
+    }
+
+    private function checkPolicy(IssueCollection $issues, McpServer $server, McpOptions $options): void
+    {
+        if ($options->disallowRemote && $server->transport?->isRemote()) {
+            $issues->add(new Issue(
+                code: IssueCode::DD_MCP_REMOTE_DISALLOWED,
+                severity: $options->strict ? Severity::ERROR : Severity::WARNING,
+                message: 'MCP remote server is disallowed by project policy',
+                module: ModuleName::MCP,
+                file: $server->file,
+                key: $server->name,
+                context: ['transport' => $server->transport->value],
+            ));
+        }
+
+        if ($server->command === null) {
+            return;
+        }
+
+        $command = $this->normalizedExecutable($server->command->command);
+
+        if (in_array($command, $options->deniedCommands, true)) {
+            $issues->add(new Issue(
+                code: IssueCode::DD_MCP_COMMAND_DENIED,
+                severity: $options->strict ? Severity::ERROR : Severity::WARNING,
+                message: 'MCP stdio command is denied by project policy',
+                module: ModuleName::MCP,
+                file: $server->file,
+                key: $server->name,
+                context: ['command' => $command],
+            ));
+        }
+
+        if ($options->allowedCommands !== [] && ! in_array($command, $options->allowedCommands, true)) {
+            $issues->add(new Issue(
+                code: IssueCode::DD_MCP_COMMAND_NOT_ALLOWED,
+                severity: $options->strict ? Severity::ERROR : Severity::WARNING,
+                message: 'MCP stdio command is not in the project allow-list',
+                module: ModuleName::MCP,
+                file: $server->file,
+                key: $server->name,
+                context: ['command' => $command, 'allowed' => $options->allowedCommands],
+            ));
+        }
     }
 
     private function checkRemoteUrl(IssueCollection $issues, McpServer $server, McpOptions $options): void
@@ -397,7 +443,7 @@ final readonly class McpAnalyzer
 
     private function isRiskyCommand(McpServerCommand $command): bool
     {
-        $executable = strtolower(basename($command->command));
+        $executable = $this->normalizedExecutable($command->command);
         $joined = strtolower(implode(' ', $command->args));
 
         if (in_array($executable, ['bash', 'sh', 'zsh', 'cmd', 'powershell', 'pwsh'], true) && preg_match('/(^|\s)(-c|\/c|invoke-expression|iex)(\s|$)/', $joined) === 1) {
@@ -411,7 +457,7 @@ final readonly class McpAnalyzer
 
     private function packageRunnerTarget(McpServerCommand $command): ?string
     {
-        $executable = strtolower(basename($command->command, '.cmd'));
+        $executable = $this->normalizedExecutable($command->command);
 
         if (! in_array($executable, ['npx', 'pnpm', 'yarn', 'bunx', 'uvx'], true)) {
             return null;
@@ -457,7 +503,7 @@ final readonly class McpAnalyzer
 
     private function dockerRunImage(McpServerCommand $command): ?string
     {
-        $executable = strtolower(basename($command->command, '.exe'));
+        $executable = $this->normalizedExecutable($command->command);
 
         if ($executable !== 'docker') {
             return null;
@@ -512,6 +558,11 @@ final readonly class McpAnalyzer
         }
 
         return strtolower(substr($image, $lastColon + 1)) === 'latest';
+    }
+
+    private function normalizedExecutable(string $command): string
+    {
+        return preg_replace('/\.(cmd|exe|bat)$/', '', strtolower(basename($command))) ?? strtolower(basename($command));
     }
 
     /**

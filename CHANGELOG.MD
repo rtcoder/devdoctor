@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.46.0 - 2026-06-08
+
+- Added MCP project policy flags: `--disallow-remote`, `--allow-command`, and `--deny-command`.
+- Added MCP policy issue codes for disallowed remote transports and stdio command allow/deny-list violations.
+- Updated CLI, README, docs, issue code catalog, and tests for policy-driven MCP diagnostics.
+
 ## v1.45.0 - 2026-06-08
 
 - Added MCP supply-chain diagnostics for unpinned package runner targets such as `npx`, `pnpm`, `yarn`, `bunx`, and `uvx`.

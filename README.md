@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, Node/frontend, Flutter/Dart, native mobile, monorepos, Python, Ruby/Rails, Go, Rust, Java/JVM, MCP agent config, Terraform/IaC, Kubernetes/Helm, .NET, C/C++, generic web, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.45.0`
+Current version: `1.46.0`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.45.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.46.0 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -140,6 +140,7 @@ php devdoctor rust
 php devdoctor java
 php devdoctor mcp
 php devdoctor mcp --config=.cursor/mcp.json
+php devdoctor mcp --disallow-remote --allow-command=node,npx --deny-command=docker
 php devdoctor iac
 php devdoctor kube
 php devdoctor dotnet
@@ -226,7 +227,8 @@ Platform-specific commands are only suggested. DevDoctor never terminates a proc
 - Go diagnostics inspect `go.mod`, `go.sum`, `go.work`, local `replace` directives, toolchain declarations, and vendor metadata without running `go mod tidy` or downloading modules.
 - Rust diagnostics inspect `Cargo.toml`, `Cargo.lock`, workspaces, `rust-toolchain.toml`, local path/git dependencies, and release profile settings without running Cargo.
 - Java diagnostics inspect Maven, Gradle, Ant, wrappers, Java version declarations, risky build scripts, and Spring production debug flags without running builds or dependency resolution.
-- MCP diagnostics inspect `.mcp.json`, `mcp.json`, `.agents/mcp.json`, `.claude/mcp.json`, `.cline/mcp.json`, `.codex/mcp.json`, `.continue/mcp.json`, `.continue/config.json`, `.cursor/mcp.json`, `.roo/mcp.json`, `.vscode/mcp.json`, and `.windsurf/mcp.json` for `stdio`, `sse`, and `http` server definitions, inline secrets, missing env references, insecure remote URLs, unpinned package runners, mutable Docker image tags, and risky shell command patterns without starting servers or making network requests.
+- MCP diagnostics inspect `.mcp.json`, `mcp.json`, `.agents/mcp.json`, `.claude/mcp.json`, `.cline/mcp.json`, `.codex/mcp.json`, `.continue/mcp.json`, `.continue/config.json`, `.cursor/mcp.json`, `.roo/mcp.json`, `.vscode/mcp.json`, and `.windsurf/mcp.json` for `stdio`, `sse`, and `http` server definitions, inline secrets, missing env references, insecure remote URLs, unpinned package runners, mutable Docker image tags, optional project policies, and risky shell command patterns without starting servers or making network requests.
+- MCP project policy flags let you report remote transports with `--disallow-remote`, restrict stdio commands with `--allow-command=node,npx`, or block specific commands with `--deny-command=docker`.
 - IaC diagnostics inspect Terraform, OpenTofu, and Terragrunt files, provider lockfiles, provider version constraints, remote module refs, backend/provider secrets, and secret-like variable defaults without running `init`, `plan`, or network access.
 - Kubernetes diagnostics inspect manifests, Helm charts, values files, image tags, service exposure, hostPath mounts, and privileged containers without running `kubectl`, `helm`, or cluster queries.
 - .NET diagnostics inspect `.sln`, project files, `global.json`, `NuGet.config`, `packages.lock.json`, target frameworks, and restore lock mode without running `dotnet restore`, `build`, or `test`.
@@ -323,6 +325,8 @@ The `presets` command detects supported project stacks from files and declared d
 `v1.44.0` expands MCP client config discovery for Claude, Cline, Continue, Roo, Windsurf, and nested `mcp.servers` style project files.
 
 `v1.45.0` adds MCP supply-chain checks for unpinned package-runner targets and mutable Docker image tags in stdio server definitions.
+
+`v1.46.0` adds MCP project policy flags for disallowing remote servers and enforcing stdio command allow/deny lists.
 
 Preset detection is informational and can be included in CI explicitly:
 
@@ -439,9 +443,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.45.0
+- uses: rtcoder/devdoctor@v1.46.0
   with:
-    version: v1.45.0
+    version: v1.46.0
     format: sarif
 ```
 
@@ -599,14 +603,14 @@ The Homebrew formula installs the platform-specific standalone release binary fo
 
 The release workflow can update `rtcoder/homebrew-tap` after each tag when the repository secret `HOMEBREW_TAP_TOKEN` is configured with write access to the tap.
 
-If the token was added after a release, run the `Update Homebrew Tap` workflow manually from GitHub Actions and pass the release version, for example `1.45.0` or `v1.45.0`. The workflow downloads `devdoctor.sha256` from the GitHub Release and updates `Formula/devdoctor.rb` in `rtcoder/homebrew-tap`.
+If the token was added after a release, run the `Update Homebrew Tap` workflow manually from GitHub Actions and pass the release version, for example `1.46.0` or `v1.46.0`. The workflow downloads `devdoctor.sha256` from the GitHub Release and updates `Formula/devdoctor.rb` in `rtcoder/homebrew-tap`.
 
 ## Development
 
 Update release version pins with:
 
 ```bash
-./bump-version 1.45.0
+./bump-version 1.46.0
 ```
 
 The helper updates `extra.devdoctor.version`, Action examples, documentation pins, CI examples, pinned test expectations, and `composer.lock`. Use `--no-lock` only when you intentionally want to skip the Composer lock refresh.
@@ -615,7 +619,7 @@ The helper updates `extra.devdoctor.version`, Action examples, documentation pin
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.45.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.46.0 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version

@@ -21,6 +21,9 @@ final class McpCommand extends Command
         {--ci : Use CI-safe behavior}
         {--strict : Treat warnings as errors where supported}
         {--config= : Specific MCP config file to inspect}
+        {--allow-command= : Comma-separated stdio command names allowed by project policy}
+        {--deny-command= : Comma-separated stdio command names denied by project policy}
+        {--disallow-remote : Report remote MCP servers as policy violations}
         {--only= : Comma-separated severities to render: error, warning, info}
         {--summary-only : Render module summaries without issue details}
         {--no-hints : Hide hints and suggested fixes from output}';
@@ -34,7 +37,24 @@ final class McpCommand extends Command
                 path: (string) $this->option('path'),
                 config: (string) ($this->option('config') ?: ''),
                 strict: (bool) $this->option('strict'),
+                allowedCommands: $this->stringListOption('allow-command'),
+                deniedCommands: $this->stringListOption('deny-command'),
+                disallowRemote: (bool) $this->option('disallow-remote'),
             ))),
         ]);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function stringListOption(string $name): array
+    {
+        return array_values(array_filter(
+            array_map(
+                static fn (string $value): string => strtolower(trim($value)),
+                explode(',', (string) ($this->option($name) ?: '')),
+            ),
+            static fn (string $value): bool => $value !== '',
+        ));
     }
 }
