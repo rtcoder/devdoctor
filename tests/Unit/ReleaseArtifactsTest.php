@@ -23,7 +23,7 @@ it('ships the release version bump helper', function () {
     $script = $root.'/bump-version';
 
     expect(is_file($script))->toBeTrue()
-        ->and(is_executable($script))->toBeTrue()
+        ->and(file_get_contents($script))->toStartWith("#!/usr/bin/env php\n")
         ->and(file_get_contents($script))->toContain('Usage: bump-version [--no-lock] <new-version>')
         ->and(file_get_contents($script))->toContain('extra.devdoctor.version')
         ->and(file_get_contents($script))->toContain('composer update');
@@ -171,9 +171,9 @@ it('ships static documentation and pinned CI examples', function () {
         ->and(file_get_contents($root.'/docs/commands.js'))->toContain('is-filtered-out')
         ->and(file_get_contents($root.'/docs/styles.css'))->toContain('.command-card[hidden]')
         ->and(file_get_contents($root.'/docs/scenarios.html'))->toContain('Kubernetes / Helm')
-        ->and(file_get_contents($root.'/docs/examples/github-actions.yml'))->toContain('v1.41.0')
-        ->and(file_get_contents($root.'/docs/examples/gitlab-ci.yml'))->toContain('v1.41.0')
-        ->and(file_get_contents($root.'/docs/examples/bitbucket-pipelines.yml'))->toContain('v1.41.0')
+        ->and(file_get_contents($root.'/docs/examples/github-actions.yml'))->toContain('v1.41.1')
+        ->and(file_get_contents($root.'/docs/examples/gitlab-ci.yml'))->toContain('v1.41.1')
+        ->and(file_get_contents($root.'/docs/examples/bitbucket-pipelines.yml'))->toContain('v1.41.1')
         ->and(file_get_contents($root.'/README.md'))->toContain('devdoctor-linux-x64')
         ->and(file_get_contents($root.'/docs/installation.html'))->toContain('Standalone Release Binary')
         ->and(file_get_contents($root.'/docs/release-verification.html'))->toContain('devdoctor.sha256');

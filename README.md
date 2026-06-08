@@ -4,7 +4,7 @@ Developer diagnostics for humans.
 
 DevDoctor is a read-only CLI for catching common local, repository, environment, cache, HTTP URL, database, queue, Docker, Composer, Git, Node/frontend, Flutter/Dart, native mobile, monorepos, Python, Ruby/Rails, Go, Rust, Java/JVM, Terraform/IaC, Kubernetes/Helm, .NET, C/C++, generic web, and CI problems before they turn into manual debugging sessions.
 
-Current version: `1.41.0`
+Current version: `1.41.1`
 
 ## Installation
 
@@ -24,7 +24,7 @@ php devdoctor <command>
 Build a local PHAR:
 
 ```bash
-php devdoctor app:build devdoctor.phar --build-version=1.41.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.41.1 --no-interaction
 php builds/devdoctor.phar --version
 ```
 
@@ -308,6 +308,8 @@ The `presets` command detects supported project stacks from files and declared d
 
 `v1.41.0` changes the generated Homebrew formula to install standalone binaries instead of the PHAR, so `devdoctor` does not depend on the local PHP version.
 
+`v1.41.1` fixes the release artifact test on Windows by checking the `bump-version` PHP shebang instead of POSIX executable permissions.
+
 Preset detection is informational and can be included in CI explicitly:
 
 ```bash
@@ -423,9 +425,9 @@ The repository CI workflow runs tests on Linux, macOS, and Windows with PHP 8.5.
 The composite GitHub Action downloads a pinned release PHAR, verifies its SHA-256 checksum, and runs CI diagnostics:
 
 ```yaml
-- uses: rtcoder/devdoctor@v1.41.0
+- uses: rtcoder/devdoctor@v1.41.1
   with:
-    version: v1.41.0
+    version: v1.41.1
     format: sarif
 ```
 
@@ -583,14 +585,14 @@ The Homebrew formula installs the platform-specific standalone release binary fo
 
 The release workflow can update `rtcoder/homebrew-tap` after each tag when the repository secret `HOMEBREW_TAP_TOKEN` is configured with write access to the tap.
 
-If the token was added after a release, run the `Update Homebrew Tap` workflow manually from GitHub Actions and pass the release version, for example `1.41.0` or `v1.41.0`. The workflow downloads `devdoctor.sha256` from the GitHub Release and updates `Formula/devdoctor.rb` in `rtcoder/homebrew-tap`.
+If the token was added after a release, run the `Update Homebrew Tap` workflow manually from GitHub Actions and pass the release version, for example `1.41.1` or `v1.41.1`. The workflow downloads `devdoctor.sha256` from the GitHub Release and updates `Formula/devdoctor.rb` in `rtcoder/homebrew-tap`.
 
 ## Development
 
 Update release version pins with:
 
 ```bash
-./bump-version 1.40.0
+./bump-version 1.41.1
 ```
 
 The helper updates `extra.devdoctor.version`, Action examples, documentation pins, CI examples, pinned test expectations, and `composer.lock`. Use `--no-lock` only when you intentionally want to skip the Composer lock refresh.
@@ -599,7 +601,7 @@ The helper updates `extra.devdoctor.version`, Action examples, documentation pin
 composer validate --strict
 php devdoctor test
 ./vendor/bin/pint --test
-php devdoctor app:build devdoctor.phar --build-version=1.41.0 --no-interaction
+php devdoctor app:build devdoctor.phar --build-version=1.41.1 --no-interaction
 php builds/devdoctor.phar --version
 ./vendor/bin/phpacker build --src=./builds/devdoctor.phar --dest=./builds/standalone --php=8.5 linux x64
 ./builds/standalone/linux/linux-x64 --version

@@ -4,6 +4,11 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.41.1 - 2026-06-08
+
+- Fixed the release artifact test for Windows by avoiding POSIX executable-bit checks on `bump-version`.
+- The test now verifies the PHP shebang and helper contents, which is portable across Linux, macOS, and Windows runners.
+
 ## v1.41.0 - 2026-06-08
 
 - Changed the generated Homebrew formula to install platform-specific standalone binaries instead of `devdoctor.phar`.

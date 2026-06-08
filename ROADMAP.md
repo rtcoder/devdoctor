@@ -246,3 +246,4 @@ After the first complete version:
 - `v1.39.0`: Repository `bump-version` helper for release version pin updates. Complete.
 - `v1.40.0`: Public `devdoctor version` command with table and JSON output. Complete.
 - `v1.41.0`: Homebrew formula installs standalone binaries instead of the PHAR. Complete.
+- `v1.41.1`: Windows-safe release artifact test for the `bump-version` helper. Complete.
