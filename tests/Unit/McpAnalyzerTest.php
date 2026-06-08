@@ -121,6 +121,29 @@ it('detects codex and agents mcp config files', function () {
     expect($issues->all()[0]->code->value)->toBe('DD_MCP_READY');
 });
 
+it('detects common agent client mcp config files and nested sections', function () {
+    foreach ([
+        '.claude/mcp.json',
+        '.cline/mcp.json',
+        '.continue/mcp.json',
+        '.continue/config.json',
+        '.roo/mcp.json',
+        '.windsurf/mcp.json',
+    ] as $file) {
+        $issues = (new McpAnalyzer)->analyze(new McpOptions(path: mcpFixture([
+            $file => json_encode([
+                'mcp' => [
+                    'servers' => [
+                        'client' => ['command' => 'node'],
+                    ],
+                ],
+            ], JSON_THROW_ON_ERROR),
+        ])));
+
+        expect($issues->all()[0]->code->value)->toBe('DD_MCP_READY');
+    }
+});
+
 it('reports inline secrets and missing environment references', function () {
     $issues = (new McpAnalyzer)->analyze(new McpOptions(path: mcpFixture([
         '.env.example' => "KNOWN_TOKEN=\n",

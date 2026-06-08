@@ -22,9 +22,15 @@ final readonly class McpAnalyzer
         '.mcp.json',
         'mcp.json',
         '.agents/mcp.json',
+        '.claude/mcp.json',
+        '.cline/mcp.json',
         '.codex/mcp.json',
+        '.continue/mcp.json',
+        '.continue/config.json',
         '.cursor/mcp.json',
+        '.roo/mcp.json',
         '.vscode/mcp.json',
+        '.windsurf/mcp.json',
     ];
 
     private const array ENV_FILES = [
@@ -163,6 +169,14 @@ final readonly class McpAnalyzer
         foreach (['mcpServers', 'servers'] as $section) {
             if (is_array($data[$section] ?? null)) {
                 return $data[$section];
+            }
+        }
+
+        if (is_array($data['mcp'] ?? null)) {
+            foreach (['mcpServers', 'servers'] as $section) {
+                if (is_array($data['mcp'][$section] ?? null)) {
+                    return $data['mcp'][$section];
+                }
             }
         }
 

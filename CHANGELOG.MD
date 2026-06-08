@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.44.0 - 2026-06-08
+
+- Expanded MCP config discovery for Claude, Cline, Continue, Roo, and Windsurf project config files.
+- Added support for nested `mcp.servers` and `mcp.mcpServers` config sections.
+- Updated docs and tests for common agent client MCP config discovery.
+
 ## v1.43.0 - 2026-06-08
 
 - Expanded `devdoctor mcp` with agent configuration hardening checks.

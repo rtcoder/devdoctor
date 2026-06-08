@@ -126,7 +126,7 @@
             "module": "mcp",
             "type": "diagnostic",
             "read_only": true,
-            "summary": "Check MCP server configuration files, secret hygiene, remote URLs, env references, and risky commands without starting servers.",
+            "summary": "Check MCP server configuration files across common agent clients, secret hygiene, remote URLs, env references, and risky commands without starting servers.",
             "example": "php devdoctor mcp --config=.mcp.json"
         },
         {
