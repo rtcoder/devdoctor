@@ -200,9 +200,13 @@ The human-readable catalog is available at [`docs/issue-codes.html`](issue-codes
 
 ## Mcp
 
+- `DD_MCP_COMMAND_RISKY` - An MCP stdio command appears to use shell evaluation or remote script execution. Introduced in `1.43.0`; status `active`.
 - `DD_MCP_CONFIG_INVALID` - An MCP configuration file contains invalid JSON. Introduced in `1.42.0`; status `active`.
+- `DD_MCP_ENV_REFERENCE_MISSING` - An MCP server references an environment key not declared in local env files. Introduced in `1.43.0`; status `active`.
+- `DD_MCP_ENV_SECRET_INLINE` - An MCP server configuration appears to contain an inline secret. Introduced in `1.43.0`; status `active`.
 - `DD_MCP_NOT_CONFIGURED` - No MCP configuration file was detected. Introduced in `1.42.0`; status `active`.
 - `DD_MCP_READY` - MCP diagnostics found no actionable issues. Introduced in `1.42.0`; status `active`.
+- `DD_MCP_REMOTE_URL_INSECURE` - An MCP remote server uses an insecure HTTP URL outside localhost. Introduced in `1.43.0`; status `active`.
 - `DD_MCP_REMOTE_URL_MISSING` - An MCP remote server is missing a url. Introduced in `1.42.0`; status `active`.
 - `DD_MCP_SERVER_INVALID` - An MCP server entry has an unsupported shape. Introduced in `1.42.0`; status `active`.
 - `DD_MCP_SERVERS_MISSING` - An MCP configuration file does not define mcpServers or servers. Introduced in `1.42.0`; status `active`.

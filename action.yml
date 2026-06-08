@@ -7,7 +7,7 @@ branding:
 
 inputs:
   version:
-    description: Explicit DevDoctor release tag to download, for example v1.42.0. Latest is never used implicitly.
+    description: Explicit DevDoctor release tag to download, for example v1.43.0. Latest is never used implicitly.
     required: true
   modules:
     description: Comma-separated DevDoctor modules to run in CI.

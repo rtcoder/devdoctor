@@ -11,6 +11,9 @@ use DevDoctor\Core\ModuleName;
 use DevDoctor\Core\PathResolver;
 use DevDoctor\Core\ProjectFiles;
 use DevDoctor\Core\Severity;
+use DevDoctor\Modules\Env\EnvEntry;
+use DevDoctor\Modules\Env\EnvParser;
+use DevDoctor\Modules\Env\SecretScanner;
 use JsonException;
 
 final readonly class McpAnalyzer
@@ -18,9 +21,22 @@ final readonly class McpAnalyzer
     private const array CONFIG_FILES = [
         '.mcp.json',
         'mcp.json',
+        '.agents/mcp.json',
+        '.codex/mcp.json',
         '.cursor/mcp.json',
         '.vscode/mcp.json',
     ];
+
+    private const array ENV_FILES = [
+        '.env',
+        '.env.example',
+        '.env.local',
+    ];
+
+    public function __construct(
+        private EnvParser $envParser = new EnvParser,
+        private SecretScanner $secretScanner = new SecretScanner,
+    ) {}
 
     public function analyze(McpOptions $options): IssueCollection
     {
@@ -28,6 +44,7 @@ final readonly class McpAnalyzer
         $paths = PathResolver::fromBasePath($options->path);
         $issues = new IssueCollection;
         $configFiles = $this->configFiles($files, $options);
+        $knownEnvKeys = $this->knownEnvKeys($paths);
 
         if ($configFiles === []) {
             $issues->add(new Issue(
@@ -56,7 +73,7 @@ final readonly class McpAnalyzer
                 continue;
             }
 
-            $this->analyzeConfig($issues, $config, $options);
+            $this->analyzeConfig($issues, $config, $options, $knownEnvKeys);
         }
 
         if ($issues->isEmpty()) {
@@ -99,7 +116,10 @@ final readonly class McpAnalyzer
         return new McpConfigFile($paths->display($configPath), $data);
     }
 
-    private function analyzeConfig(IssueCollection $issues, McpConfigFile $config, McpOptions $options): void
+    /**
+     * @param  list<string>  $knownEnvKeys
+     */
+    private function analyzeConfig(IssueCollection $issues, McpConfigFile $config, McpOptions $options, array $knownEnvKeys): void
     {
         $servers = $this->serversSection($config->data ?? []);
 
@@ -130,7 +150,7 @@ final readonly class McpAnalyzer
             }
 
             $server = $this->server($name, $config->path, $serverData);
-            $this->analyzeServer($issues, $server, $options);
+            $this->analyzeServer($issues, $server, $options, $knownEnvKeys);
         }
     }
 
@@ -168,11 +188,15 @@ final readonly class McpAnalyzer
                 env: $this->stringMap($data['env'] ?? []),
             ),
             url: $url,
+            headers: $this->stringMap($data['headers'] ?? []),
             rawTransport: $rawTransport,
         );
     }
 
-    private function analyzeServer(IssueCollection $issues, McpServer $server, McpOptions $options): void
+    /**
+     * @param  list<string>  $knownEnvKeys
+     */
+    private function analyzeServer(IssueCollection $issues, McpServer $server, McpOptions $options, array $knownEnvKeys): void
     {
         if ($server->rawTransport !== null && $server->transport === null) {
             $issues->add(new Issue(
@@ -222,6 +246,153 @@ final readonly class McpAnalyzer
                 key: $server->name,
             ));
         }
+
+        $this->checkRemoteUrl($issues, $server, $options);
+        $this->checkRiskyCommand($issues, $server, $options);
+        $this->checkInlineSecrets($issues, $server, $options);
+        $this->checkEnvReferences($issues, $server, $options, $knownEnvKeys);
+    }
+
+    private function checkRemoteUrl(IssueCollection $issues, McpServer $server, McpOptions $options): void
+    {
+        if (! $server->transport?->isRemote() || $server->url === null || ! str_starts_with(strtolower($server->url), 'http://')) {
+            return;
+        }
+
+        $host = strtolower((string) parse_url($server->url, PHP_URL_HOST));
+
+        if (in_array($host, ['localhost', '127.0.0.1', '::1'], true)) {
+            return;
+        }
+
+        $issues->add(new Issue(
+            code: IssueCode::DD_MCP_REMOTE_URL_INSECURE,
+            severity: $options->strict ? Severity::ERROR : Severity::WARNING,
+            message: 'MCP remote server uses an insecure HTTP URL',
+            module: ModuleName::MCP,
+            file: $server->file,
+            key: $server->name,
+            context: ['url' => $server->url],
+        ));
+    }
+
+    private function checkRiskyCommand(IssueCollection $issues, McpServer $server, McpOptions $options): void
+    {
+        if ($server->command === null || ! $this->isRiskyCommand($server->command)) {
+            return;
+        }
+
+        $issues->add(new Issue(
+            code: IssueCode::DD_MCP_COMMAND_RISKY,
+            severity: $options->strict ? Severity::ERROR : Severity::WARNING,
+            message: 'MCP stdio server command should be reviewed before use',
+            module: ModuleName::MCP,
+            file: $server->file,
+            key: $server->name,
+            context: [
+                'command' => $server->command->command,
+                'args' => $server->command->args,
+            ],
+        ));
+    }
+
+    private function checkInlineSecrets(IssueCollection $issues, McpServer $server, McpOptions $options): void
+    {
+        foreach (['env' => $server->command?->env ?? [], 'headers' => $server->headers] as $section => $values) {
+            foreach ($values as $key => $value) {
+                if (! $this->secretScanner->isSuspicious(new EnvEntry($key, $value, $key.'='.$value, 1, $server->file))) {
+                    continue;
+                }
+
+                $issues->add(new Issue(
+                    code: IssueCode::DD_MCP_ENV_SECRET_INLINE,
+                    severity: $options->strict ? Severity::ERROR : Severity::WARNING,
+                    message: 'MCP server configuration appears to contain an inline secret',
+                    module: ModuleName::MCP,
+                    file: $server->file,
+                    key: $server->name.'.'.$section.'.'.$key,
+                    context: ['section' => $section, 'key' => $key],
+                ));
+            }
+        }
+    }
+
+    /**
+     * @param  list<string>  $knownEnvKeys
+     */
+    private function checkEnvReferences(IssueCollection $issues, McpServer $server, McpOptions $options, array $knownEnvKeys): void
+    {
+        foreach ($this->envReferences($server) as $reference) {
+            if (in_array($reference, $knownEnvKeys, true)) {
+                continue;
+            }
+
+            $issues->add(new Issue(
+                code: IssueCode::DD_MCP_ENV_REFERENCE_MISSING,
+                severity: $options->strict ? Severity::ERROR : Severity::WARNING,
+                message: 'MCP server references an environment key not declared in local env files',
+                module: ModuleName::MCP,
+                file: $server->file,
+                key: $server->name.'.'.$reference,
+                context: ['env' => $reference],
+            ));
+        }
+    }
+
+    private function isRiskyCommand(McpServerCommand $command): bool
+    {
+        $executable = strtolower(basename($command->command));
+        $joined = strtolower(implode(' ', $command->args));
+
+        if (in_array($executable, ['bash', 'sh', 'zsh', 'cmd', 'powershell', 'pwsh'], true) && preg_match('/(^|\s)(-c|\/c|invoke-expression|iex)(\s|$)/', $joined) === 1) {
+            return true;
+        }
+
+        return preg_match('/(curl|wget)\s+.+\|\s*(bash|sh|zsh|powershell|pwsh)/', $joined) === 1
+            || str_contains($joined, 'invoke-expression')
+            || preg_match('/(^|\s)iex(\s|$)/', $joined) === 1;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function envReferences(McpServer $server): array
+    {
+        $values = array_filter([
+            $server->url,
+            $server->command?->command,
+            ...($server->command?->args ?? []),
+            ...array_values($server->command?->env ?? []),
+            ...array_values($server->headers),
+        ], static fn (?string $value): bool => $value !== null && $value !== '');
+
+        $references = [];
+
+        foreach ($values as $value) {
+            if (preg_match_all('/\$\{([A-Z_][A-Z0-9_]*)(?:[^}]*)\}/i', $value, $matches) !== false) {
+                array_push($references, ...$matches[1]);
+            }
+        }
+
+        return array_values(array_unique($references));
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function knownEnvKeys(PathResolver $paths): array
+    {
+        $keys = [];
+
+        foreach (self::ENV_FILES as $file) {
+            $envFile = $this->envParser->parseFile($paths->absolute($file), $paths->display($file));
+
+            if ($envFile->exists) {
+                array_push($keys, ...$envFile->keys());
+            }
+        }
+
+        return array_values(array_unique($keys));
     }
 
     private function stringValue(mixed $value): ?string

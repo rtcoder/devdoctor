@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.43.0 - 2026-06-08
+
+- Expanded `devdoctor mcp` with agent configuration hardening checks.
+- Added support for `.agents/mcp.json` and `.codex/mcp.json`.
+- Added MCP issue codes for inline secrets, missing env references, insecure remote URLs, and risky stdio commands.
+
 ## v1.42.0 - 2026-06-08
 
 - Added `devdoctor mcp` for read-only Model Context Protocol configuration diagnostics.

@@ -74,8 +74,12 @@ enum IssueCode: string
     case DD_LARAVEL_PROD_DEBUG = 'DD_LARAVEL_PROD_DEBUG';
     case DD_LARAVEL_READY = 'DD_LARAVEL_READY';
     case DD_MCP_CONFIG_INVALID = 'DD_MCP_CONFIG_INVALID';
+    case DD_MCP_COMMAND_RISKY = 'DD_MCP_COMMAND_RISKY';
+    case DD_MCP_ENV_REFERENCE_MISSING = 'DD_MCP_ENV_REFERENCE_MISSING';
+    case DD_MCP_ENV_SECRET_INLINE = 'DD_MCP_ENV_SECRET_INLINE';
     case DD_MCP_NOT_CONFIGURED = 'DD_MCP_NOT_CONFIGURED';
     case DD_MCP_READY = 'DD_MCP_READY';
+    case DD_MCP_REMOTE_URL_INSECURE = 'DD_MCP_REMOTE_URL_INSECURE';
     case DD_MCP_REMOTE_URL_MISSING = 'DD_MCP_REMOTE_URL_MISSING';
     case DD_MCP_SERVER_INVALID = 'DD_MCP_SERVER_INVALID';
     case DD_MCP_SERVERS_MISSING = 'DD_MCP_SERVERS_MISSING';
@@ -327,6 +331,10 @@ enum IssueCode: string
             self::DD_LARAVEL_ENV_MISSING => 'Create .env from .env.example and fill required Laravel values.',
             self::DD_LARAVEL_PROD_DEBUG => 'Disable APP_DEBUG before using production environment settings.',
             self::DD_MCP_CONFIG_INVALID => 'Fix the JSON syntax before relying on MCP server configuration.',
+            self::DD_MCP_COMMAND_RISKY => 'Review the command and replace shell evaluation or remote script execution with a pinned executable.',
+            self::DD_MCP_ENV_REFERENCE_MISSING => 'Declare the referenced environment key in .env or .env.example, or document the external secret source.',
+            self::DD_MCP_ENV_SECRET_INLINE => 'Move the secret value to an environment variable and rotate it if the value was real.',
+            self::DD_MCP_REMOTE_URL_INSECURE => 'Use HTTPS for remote MCP servers unless the URL is an intentional localhost endpoint.',
             self::DD_MCP_REMOTE_URL_MISSING => 'Add the remote MCP server URL or switch the server to stdio with a command.',
             self::DD_MCP_SERVER_INVALID => 'Use a named MCP server object with a supported transport, command, or URL.',
             self::DD_MCP_SERVERS_MISSING => 'Define MCP servers under mcpServers or servers.',
