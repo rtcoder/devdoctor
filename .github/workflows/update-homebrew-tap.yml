@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "DevDoctor version to publish to Homebrew, for example 1.40.0 or v1.40.0"
+        description: "DevDoctor version to publish to Homebrew, for example 1.41.0 or v1.41.0"
         required: true
 
 permissions:
@@ -27,7 +27,7 @@ jobs:
         run: |
           test -n "${HOMEBREW_TAP_TOKEN}"
 
-      - name: Resolve release checksum
+      - name: Resolve release checksums
         id: checksum
         shell: bash
         env:
@@ -38,18 +38,17 @@ jobs:
           tag="v${version}"
           gh release download "${tag}" \
             --repo "${GITHUB_REPOSITORY}" \
-            --pattern devdoctor.phar.sha256 \
+            --pattern devdoctor.sha256 \
             --dir "${RUNNER_TEMP}/devdoctor-release"
 
-          sha256="$(cut -d ' ' -f 1 "${RUNNER_TEMP}/devdoctor-release/devdoctor.phar.sha256")"
-          test -n "${sha256}"
+          test -s "${RUNNER_TEMP}/devdoctor-release/devdoctor.sha256"
 
           echo "version=${version}" >> "${GITHUB_OUTPUT}"
-          echo "sha256=${sha256}" >> "${GITHUB_OUTPUT}"
+          echo "checksum_file=${RUNNER_TEMP}/devdoctor-release/devdoctor.sha256" >> "${GITHUB_OUTPUT}"
 
       - name: Update tap
         shell: bash
         run: |
           bash .github/scripts/update-homebrew-tap.sh \
             "${{ steps.checksum.outputs.version }}" \
-            "${{ steps.checksum.outputs.sha256 }}"
+            "${{ steps.checksum.outputs.checksum_file }}"

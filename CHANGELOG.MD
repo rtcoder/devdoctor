@@ -4,6 +4,12 @@ All notable DevDoctor releases are listed here from newest to oldest.
 
 This changelog is based on the Git tag history and the project roadmap. DevDoctor follows a release discipline where each feature group receives its own version, documentation update, commit, annotated tag, and push to `origin`.
 
+## v1.41.0 - 2026-06-08
+
+- Changed the generated Homebrew formula to install platform-specific standalone binaries instead of `devdoctor.phar`.
+- Removed the Homebrew dependency on the local `php` formula so `devdoctor --version` no longer fails when PATH points at PHP older than 8.5.
+- Updated release and manual tap workflows to use the combined `devdoctor.sha256` checksum file for standalone assets.
+
 ## v1.40.0 - 2026-06-07
 
 - Added the public `devdoctor version` command.

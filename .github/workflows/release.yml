@@ -95,5 +95,4 @@ jobs:
         shell: bash
         run: |
           version="${GITHUB_REF_NAME#v}"
-          sha256="$(cut -d ' ' -f 1 release/devdoctor.phar.sha256)"
-          bash .github/scripts/update-homebrew-tap.sh "${version}" "${sha256}"
+          bash .github/scripts/update-homebrew-tap.sh "${version}" "release/devdoctor.sha256"

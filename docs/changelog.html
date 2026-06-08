@@ -26,6 +26,14 @@
 
     <section class="release-list">
         <article class="release">
+            <h2>v1.41.0 <span class="meta">2026-06-08</span></h2>
+            <ul>
+                <li>Changed the generated Homebrew formula to install platform-specific standalone binaries instead of <code>devdoctor.phar</code>.</li>
+                <li>Removed the Homebrew dependency on the local <code>php</code> formula so <code>devdoctor --version</code> no longer fails when PATH points at PHP older than 8.5.</li>
+                <li>Updated release and manual tap workflows to use the combined <code>devdoctor.sha256</code> checksum file for standalone assets.</li>
+            </ul>
+        </article>
+        <article class="release">
             <h2>v1.40.0 <span class="meta">2026-06-07</span></h2>
             <ul>
                 <li>Added the public <code>devdoctor version</code> command.</li>
